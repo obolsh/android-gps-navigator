@@ -8,7 +8,7 @@ public interface IMapSdk {
 
     void showMeOnMap(IPlaceListener placeListener);
 
-    void setMapSettings(IMapSettings mapSettings);
+    void setMapSettings(IMapSetting mapSettings);
 
     void showPlace(IMapPlace place, IPlaceShowListener placeShowListener);
 

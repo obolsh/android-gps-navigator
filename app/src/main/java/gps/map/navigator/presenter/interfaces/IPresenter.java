@@ -21,7 +21,7 @@ public interface IPresenter {
 
     void findPlace(IPlaceListener placeListener);
 
-    void navifate(IRoute route, IRouteListener routeListener);
+    void navigate(IRoute route, IRouteListener routeListener);
 
     void buildRoute(IPlaceHistoryListener placeHistoryListener);
 }

@@ -28,9 +28,9 @@ public interface ICache {
 
     void setLastPlace(IMapPlace lastPlace);
 
-    IMapSettings getMapSettings();
+    IMapSetting getMapSettings();
 
-    void setMapSettings(IMapSettings mapSettings);
+    void setMapSettings(IMapSetting mapSettings);
 
     byte[] getRawData(String key);
 
