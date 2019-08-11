@@ -55,7 +55,7 @@ public class PresenterImpl implements IPresenter {
         } else if (isDefaultMap(mapSetting)) {
             mapSetting.setMapType(isDay ? MapType.NORMAL_DAY : MapType.NORMAL_NIGHT);
         } else {
-            mapSetting.setMapType(isDay ? MapType.SATELITE_DAY : MapType.SATELITE_NIGHT);
+            mapSetting.setMapType(isDay ? MapType.SATELLITE_DAY : MapType.SATELLITE_NIGHT);
         }
         saveNewMapSettings(mapSetting);
     }
@@ -83,7 +83,7 @@ public class PresenterImpl implements IPresenter {
         int mapType = mapSetting.getMapType();
         return mapType == MapType.NORMAL_DAY
                 || mapType == MapType.TRAFFIC_DAY
-                || mapType == MapType.SATELITE_DAY;
+                || mapType == MapType.SATELLITE_DAY;
     }
 
     private void saveNewMapSettings(IMapSetting mapSetting) {
@@ -104,11 +104,11 @@ public class PresenterImpl implements IPresenter {
         if (enable) {
             mapSetting.setMapType(
                     isDefaultMap ? MapType.TRAFFIC_NIGHT :
-                            isTrafficMap ? MapType.TRAFFIC_NIGHT : MapType.SATELITE_NIGHT);
+                            isTrafficMap ? MapType.TRAFFIC_NIGHT : MapType.SATELLITE_NIGHT);
         } else {
             mapSetting.setMapType(
                     isDefaultMap ? MapType.TRAFFIC_DAY :
-                            isTrafficMap ? MapType.TRAFFIC_DAY : MapType.SATELITE_DAY);
+                            isTrafficMap ? MapType.TRAFFIC_DAY : MapType.SATELLITE_DAY);
         }
         saveNewMapSettings(mapSetting);
     }
