@@ -1,4 +1,4 @@
-package gps.map.navigator.model.impl.sdk;
+package gps.map.navigator.model.impl.common;
 
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IMapSdk;
@@ -9,7 +9,7 @@ import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
-public class MapBoxSdkImpl implements IMapSdk {
+public class EmptyMapSdk implements IMapSdk {
 
     @Override
     public void showMeOnMap(IPlaceListener placeListener) {

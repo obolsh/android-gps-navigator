@@ -3,6 +3,7 @@ package gps.map.navigator.model.interfaces;
 import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
+import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
 public interface IMapSdk {
 
@@ -12,7 +13,7 @@ public interface IMapSdk {
 
     void showPlace(IMapPlace place, IPlaceShowListener placeShowListener);
 
-    void showRoute(IRoute route, IRouteListener routeListener);
+    void showRoute(IRoute route, IRouteReadyListener routeListener);
 
     void findPlace(IPlaceListener placeListener);
 

@@ -6,5 +6,5 @@ public interface IPlaceListener {
 
     void onPlaceLocated(IMapPlace place);
 
-    void onPlaceLocationFailed(IMapPlace place);
+    void onPlaceLocationFailed(Exception reason);
 }
