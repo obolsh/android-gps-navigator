@@ -52,8 +52,10 @@ public class PresenterImpl implements IPresenter {
         boolean isDay = isDay(mapSetting);
         if (enable) {
             mapSetting.setMapType(isDay ? MapType.TRAFFIC_DAY : MapType.TRAFFIC_NIGHT);
-        } else {
+        } else if (isDefaultMap(mapSetting)) {
             mapSetting.setMapType(isDay ? MapType.NORMAL_DAY : MapType.NORMAL_NIGHT);
+        } else {
+            mapSetting.setMapType(isDay ? MapType.SATELITE_DAY : MapType.SATELITE_NIGHT);
         }
         saveNewMapSettings(mapSetting);
     }
