@@ -13,6 +13,22 @@ public class MapPlace implements IMapPlace {
     private boolean favourite;
     private long lastUsedTime;
 
+    public MapPlace() {
+    }
+
+    public MapPlace(String id, long x, long y, String title, String address, String label,
+                    boolean favourite, long lastUsedTime) {
+        super();
+        this.id = id;
+        this.x = x;
+        this.y = y;
+        this.title = title;
+        this.address = address;
+        this.label = label;
+        this.favourite = favourite;
+        this.lastUsedTime = lastUsedTime;
+    }
+
     @Override
     public String getId() {
         return id;

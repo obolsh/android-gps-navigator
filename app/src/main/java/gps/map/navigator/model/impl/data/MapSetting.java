@@ -8,6 +8,15 @@ public class MapSetting implements IMapSetting {
     private String id = "default_id";
     private int mapType;
 
+    public MapSetting() {
+    }
+
+    public MapSetting(String id, int mapType) {
+        super();
+        this.id = id;
+        this.mapType = mapType;
+    }
+
     @Override
     public String getId() {
         return id;

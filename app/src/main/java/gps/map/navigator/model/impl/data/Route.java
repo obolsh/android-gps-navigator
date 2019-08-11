@@ -11,6 +11,19 @@ public class Route implements IRoute {
     private String title;
     private long lastUsedTime;
 
+    public Route() {
+    }
+
+    public Route(String id, IMapPlace origin, IMapPlace destination, String title,
+                 long lastUsedTime) {
+        super();
+        this.id = id;
+        this.origin = origin;
+        this.destination = destination;
+        this.title = title;
+        this.lastUsedTime = lastUsedTime;
+    }
+
     @Override
     public String getId() {
         return id;
