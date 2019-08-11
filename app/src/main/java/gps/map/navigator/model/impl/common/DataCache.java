@@ -6,6 +6,9 @@ import java.util.List;
 import gps.map.navigator.common.cache.DatabaseStorage;
 import gps.map.navigator.common.cache.IStorage;
 import gps.map.navigator.common.utils.SerializationUtils;
+import gps.map.navigator.model.impl.data.MapPlace;
+import gps.map.navigator.model.impl.data.MapSetting;
+import gps.map.navigator.model.impl.data.Route;
 import gps.map.navigator.model.interfaces.ICache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IMapSetting;
@@ -13,9 +16,9 @@ import gps.map.navigator.model.interfaces.IRoute;
 
 public class DataCache implements ICache {
 
-    private SerializationUtils<IMapPlace> placeSerializationUtils;
-    private SerializationUtils<IRoute> routeSerializationUtils;
-    private SerializationUtils<IMapSetting> mapSettingSerializationUtils;
+    private SerializationUtils<MapPlace> placeSerializationUtils;
+    private SerializationUtils<Route> routeSerializationUtils;
+    private SerializationUtils<MapSetting> mapSettingSerializationUtils;
     private IStorage storage;
 
     private final String KEY_MY_LOCATION = "key_my_location";
@@ -46,7 +49,7 @@ public class DataCache implements ICache {
     public void setHistoryPlaces(List<IMapPlace> historyPlaces) {
         List<byte[]> arrays = new ArrayList<>();
         for (int i = 0; i < historyPlaces.size(); i++) {
-            arrays.add(placeSerializationUtils.serialize(historyPlaces.get(i)));
+            arrays.add(placeSerializationUtils.serialize((MapPlace) historyPlaces.get(i)));
         }
         storage.saveChunkedData(arrays);
     }
@@ -57,7 +60,7 @@ public class DataCache implements ICache {
     }
 
     private IMapPlace getPlace(String key) {
-        byte[] data = storage.getData(key, null);
+        byte[] data = getRawData(key);
         return placeSerializationUtils.deserialize(data);
     }
 
@@ -67,8 +70,8 @@ public class DataCache implements ICache {
     }
 
     private void savePlace(IMapPlace place, String key) {
-        byte[] data = placeSerializationUtils.serialize(place);
-        storage.saveData(key, data);
+        byte[] data = placeSerializationUtils.serialize((MapPlace) place);
+        setRawData(key, data);
     }
 
     @Override
@@ -93,14 +96,14 @@ public class DataCache implements ICache {
 
     @Override
     public IRoute getLastRoute() {
-        byte[] data = storage.getData(KEY_LAST_ROUTE, null);
+        byte[] data = getRawData(KEY_LAST_ROUTE);
         return routeSerializationUtils.deserialize(data);
     }
 
     @Override
     public void setLastRoute(IRoute lastRoute) {
-        byte[] data = routeSerializationUtils.serialize(lastRoute);
-        storage.saveData(KEY_LAST_ROUTE, data);
+        byte[] data = routeSerializationUtils.serialize((Route) lastRoute);
+        setRawData(KEY_LAST_ROUTE, data);
     }
 
     @Override
@@ -115,14 +118,14 @@ public class DataCache implements ICache {
 
     @Override
     public IMapSetting getMapSettings() {
-        byte[] data = storage.getData(KEY_MAP_SETTINGS, null);
+        byte[] data = getRawData(KEY_MAP_SETTINGS);
         return mapSettingSerializationUtils.deserialize(data);
     }
 
     @Override
     public void setMapSettings(IMapSetting mapSettings) {
-        byte[] data = mapSettingSerializationUtils.serialize(mapSettings);
-        storage.saveData(KEY_MAP_SETTINGS, data);
+        byte[] data = mapSettingSerializationUtils.serialize((MapSetting) mapSettings);
+        setRawData(KEY_MAP_SETTINGS, data);
     }
 
     @Override
