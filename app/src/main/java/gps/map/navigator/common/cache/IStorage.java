@@ -13,5 +13,7 @@ public interface IStorage {
     boolean saveChunkedData(List<byte[]> data);
 
     List<byte[]> getChunkedData();
+
+    void invalidate();
 }
 
