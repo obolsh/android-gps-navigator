@@ -34,21 +34,28 @@ public class DatabaseStorage extends SQLiteOpenHelper implements IStorage {
 
     @Override
     public boolean hasData(String key, boolean defaultValue) {
-        SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = null;
         try {
-            cursor = db.query(TABLE_CACHE, new String[]{COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE},
-                String.format(Locale.US, "%s='%s'", COLUMN_CACHE_KEY, key), null, null, null, null);
+            cursor = getCacheCursor(key);
             boolean result = cursor != null;
             result = result && cursor.moveToFirst() && cursor.getCount() > 0;
             return result;
         } catch (Throwable t) {
-            return false;
+            return defaultValue;
         } finally {
             if (cursor != null) {
                 cursor.close();
             }
         }
+    }
+
+    private Cursor getCacheCursor(String key) {
+        return makeQuery(TABLE_CACHE, new String[]{COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE},
+            String.format(Locale.US, "%s='%s'", COLUMN_CACHE_KEY, key));
+    }
+
+    private Cursor makeQuery(String table, String[] columns, String selection) {
+        return getReadableDatabase().query(table, columns, selection, null, null, null, null);
     }
 
     @Override
@@ -66,23 +73,22 @@ public class DatabaseStorage extends SQLiteOpenHelper implements IStorage {
 
     @Override
     public byte[] getData(String key, byte[] defaultValue) {
-        SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CACHE, new String[]{COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE},
-            String.format(Locale.US, "%s='%s'", COLUMN_CACHE_KEY, key), null, null, null, null);
-        if (cursor == null) {
-            return null;
-        }
+        Cursor cursor = null;
         try {
-            if (cursor.getCount() <= 0) {
-                return null;
+            cursor = getCacheCursor(key);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                return cursor.getBlob(cursor.getColumnIndex(COLUMN_CACHE_VALUE));
             }
-            cursor.moveToFirst();
-            return cursor.getBlob(cursor.getColumnIndex(COLUMN_CACHE_VALUE));
-        } catch (Exception e) {
-            return null;
+        } catch (Throwable t) {
+            t.printStackTrace();
         } finally {
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
         }
+        return defaultValue;
+
     }
 
     @Override
@@ -103,11 +109,9 @@ public class DatabaseStorage extends SQLiteOpenHelper implements IStorage {
 
     @Override
     public List<byte[]> getChunkedData() {
-        SQLiteDatabase db = getReadableDatabase();
         List<byte[]> data = new ArrayList<>();
         try {
-            Cursor cursor = db.query(TABLE_CHUNKED, new String[]{COLUMN_CHUNKED_VALUE},
-                null, null, null, null, null);
+            Cursor cursor = makeQuery(TABLE_CHUNKED, new String[]{COLUMN_CHUNKED_VALUE}, null);
             if (cursor != null && cursor.getCount() > 0) {
                 try {
                     cursor.moveToFirst();
