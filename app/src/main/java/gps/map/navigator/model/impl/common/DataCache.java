@@ -3,6 +3,7 @@ package gps.map.navigator.model.impl.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
 import gps.map.navigator.common.cache.DatabaseStorage;
 import gps.map.navigator.common.cache.IStorage;
 import gps.map.navigator.common.utils.SerializationUtils;
@@ -28,11 +29,11 @@ public class DataCache implements ICache {
     private final String KEY_LAST_ROUTE = "key_last_route";
     private final String KEY_MAP_SETTINGS = "key_map_settings";
 
-    public DataCache() {
+    public DataCache(Context context) {
         placeSerializationUtils = new SerializationUtils<>();
         routeSerializationUtils = new SerializationUtils<>();
         mapSettingSerializationUtils = new SerializationUtils<>();
-        storage = new DatabaseStorage();
+        storage = new DatabaseStorage(context);
     }
 
     @Override
