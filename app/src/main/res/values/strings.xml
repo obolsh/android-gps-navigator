@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Android GPS Navigator</string>
+    <string name="traffic">traffic</string>
+    <string name="satellite">satellite</string>
 </resources>
