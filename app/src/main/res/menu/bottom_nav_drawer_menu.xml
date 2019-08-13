@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav1"
+            android:id="@+id/enable_traffic"
             android:icon="@android:drawable/ic_menu_myplaces"
             android:title="@string/traffic" />
         <item
-            android:id="@+id/nav2"
+            android:id="@+id/enable_night_mode"
             android:icon="@android:drawable/ic_dialog_map"
-            android:title="@string/satellite" />
+            android:title="@string/night_mode" />
     </group>
 </menu>
