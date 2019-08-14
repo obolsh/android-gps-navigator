@@ -3,11 +3,11 @@
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/enable_traffic"
-            android:icon="@android:drawable/ic_menu_myplaces"
+            android:icon="@android:drawable/ic_dialog_alert"
             android:title="@string/traffic" />
         <item
             android:id="@+id/enable_night_mode"
-            android:icon="@android:drawable/ic_dialog_map"
+            android:icon="@android:drawable/ic_lock_power_off"
             android:title="@string/night_mode" />
     </group>
 </menu>
