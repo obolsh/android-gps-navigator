@@ -9,5 +9,14 @@
             android:id="@+id/enable_night_mode"
             android:icon="@android:drawable/ic_lock_power_off"
             android:title="@string/night_mode" />
+        <item
+            android:id="@+id/rate_us"
+            android:icon="@android:drawable/ic_lock_silent_mode_off"
+            android:title="@string/rate_us" />
+
+        <item
+            android:id="@+id/share"
+            android:icon="@android:drawable/ic_media_ff"
+            android:title="@string/share_us" />
     </group>
 </menu>

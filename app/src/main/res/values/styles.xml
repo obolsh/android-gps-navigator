@@ -13,8 +13,4 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <!--<style name="ShapeAppearance.MyApp.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">-->
-        <!--<item name="cornerFamily">rounded</item>-->
-        <!--<item name="cornerSize">4dp</item>-->
-    <!--</style>-->
 </resources>

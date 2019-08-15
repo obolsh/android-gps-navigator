@@ -2,4 +2,6 @@
     <string name="app_name">Android GPS Navigator</string>
     <string name="traffic">traffic</string>
     <string name="night_mode">night</string>
+    <string name="rate_us">rate us</string>
+    <string name="share_us">share</string>
 </resources>
