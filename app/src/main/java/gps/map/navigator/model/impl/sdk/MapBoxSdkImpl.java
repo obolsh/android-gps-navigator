@@ -1,5 +1,7 @@
 package gps.map.navigator.model.impl.sdk;
 
+import android.content.Context;
+
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IMapSdk;
 import gps.map.navigator.model.interfaces.IMapSetting;
@@ -10,6 +12,12 @@ import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
 public class MapBoxSdkImpl implements IMapSdk {
+
+    private Context context;
+
+    public MapBoxSdkImpl(Context context) {
+        this.context = context;
+    }
 
     @Override
     public void showMeOnMap(IPlaceListener placeListener) {

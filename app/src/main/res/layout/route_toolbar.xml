@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="62dp"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="?attr/colorPrimaryDark"
+                android:drawableStart="@android:drawable/ic_menu_mylocation"
+                android:drawableLeft="@android:drawable/ic_menu_mylocation"
+                android:drawablePadding="8dp"
+                android:enabled="false"
+                android:gravity="center|left"
+                android:paddingLeft="8dp"
+                android:text="Origin"
+                android:textSize="18sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="?attr/colorPrimaryDark"
+                android:drawableStart="@android:drawable/ic_menu_myplaces"
+                android:drawableLeft="@android:drawable/ic_menu_myplaces"
+                android:drawablePadding="8dp"
+                android:enabled="false"
+                android:gravity="center|left"
+                android:paddingLeft="8dp"
+                android:text="Destination"
+                android:textSize="18sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="56dp"
+        android:layout_height="28dp"
+        android:layout_gravity="center"
+        android:layout_margin="12dp"
+        android:layout_weight="1"
+        app:srcCompat="@android:drawable/ic_menu_rotate" />
+
+</LinearLayout>
