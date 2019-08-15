@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/enable_traffic"
             android:icon="@android:drawable/ic_dialog_alert"
-            android:title="@string/traffic" />
+            android:title="@string/traffic"
+            app:actionLayout="@layout/checked_menu_item"
+            app:showAsAction="always" />
         <item
             android:id="@+id/enable_night_mode"
             android:icon="@android:drawable/ic_lock_power_off"
-            android:title="@string/night_mode" />
+            android:title="@string/night_mode"
+            app:actionLayout="@layout/checked_menu_item"
+            app:showAsAction="always" />
         <item
             android:id="@+id/rate_us"
             android:icon="@android:drawable/ic_lock_silent_mode_off"
