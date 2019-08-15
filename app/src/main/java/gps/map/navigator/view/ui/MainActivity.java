@@ -33,6 +33,15 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
     PresenterStrategy presenterStrategy;
     IRoute activeRoute;
 
+    private final int DEFAULT_SCREEN = 1;
+    private final int BUILD_ROUTE_SCREEN = 2;
+    private final int FIND_PLACE_SCREEN = 3;
+    private final int NAVIGATION_SCREEN = 4;
+
+    private int activeScreenType = DEFAULT_SCREEN;
+
+    BuildRouteFragment buildRouteFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +64,12 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
         fragmentManager = getSupportFragmentManager();
         presenterStrategy = PresenterStrategy.getInstance();
         bottomAppBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onBackPressed() {
+        backToMainScreen();
+//        super.onBackPressed();
     }
 
     @Override
@@ -110,10 +125,11 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
 
             }
         });
-        BuildRouteFragment buildRouteFragment = new BuildRouteFragment();
+        buildRouteFragment = new BuildRouteFragment();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.container, buildRouteFragment, buildRouteFragment.getTag());
         transaction.commit();
+        activeScreenType = BUILD_ROUTE_SCREEN;
     }
 
     @Override
@@ -151,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
 
             }
         });
+        activeScreenType = FIND_PLACE_SCREEN;
     }
 
     @Override
@@ -168,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
 
             }
         });
+        activeScreenType = FIND_PLACE_SCREEN;
     }
 
     @Override
@@ -185,11 +203,24 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
         floatingActionButton.show();
         bottomAppBar.setVisibility(View.VISIBLE);
         bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_CENTER);
+        if (BUILD_ROUTE_SCREEN == activeScreenType) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.remove(buildRouteFragment);
+            transaction.commit();
+            activeScreenType = DEFAULT_SCREEN;
+        }
     }
 
     @Override
     public void backToBuildRouteScreen() {
         bottomAppBar.setVisibility(View.INVISIBLE);
         bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_END);
+        if (FIND_PLACE_SCREEN == activeScreenType) {
+            buildRouteFragment = new BuildRouteFragment();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.add(R.id.container, buildRouteFragment, buildRouteFragment.getTag());
+            transaction.commit();
+            activeScreenType = BUILD_ROUTE_SCREEN;
+        }
     }
 }
