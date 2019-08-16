@@ -4,24 +4,24 @@
     <group android:checkableBehavior="none">
         <item
             android:id="@+id/enable_traffic"
-            android:icon="@android:drawable/ic_dialog_alert"
+            android:icon="@drawable/outline_traffic_white_24dp"
             android:title="@string/traffic"
             app:actionLayout="@layout/checked_menu_item"
             app:showAsAction="always" />
         <item
             android:id="@+id/enable_night_mode"
-            android:icon="@android:drawable/ic_lock_power_off"
+            android:icon="@drawable/outline_brightness_medium_white_24dp"
             android:title="@string/night_mode"
             app:actionLayout="@layout/checked_menu_item"
             app:showAsAction="always" />
         <item
             android:id="@+id/rate_us"
-            android:icon="@android:drawable/ic_lock_silent_mode_off"
+            android:icon="@drawable/outline_stars_white_24dp"
             android:title="@string/rate_us" />
 
         <item
             android:id="@+id/share"
-            android:icon="@android:drawable/ic_media_ff"
+            android:icon="@drawable/outline_share_white_24dp"
             android:title="@string/share_us" />
     </group>
 </menu>
