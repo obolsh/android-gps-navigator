@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:drawable="@drawable/outline_place_white_24dp"
+        android:width="@dimen/icon_size"
+        android:height="@dimen/icon_size"
+        />
+</layer-list>
