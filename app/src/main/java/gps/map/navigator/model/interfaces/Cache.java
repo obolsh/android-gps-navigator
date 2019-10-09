@@ -2,7 +2,7 @@ package gps.map.navigator.model.interfaces;
 
 import java.util.List;
 
-public interface ICache {
+public interface Cache {
 
     List<IMapPlace> getHistoryPlaces();
 
@@ -28,9 +28,9 @@ public interface ICache {
 
     void setLastPlace(IMapPlace lastPlace);
 
-    IMapSetting getMapSettings();
+    MapSetting getMapSettings();
 
-    void setMapSettings(IMapSetting mapSettings);
+    void setMapSettings(MapSetting mapSettings);
 
     byte[] getRawData(String key);
 

@@ -7,7 +7,7 @@ import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
-public interface IPresenter {
+public interface Presenter {
 
     void showMeOnMap(IPlaceListener placeListener);
 

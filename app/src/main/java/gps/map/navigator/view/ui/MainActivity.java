@@ -14,10 +14,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 import gps.map.navigator.R;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
-import gps.map.navigator.presenter.strategy.PresenterStrategy;
+import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
@@ -27,10 +30,12 @@ import gps.map.navigator.view.ui.fragment.BottomNavigationDrawerFragment;
 import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
 
 public class MainActivity extends AppCompatActivity implements IViewInteraction {
+
     FloatingActionButton floatingActionButton;
     BottomAppBar bottomAppBar;
     FragmentManager fragmentManager;
-    PresenterStrategy presenterStrategy;
+    @Inject
+    Presenter presenterStrategy;
     IRoute activeRoute;
 
     private final int DEFAULT_SCREEN = 1;
@@ -42,10 +47,13 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
 
     BuildRouteFragment buildRouteFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         bottomAppBar = findViewById(R.id.bottom_app_bar);
         bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_CENTER);
         floatingActionButton = findViewById(R.id.fab);
@@ -62,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
         floatingActionButton.show();
         setSupportActionBar(bottomAppBar);
         fragmentManager = getSupportFragmentManager();
-        presenterStrategy = PresenterStrategy.getInstance();
         bottomAppBar.setVisibility(View.VISIBLE);
     }
 

@@ -5,11 +5,11 @@ import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
-public interface IMapSdk {
+public interface MapSdk {
 
     void showMeOnMap(IPlaceListener placeListener);
 
-    void setMapSettings(IMapSetting mapSettings);
+    void setMapSettings(MapSetting mapSettings);
 
     void showPlace(IMapPlace place, IPlaceShowListener placeShowListener);
 
