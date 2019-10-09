@@ -25,3 +25,32 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    //app
+    bundleId = "gps.map.navigator"
+
+    //versions
+    versionCode = 1
+    versionName = "1.0.1"
+
+    //proguard
+    activateProguard = false
+
+    // Sdk and tools
+    minSdkVersion = 19
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+
+    // App dependencies
+    appcompatLibraryVersion = '1.0.0'
+    daggerVersion = '2.13'
+    constraintlayoutLibraryVersion = '1.1.3'
+    materialLibraryVersion = '1.0.0-alpha1'
+
+
+    //tests
+    junitLibraryVersion = '4.12'
+    espressoLibraryVersion = '3.1.0'
+    runnerVersion = '1.1.0'
+}

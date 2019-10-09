@@ -10,26 +10,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class DatabaseStorage extends SQLiteOpenHelper implements IStorage {
+import javax.inject.Inject;
+import javax.inject.Named;
 
-    private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "database_storage.db";
+import gps.map.navigator.common.Constants;
+
+public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
+
     private static final String TABLE_CHUNKED = "table_chunked";
     private static final String TABLE_CACHE = "table_cache";
     private static final String COLUMN_CACHE_KEY = "cache_key";
     private static final String COLUMN_CACHE_VALUE = "cache_value";
     private static final String COLUMN_CHUNKED_VALUE = "chunked_value";
+    private Integer databaseVersion;
 
 
     private static final String SQL_CREATE_CACHE_TABLE = "create table " + TABLE_CACHE +
-        " (_id integer primary key autoincrement," +
-        " " + COLUMN_CACHE_KEY + " varchar(255), " + COLUMN_CACHE_VALUE + " blob);";
+            " (_id integer primary key autoincrement," +
+            " " + COLUMN_CACHE_KEY + " varchar(255), " + COLUMN_CACHE_VALUE + " blob);";
     private static final String SQL_CREATE_CHUNKED_TABLE = "create table " + TABLE_CHUNKED +
-        " (_id integer primary key autoincrement," +
-        " " + COLUMN_CHUNKED_VALUE + " blob);";
+            " (_id integer primary key autoincrement," +
+            " " + COLUMN_CHUNKED_VALUE + " blob);";
 
-    public DatabaseStorage(Context context) {
-        super(context, DB_NAME, null, DB_VERSION);
+    @Inject
+    public DatabaseStorage(@Named(Constants.ApplicationContext) Context context,
+                           @Named(Constants.DatabaseInfo) String databaseName,
+                           @Named(Constants.DatabaseInfo) Integer databaseVersion) {
+        super(context, databaseName, null, databaseVersion);
+        this.databaseVersion = databaseVersion;
     }
 
     @Override
@@ -51,7 +59,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements IStorage {
 
     private Cursor getCacheCursor(String key) {
         return makeQuery(TABLE_CACHE, new String[]{COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE},
-            String.format(Locale.US, "%s='%s'", COLUMN_CACHE_KEY, key));
+                String.format(Locale.US, "%s='%s'", COLUMN_CACHE_KEY, key));
     }
 
     private Cursor makeQuery(String table, String[] columns, String selection) {
@@ -111,12 +119,15 @@ public class DatabaseStorage extends SQLiteOpenHelper implements IStorage {
     public List<byte[]> getChunkedData() {
         List<byte[]> data = new ArrayList<>();
         try {
-            Cursor cursor = makeQuery(TABLE_CHUNKED, new String[]{COLUMN_CHUNKED_VALUE}, null);
-            if (cursor != null && cursor.getCount() > 0) {
+            Cursor cursor;
+            cursor = makeQuery(TABLE_CHUNKED, new String[]{COLUMN_CHUNKED_VALUE}, null);
+            if (cursor != null) {
                 try {
-                    cursor.moveToFirst();
-                    while (cursor.moveToNext()) {
-                        data.add(cursor.getBlob(cursor.getColumnIndex(COLUMN_CHUNKED_VALUE)));
+                    if (cursor.getCount() > 0) {
+                        cursor.moveToFirst();
+                        while (cursor.moveToNext()) {
+                            data.add(cursor.getBlob(cursor.getColumnIndex(COLUMN_CHUNKED_VALUE)));
+                        }
                     }
                 } finally {
                     cursor.close();
@@ -141,7 +152,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements IStorage {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (DB_VERSION != newVersion) {
+        if (databaseVersion != newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CHUNKED);
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_CACHE);
             onCreate(db);

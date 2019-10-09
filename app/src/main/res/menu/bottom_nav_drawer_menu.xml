@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/nav1"
-            android:icon="@android:drawable/ic_menu_myplaces"
-            android:title="@string/traffic" />
+            android:id="@+id/enable_traffic"
+            android:icon="@drawable/outline_traffic_white_24dp"
+            android:title="@string/traffic"
+            app:actionLayout="@layout/checked_menu_item"
+            app:showAsAction="always" />
         <item
-            android:id="@+id/nav2"
-            android:icon="@android:drawable/ic_dialog_map"
-            android:title="@string/satellite" />
+            android:id="@+id/enable_night_mode"
+            android:icon="@drawable/outline_brightness_medium_white_24dp"
+            android:title="@string/night_mode"
+            app:actionLayout="@layout/checked_menu_item"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/rate_us"
+            android:icon="@drawable/outline_stars_white_24dp"
+            android:title="@string/rate_us" />
+
+        <item
+            android:id="@+id/share"
+            android:icon="@drawable/outline_share_white_24dp"
+            android:title="@string/share_us" />
     </group>
 </menu>

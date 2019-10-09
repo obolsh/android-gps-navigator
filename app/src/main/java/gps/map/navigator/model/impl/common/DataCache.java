@@ -3,24 +3,27 @@ package gps.map.navigator.model.impl.common;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.content.Context;
-import gps.map.navigator.common.cache.DatabaseStorage;
-import gps.map.navigator.common.cache.IStorage;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import gps.map.navigator.common.cache.Storage;
 import gps.map.navigator.common.utils.SerializationUtils;
 import gps.map.navigator.model.impl.data.MapPlace;
-import gps.map.navigator.model.impl.data.MapSetting;
+import gps.map.navigator.model.impl.data.MapSettingImpl;
 import gps.map.navigator.model.impl.data.Route;
-import gps.map.navigator.model.interfaces.ICache;
+import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
-import gps.map.navigator.model.interfaces.IMapSetting;
+import gps.map.navigator.model.interfaces.MapSetting;
 import gps.map.navigator.model.interfaces.IRoute;
 
-public class DataCache implements ICache {
+public class DataCache implements Cache {
 
     private SerializationUtils<MapPlace> placeSerializationUtils;
     private SerializationUtils<Route> routeSerializationUtils;
-    private SerializationUtils<MapSetting> mapSettingSerializationUtils;
-    private IStorage storage;
+    private SerializationUtils<MapSettingImpl> mapSettingSerializationUtils;
+    @Inject
+    public Storage storage;
 
     private final String KEY_MY_LOCATION = "key_my_location";
     private final String KEY_LAST_ORIGIN = "key_last_origin";
@@ -29,11 +32,11 @@ public class DataCache implements ICache {
     private final String KEY_LAST_ROUTE = "key_last_route";
     private final String KEY_MAP_SETTINGS = "key_map_settings";
 
-    public DataCache(Context context) {
+    @Inject
+    public DataCache() {
         placeSerializationUtils = new SerializationUtils<>();
         routeSerializationUtils = new SerializationUtils<>();
         mapSettingSerializationUtils = new SerializationUtils<>();
-        storage = new DatabaseStorage(context);
     }
 
     @Override
@@ -118,14 +121,14 @@ public class DataCache implements ICache {
     }
 
     @Override
-    public IMapSetting getMapSettings() {
+    public MapSetting getMapSettings() {
         byte[] data = getRawData(KEY_MAP_SETTINGS);
         return mapSettingSerializationUtils.deserialize(data);
     }
 
     @Override
-    public void setMapSettings(IMapSetting mapSettings) {
-        byte[] data = mapSettingSerializationUtils.serialize((MapSetting) mapSettings);
+    public void setMapSettings(MapSetting mapSettings) {
+        byte[] data = mapSettingSerializationUtils.serialize((MapSettingImpl) mapSettings);
         setRawData(KEY_MAP_SETTINGS, data);
     }
 

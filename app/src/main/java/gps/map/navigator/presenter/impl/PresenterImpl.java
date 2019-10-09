@@ -1,25 +1,31 @@
 package gps.map.navigator.presenter.impl;
 
+import javax.inject.Inject;
+
 import gps.map.navigator.model.MapType;
-import gps.map.navigator.model.impl.data.MapSetting;
-import gps.map.navigator.model.interfaces.ICache;
+import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
-import gps.map.navigator.model.interfaces.IMapSdk;
-import gps.map.navigator.model.interfaces.IMapSetting;
+import gps.map.navigator.model.interfaces.MapSdk;
+import gps.map.navigator.model.interfaces.MapSetting;
 import gps.map.navigator.model.interfaces.IRoute;
-import gps.map.navigator.model.strategy.CacheStrategy;
-import gps.map.navigator.model.strategy.MapStrategy;
-import gps.map.navigator.presenter.interfaces.IPresenter;
+import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
-public class PresenterImpl implements IPresenter {
+public class PresenterImpl implements Presenter {
+    @Inject
+    MapSdk mapSdk;
+    @Inject
+    Cache cache;
+    @Inject
+    MapSetting mapSetting;
 
-    private static IMapSdk mapSdk = MapStrategy.getInstance();
-    private static ICache cache = CacheStrategy.getInstance();
+    @Inject
+    public PresenterImpl() {
+    }
 
     @Override
     public void showMeOnMap(final IPlaceListener placeListener) {
@@ -48,7 +54,7 @@ public class PresenterImpl implements IPresenter {
 
     @Override
     public void enableTraffic(boolean enable) {
-        IMapSetting mapSetting = getMapSettings();
+        MapSetting mapSetting = getMapSettings();
         boolean isDay = isDay(mapSetting);
         if (enable) {
             mapSetting.setMapType(isDay ? MapType.TRAFFIC_DAY : MapType.TRAFFIC_NIGHT);
@@ -60,11 +66,11 @@ public class PresenterImpl implements IPresenter {
         saveNewMapSettings(mapSetting);
     }
 
-    private IMapSetting getMapSettings() {
+    private MapSetting getMapSettings() {
         if (hasCachedMapSettings()) {
             return cache.getMapSettings();
         } else {
-            return getDefaultMapSettings();
+            return mapSetting;
         }
     }
 
@@ -72,21 +78,14 @@ public class PresenterImpl implements IPresenter {
         return cache != null && cache.getMapSettings() != null;
     }
 
-    private IMapSetting getDefaultMapSettings() {
-        MapSetting setting = new MapSetting();
-        setting.setId("default_id");
-        setting.setMapType(MapType.NORMAL_DAY);
-        return setting;
-    }
-
-    private boolean isDay(IMapSetting mapSetting) {
+    private boolean isDay(MapSetting mapSetting) {
         int mapType = mapSetting.getMapType();
         return mapType == MapType.NORMAL_DAY
                 || mapType == MapType.TRAFFIC_DAY
                 || mapType == MapType.SATELLITE_DAY;
     }
 
-    private void saveNewMapSettings(IMapSetting mapSetting) {
+    private void saveNewMapSettings(MapSetting mapSetting) {
         if (mapSdk != null && mapSetting != null) {
             mapSdk.setMapSettings(mapSetting);
         }
@@ -98,7 +97,7 @@ public class PresenterImpl implements IPresenter {
 
     @Override
     public void enableNightMode(boolean enable) {
-        IMapSetting mapSetting = getMapSettings();
+        MapSetting mapSetting = getMapSettings();
         boolean isDefaultMap = isDefaultMap(mapSetting);
         boolean isTrafficMap = isTrafficMap(mapSetting);
         if (enable) {
@@ -113,13 +112,13 @@ public class PresenterImpl implements IPresenter {
         saveNewMapSettings(mapSetting);
     }
 
-    private boolean isDefaultMap(IMapSetting mapSetting) {
+    private boolean isDefaultMap(MapSetting mapSetting) {
         int mapType = mapSetting.getMapType();
         return mapType == MapType.NORMAL_DAY
                 || mapType == MapType.NORMAL_NIGHT;
     }
 
-    private boolean isTrafficMap(IMapSetting mapSetting) {
+    private boolean isTrafficMap(MapSetting mapSetting) {
         int mapType = mapSetting.getMapType();
         return mapType == MapType.TRAFFIC_DAY
                 || mapType == MapType.TRAFFIC_NIGHT;

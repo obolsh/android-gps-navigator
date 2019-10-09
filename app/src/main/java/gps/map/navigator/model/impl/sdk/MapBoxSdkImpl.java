@@ -1,15 +1,23 @@
 package gps.map.navigator.model.impl.sdk;
 
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import gps.map.navigator.model.interfaces.IMapPlace;
-import gps.map.navigator.model.interfaces.IMapSdk;
-import gps.map.navigator.model.interfaces.IMapSetting;
+import gps.map.navigator.model.interfaces.MapSdk;
+import gps.map.navigator.model.interfaces.MapSetting;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
-public class MapBoxSdkImpl implements IMapSdk {
+public class MapBoxSdkImpl implements MapSdk {
+
+    @Inject
+    public MapBoxSdkImpl() {
+    }
 
     @Override
     public void showMeOnMap(IPlaceListener placeListener) {
@@ -17,7 +25,7 @@ public class MapBoxSdkImpl implements IMapSdk {
     }
 
     @Override
-    public void setMapSettings(IMapSetting mapSettings) {
+    public void setMapSettings(MapSetting mapSettings) {
 
     }
 

@@ -2,7 +2,7 @@ package gps.map.navigator.common.cache;
 
 import java.util.List;
 
-public interface IStorage {
+public interface Storage {
 
     boolean hasData(String key, boolean defaultValue);
 

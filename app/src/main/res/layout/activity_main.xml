@@ -4,7 +4,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Other components and views -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerVertical="false"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="120dp"
+        android:clickable="false"
+        app:layout_anchor="@+id/container"
+        app:layout_anchorGravity="end|bottom"
+        app:srcCompat="@drawable/outline_gps_fixed_white_24dp" />
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottom_app_bar"
@@ -14,14 +31,14 @@
         android:layout_gravity="bottom"
         app:backgroundTint="@color/colorPrimary"
         app:fabAlignmentMode="center"
-        app:navigationIcon="@android:drawable/ic_menu_sort_by_size" />
+        app:navigationIcon="@drawable/baseline_menu_white_24dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@android:drawable/ic_menu_directions"
+        android:src="@drawable/outline_directions_white_24dp"
         app:layout_anchor="@id/bottom_app_bar"
-        app:maxImageSize="46dp" />
+        app:maxImageSize="32dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

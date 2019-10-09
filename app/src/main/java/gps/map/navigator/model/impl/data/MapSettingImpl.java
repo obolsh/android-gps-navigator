@@ -1,20 +1,18 @@
 package gps.map.navigator.model.impl.data;
 
+import javax.inject.Inject;
+
 import gps.map.navigator.model.MapType;
-import gps.map.navigator.model.interfaces.IMapSetting;
+import gps.map.navigator.model.interfaces.MapSetting;
 
-public class MapSetting implements IMapSetting {
+public class MapSettingImpl implements MapSetting {
 
-    private String id = "default_id";
+    private String id;
     private int mapType;
 
-    public MapSetting() {
-    }
-
-    public MapSetting(String id, int mapType) {
+    @Inject
+    public MapSettingImpl() {
         super();
-        this.id = id;
-        this.mapType = mapType;
     }
 
     @Override
@@ -40,7 +38,7 @@ public class MapSetting implements IMapSetting {
 
     @Override
     public String toString() {
-        return "MapSetting{" +
+        return "MapSettingImpl{" +
                 "id='" + id + '\'' +
                 ", mapType=" + mapType +
                 '}';

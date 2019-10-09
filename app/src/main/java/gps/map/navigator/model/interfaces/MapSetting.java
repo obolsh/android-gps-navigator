@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import gps.map.navigator.model.MapType;
 
-public interface IMapSetting extends Serializable {
+public interface MapSetting extends Serializable {
 
     void setId(String id);
 
