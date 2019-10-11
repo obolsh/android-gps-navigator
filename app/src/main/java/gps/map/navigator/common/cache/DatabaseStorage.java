@@ -14,16 +14,17 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import gps.map.navigator.common.Constants;
+import gps.map.navigator.common.debug.Logger;
 
 public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
+
+    private Integer databaseVersion;
 
     private static final String TABLE_CHUNKED = "table_chunked";
     private static final String TABLE_CACHE = "table_cache";
     private static final String COLUMN_CACHE_KEY = "cache_key";
     private static final String COLUMN_CACHE_VALUE = "cache_value";
     private static final String COLUMN_CHUNKED_VALUE = "chunked_value";
-    private Integer databaseVersion;
-
 
     private static final String SQL_CREATE_CACHE_TABLE = "create table " + TABLE_CACHE +
             " (_id integer primary key autoincrement," +
@@ -49,6 +50,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             result = result && cursor.moveToFirst() && cursor.getCount() > 0;
             return result;
         } catch (Throwable t) {
+            Logger.error(t);
             return defaultValue;
         } finally {
             if (cursor != null) {
@@ -75,6 +77,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             getWritableDatabase().insert(TABLE_CACHE, null, cv);
             return true;
         } catch (Throwable t) {
+            Logger.error(t);
             return false;
         }
     }
@@ -89,7 +92,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
                 return cursor.getBlob(cursor.getColumnIndex(COLUMN_CACHE_VALUE));
             }
         } catch (Throwable t) {
-            t.printStackTrace();
+            Logger.error(t);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -111,6 +114,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             }
             return true;
         } catch (Throwable t) {
+            Logger.error(t);
             return false;
         }
     }
@@ -134,7 +138,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
                 }
             }
         } catch (Throwable t) {
-            t.printStackTrace();
+            Logger.error(t);
         }
         return data;
     }

@@ -4,10 +4,14 @@ import javax.inject.Inject;
 
 import gps.map.navigator.model.MapType;
 import gps.map.navigator.model.interfaces.Cache;
-import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.MapSdk;
 import gps.map.navigator.model.interfaces.MapSetting;
 import gps.map.navigator.model.interfaces.IRoute;
+import gps.map.navigator.presenter.impl.listener.FindAndShowListener;
+import gps.map.navigator.presenter.impl.listener.FindPlaceListener;
+import gps.map.navigator.presenter.impl.listener.NavigateListener;
+import gps.map.navigator.presenter.impl.listener.ShowMeOnMapListener;
+import gps.map.navigator.presenter.impl.listener.ShowRouteListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.interfaces.IPlaceListener;
@@ -24,31 +28,13 @@ public class PresenterImpl implements Presenter {
     MapSetting mapSetting;
 
     @Inject
-    public PresenterImpl() {
+    PresenterImpl() {
     }
 
     @Override
-    public void showMeOnMap(final IPlaceListener placeListener) {
+    public void showMeOnMap(IPlaceListener placeListener) {
         if (mapSdk != null) {
-            mapSdk.showMeOnMap(new IPlaceListener() {
-                @Override
-                public void onPlaceLocated(IMapPlace place) {
-                    if (cache != null) {
-                        cache.setMyLocation(place);
-                    }
-                    if (placeListener != null) {
-                        placeListener.onPlaceLocated(place);
-                    }
-                }
-
-                @Override
-                public void onPlaceLocationFailed(Exception reason) {
-                    if (placeListener != null) {
-                        placeListener.onPlaceLocationFailed(reason);
-                    }
-                }
-
-            });
+            mapSdk.showMeOnMap(new ShowMeOnMapListener(cache, placeListener));
         }
     }
 
@@ -125,102 +111,30 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void findAndShowPlace(final IPlaceShowListener placeShowListener) {
+    public void findAndShowPlace(IPlaceShowListener placeShowListener) {
         if (mapSdk != null) {
-            mapSdk.findPlace(new IPlaceListener() {
-                @Override
-                public void onPlaceLocated(IMapPlace place) {
-                    if (cache != null) {
-                        cache.setLastPlace(place);
-                    }
-                    if (mapSdk != null) {
-                        mapSdk.showPlace(place, placeShowListener);
-                    }
-                }
-
-                @Override
-                public void onPlaceLocationFailed(Exception reason) {
-                    if (placeShowListener != null) {
-                        placeShowListener.onPlaceShowFailed(reason);
-                    }
-                }
-            });
+            mapSdk.findPlace(new FindAndShowListener(mapSdk, cache, placeShowListener));
         }
     }
 
     @Override
-    public void showRoute(IRoute route, final IRouteReadyListener routeReadyListener) {
+    public void showRoute(IRoute route, IRouteReadyListener routeReadyListener) {
         if (mapSdk != null) {
-            mapSdk.showRoute(route, new IRouteReadyListener() {
-                @Override
-                public void onRouteReady(IRoute route) {
-                    if (cache != null) {
-                        cache.setLastRoute(route);
-                    }
-                    if (routeReadyListener != null) {
-                        routeReadyListener.onRouteReady(route);
-                    }
-                }
-
-                @Override
-                public void onRouteFailed(Exception reason) {
-                    if (routeReadyListener != null) {
-                        routeReadyListener.onRouteFailed(reason);
-                    }
-                }
-            });
+            mapSdk.showRoute(route, new ShowRouteListener(cache, routeReadyListener));
         }
     }
 
     @Override
-    public void findPlace(final IPlaceListener placeListener) {
+    public void findPlace(IPlaceListener placeListener) {
         if (mapSdk != null) {
-            mapSdk.findPlace(new IPlaceListener() {
-                @Override
-                public void onPlaceLocated(IMapPlace place) {
-                    if (cache != null) {
-                        cache.setLastPlace(place);
-                    }
-                    if (placeListener != null) {
-                        placeListener.onPlaceLocated(place);
-                    }
-                }
-
-                @Override
-                public void onPlaceLocationFailed(Exception reason) {
-                    if (placeListener != null) {
-                        placeListener.onPlaceLocationFailed(reason);
-                    }
-                }
-            });
+            mapSdk.findPlace(new FindPlaceListener(cache, placeListener));
         }
     }
 
     @Override
-    public void navigate(IRoute route, final IRouteListener routeListener) {
+    public void navigate(IRoute route, IRouteListener routeListener) {
         if (mapSdk != null) {
-            mapSdk.navigate(route, new IRouteListener() {
-                @Override
-                public void onRouteStarted(IRoute route) {
-                    if (routeListener != null) {
-                        routeListener.onRouteStarted(route);
-                    }
-                }
-
-                @Override
-                public void onRouteStopped(IRoute route) {
-                    if (routeListener != null) {
-                        routeListener.onRouteStopped(route);
-                    }
-                }
-
-                @Override
-                public void onRouteError(IRoute route, Exception reason) {
-                    if (routeListener != null) {
-                        routeListener.onRouteError(route, reason);
-                    }
-                }
-            });
+            mapSdk.navigate(route, new NavigateListener(routeListener));
         }
     }
 

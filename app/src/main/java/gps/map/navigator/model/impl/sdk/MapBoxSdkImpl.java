@@ -2,7 +2,6 @@ package gps.map.navigator.model.impl.sdk;
 
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.MapSdk;

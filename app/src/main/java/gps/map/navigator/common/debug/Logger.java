@@ -18,6 +18,10 @@ public class Logger {
         printInLogcat(message, true);
     }
 
+    public static void error(Throwable throwable) {
+        Log.e(TAG, "", throwable);
+    }
+
     private static void printInLogcat(String message, boolean isError) {
         int maxLogSize = 2000;
         String text;

@@ -15,6 +15,8 @@ import gps.map.navigator.model.interfaces.MapSdk;
 import gps.map.navigator.model.interfaces.MapSetting;
 import gps.map.navigator.presenter.impl.PresenterImpl;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.interfaces.IViewInteraction;
+import gps.map.navigator.view.viewmodel.ViewInteractionImpl;
 
 @Module
 public class CoreModule {
@@ -54,5 +56,10 @@ public class CoreModule {
     @Provides
     Presenter providePresenter(PresenterImpl presenter) {
         return presenter;
+    }
+
+    @Provides
+    IViewInteraction provideIViewInteraction(ViewInteractionImpl interaction) {
+        return interaction;
     }
 }

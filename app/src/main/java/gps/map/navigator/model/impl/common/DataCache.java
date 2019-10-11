@@ -19,11 +19,12 @@ import gps.map.navigator.model.interfaces.IRoute;
 
 public class DataCache implements Cache {
 
+    @Inject
+    public Storage storage;
+
     private SerializationUtils<MapPlace> placeSerializationUtils;
     private SerializationUtils<Route> routeSerializationUtils;
     private SerializationUtils<MapSettingImpl> mapSettingSerializationUtils;
-    @Inject
-    public Storage storage;
 
     private final String KEY_MY_LOCATION = "key_my_location";
     private final String KEY_LAST_ORIGIN = "key_last_origin";

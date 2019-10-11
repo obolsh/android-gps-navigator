@@ -13,16 +13,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.navigation.NavigationView;
 
 import gps.map.navigator.R;
-import gps.map.navigator.view.interfaces.IViewInteraction;
 
 public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
 
     private NavigationView navigationView;
-    private IViewInteraction viewInteraction;
+//    private IViewInteraction viewInteraction;
 
-    public BottomNavigationDrawerFragment(IViewInteraction viewInteraction) {
-        this.viewInteraction = viewInteraction;
-    }
+//    public BottomNavigationDrawerFragment(IViewInteraction viewInteraction) {
+//        this.viewInteraction = viewInteraction;
+//    }
 
     @Nullable
     @Override
@@ -43,10 +42,10 @@ public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.enable_traffic:
-                        viewInteraction.enableTrafficMode(true);
+//                        viewInteraction.enableTrafficMode(true);
                         break;
                     case R.id.enable_night_mode:
-                        viewInteraction.enableNightMode(true);
+//                        viewInteraction.enableNightMode(true);
                         break;
 
                     default:
