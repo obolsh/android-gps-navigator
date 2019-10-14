@@ -53,4 +53,7 @@ ext {
     junitLibraryVersion = '4.12'
     espressoLibraryVersion = '3.1.0'
     runnerVersion = '1.1.0'
+    robolectricLibraryVersion = '4.3'
+    mockitoVersion = '1.10.19'
+    androidTestVersion = '1.2.0'
 }
