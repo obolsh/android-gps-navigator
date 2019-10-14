@@ -129,8 +129,9 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
                 try {
                     if (cursor.getCount() > 0) {
                         cursor.moveToFirst();
+                        data.add(getRawChunckedData(cursor));
                         while (cursor.moveToNext()) {
-                            data.add(cursor.getBlob(cursor.getColumnIndex(COLUMN_CHUNKED_VALUE)));
+                            data.add(getRawChunckedData(cursor));
                         }
                     }
                 } finally {
@@ -141,6 +142,10 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             Logger.error(t);
         }
         return data;
+    }
+
+    private byte[] getRawChunckedData(Cursor cursor) {
+        return cursor.getBlob(cursor.getColumnIndex(COLUMN_CHUNKED_VALUE));
     }
 
     @Override
