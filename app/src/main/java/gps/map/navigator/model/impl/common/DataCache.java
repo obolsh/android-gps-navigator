@@ -3,15 +3,10 @@ package gps.map.navigator.model.impl.common;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import gps.map.navigator.common.cache.Storage;
 import gps.map.navigator.common.utils.SerializationUtils;
-import gps.map.navigator.model.impl.data.MapPlace;
-import gps.map.navigator.model.impl.data.MapSettingImpl;
-import gps.map.navigator.model.impl.data.Route;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.MapSetting;
@@ -22,16 +17,16 @@ public class DataCache implements Cache {
     @Inject
     public Storage storage;
 
-    private SerializationUtils<MapPlace> placeSerializationUtils;
-    private SerializationUtils<Route> routeSerializationUtils;
-    private SerializationUtils<MapSettingImpl> mapSettingSerializationUtils;
+    private SerializationUtils<IMapPlace> placeSerializationUtils;
+    private SerializationUtils<IRoute> routeSerializationUtils;
+    private SerializationUtils<MapSetting> mapSettingSerializationUtils;
 
-    private final String KEY_MY_LOCATION = "key_my_location";
-    private final String KEY_LAST_ORIGIN = "key_last_origin";
-    private final String KEY_LAST_PLACE = "key_last_place";
-    private final String KEY_LAST_DESTINATION = "key_last_destination";
-    private final String KEY_LAST_ROUTE = "key_last_route";
-    private final String KEY_MAP_SETTINGS = "key_map_settings";
+    static final String KEY_MY_LOCATION = "key_my_location";
+    static final String KEY_LAST_ORIGIN = "key_last_origin";
+    static final String KEY_LAST_PLACE = "key_last_place";
+    static final String KEY_LAST_DESTINATION = "key_last_destination";
+    static final String KEY_LAST_ROUTE = "key_last_route";
+    static final String KEY_MAP_SETTINGS = "key_map_settings";
 
     @Inject
     public DataCache() {
@@ -43,20 +38,27 @@ public class DataCache implements Cache {
     @Override
     public List<IMapPlace> getHistoryPlaces() {
         List<byte[]> arrays = storage.getChunkedData();
-        List<IMapPlace> output = new ArrayList<>(arrays.size());
-        for (int i = 0; i < arrays.size(); i++) {
-            output.add(placeSerializationUtils.deserialize(arrays.get(i)));
+        if (arrays != null) {
+            int cacheSize = arrays.size();
+            List<IMapPlace> output = new ArrayList<>(cacheSize);
+            for (int i = 0; i < cacheSize; i++) {
+                output.add(placeSerializationUtils.deserialize(arrays.get(i)));
+            }
+            return output;
+        } else {
+            return new ArrayList<>();
         }
-        return output;
     }
 
     @Override
     public void setHistoryPlaces(List<IMapPlace> historyPlaces) {
-        List<byte[]> arrays = new ArrayList<>();
-        for (int i = 0; i < historyPlaces.size(); i++) {
-            arrays.add(placeSerializationUtils.serialize((MapPlace) historyPlaces.get(i)));
+        if (historyPlaces != null) {
+            List<byte[]> arrays = new ArrayList<>();
+            for (int i = 0; i < historyPlaces.size(); i++) {
+                arrays.add(placeSerializationUtils.serialize(historyPlaces.get(i)));
+            }
+            storage.saveChunkedData(arrays);
         }
-        storage.saveChunkedData(arrays);
     }
 
     @Override
@@ -65,18 +67,28 @@ public class DataCache implements Cache {
     }
 
     private IMapPlace getPlace(String key) {
-        byte[] data = getRawData(key);
-        return placeSerializationUtils.deserialize(data);
+        if (key != null && !key.isEmpty()) {
+            byte[] data = getRawData(key);
+            return placeSerializationUtils.deserialize(data);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void setMyLocation(IMapPlace myLocation) {
-        savePlace(myLocation, KEY_MY_LOCATION);
+        if (myLocation != null) {
+            savePlace(myLocation, KEY_MY_LOCATION);
+        }
     }
 
     private void savePlace(IMapPlace place, String key) {
-        byte[] data = placeSerializationUtils.serialize((MapPlace) place);
-        setRawData(key, data);
+        if (place != null && key != null && !key.isEmpty()) {
+            byte[] data = placeSerializationUtils.serialize(place);
+            if (data != null) {
+                setRawData(key, data);
+            }
+        }
     }
 
     @Override
@@ -86,7 +98,9 @@ public class DataCache implements Cache {
 
     @Override
     public void setLastOrigin(IMapPlace lastOrigin) {
-        savePlace(lastOrigin, KEY_LAST_ORIGIN);
+        if (lastOrigin != null) {
+            savePlace(lastOrigin, KEY_LAST_ORIGIN);
+        }
     }
 
     @Override
@@ -96,19 +110,29 @@ public class DataCache implements Cache {
 
     @Override
     public void setLastDestination(IMapPlace lastDestination) {
-        savePlace(lastDestination, KEY_LAST_DESTINATION);
+        if (lastDestination != null) {
+            savePlace(lastDestination, KEY_LAST_DESTINATION);
+        }
     }
 
     @Override
     public IRoute getLastRoute() {
         byte[] data = getRawData(KEY_LAST_ROUTE);
-        return routeSerializationUtils.deserialize(data);
+        if (data != null) {
+            return routeSerializationUtils.deserialize(data);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void setLastRoute(IRoute lastRoute) {
-        byte[] data = routeSerializationUtils.serialize((Route) lastRoute);
-        setRawData(KEY_LAST_ROUTE, data);
+        if (lastRoute != null) {
+            byte[] data = routeSerializationUtils.serialize(lastRoute);
+            if (data != null) {
+                setRawData(KEY_LAST_ROUTE, data);
+            }
+        }
     }
 
     @Override
@@ -118,28 +142,44 @@ public class DataCache implements Cache {
 
     @Override
     public void setLastPlace(IMapPlace lastPlace) {
-        savePlace(lastPlace, KEY_LAST_PLACE);
+        if (lastPlace != null) {
+            savePlace(lastPlace, KEY_LAST_PLACE);
+        }
     }
 
     @Override
     public MapSetting getMapSettings() {
         byte[] data = getRawData(KEY_MAP_SETTINGS);
-        return mapSettingSerializationUtils.deserialize(data);
+        if (data != null) {
+            return mapSettingSerializationUtils.deserialize(data);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void setMapSettings(MapSetting mapSettings) {
-        byte[] data = mapSettingSerializationUtils.serialize((MapSettingImpl) mapSettings);
-        setRawData(KEY_MAP_SETTINGS, data);
+        if (mapSettings != null) {
+            byte[] data = mapSettingSerializationUtils.serialize(mapSettings);
+            if (data != null) {
+                setRawData(KEY_MAP_SETTINGS, data);
+            }
+        }
     }
 
     @Override
     public byte[] getRawData(String key) {
-        return storage.getData(key, null);
+        if (key != null && !key.isEmpty()) {
+            return storage.getData(key, null);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void setRawData(String key, byte[] rawData) {
-        storage.saveData(key, rawData);
+        if (key != null && !key.isEmpty()) {
+            storage.saveData(key, rawData);
+        }
     }
 }
