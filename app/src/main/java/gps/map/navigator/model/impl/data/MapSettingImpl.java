@@ -15,6 +15,11 @@ public class MapSettingImpl implements MapSetting {
         super();
     }
 
+    public MapSettingImpl(String id, int mapType) {
+        this.id = id;
+        this.mapType = mapType;
+    }
+
     @Override
     public String getId() {
         return id;
