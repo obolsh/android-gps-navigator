@@ -24,14 +24,7 @@ public class MapTypeController implements IMapTypeController {
     @Override
     public void enableTraffic(boolean enable) {
         MapSetting mapSetting = getMapSettings();
-        boolean isDay = isDay(mapSetting);
-        if (enable) {
-            mapSetting.setMapType(isDay ? MapType.TRAFFIC_DAY : MapType.TRAFFIC_NIGHT);
-        } else if (isDefaultMap(mapSetting)) {
-            mapSetting.setMapType(isDay ? MapType.NORMAL_DAY : MapType.NORMAL_NIGHT);
-        } else {
-            mapSetting.setMapType(isDay ? MapType.SATELLITE_DAY : MapType.SATELLITE_NIGHT);
-        }
+        mapSetting.setMapType(getMapTypeForTraffic(mapSetting, enable));
         saveNewMapSettings(mapSetting);
     }
 
@@ -44,53 +37,114 @@ public class MapTypeController implements IMapTypeController {
     }
 
     private boolean hasCachedMapSettings() {
-        return cache != null && cache.getMapSettings() != null;
+        return cache.getMapSettings() != null;
+    }
+
+    private int getMapTypeForTraffic(MapSetting mapSetting, boolean enable) {
+        boolean isDay = isDay(mapSetting);
+        boolean isSateliteMap = isSateliteMap(mapSetting);
+        if (enable) {
+            if (isSateliteMap) {
+                return isDay ? MapType.SATELLITE_TRAFFIC_DAY : MapType.SATELLITE_TRAFFIC_NIGHT;
+            } else {
+                return isDay ? MapType.NORMAL_TRAFFIC_DAY : MapType.NORMAL_TRAFFIC_NIGHT;
+            }
+        } else {
+            if (isSateliteMap) {
+                return isDay ? MapType.SATELLITE_DAY : MapType.SATELLITE_NIGHT;
+            } else {
+                return isDay ? MapType.NORMAL_DAY : MapType.NORMAL_NIGHT;
+            }
+        }
     }
 
     private boolean isDay(MapSetting mapSetting) {
-        int mapType = mapSetting.getMapType();
+        return hasDayStamp(mapSetting.getMapType());
+    }
+
+    private boolean hasDayStamp(int mapType) {
         return mapType == MapType.NORMAL_DAY
-                || mapType == MapType.TRAFFIC_DAY
-                || mapType == MapType.SATELLITE_DAY;
+                || mapType == MapType.NORMAL_TRAFFIC_DAY
+                || mapType == MapType.SATELLITE_DAY
+                || mapType == MapType.SATELLITE_TRAFFIC_DAY;
+    }
+
+    private boolean isSateliteMap(MapSetting mapSetting) {
+        return hasSateliteStamp(mapSetting.getMapType());
+    }
+
+    private boolean hasSateliteStamp(int mapType) {
+        return mapType == MapType.SATELLITE_DAY
+                || mapType == MapType.SATELLITE_NIGHT
+                || mapType == MapType.SATELLITE_TRAFFIC_DAY
+                || mapType == MapType.SATELLITE_TRAFFIC_NIGHT;
     }
 
     private void saveNewMapSettings(MapSetting mapSetting) {
-        if (mapSdk != null && mapSetting != null) {
+        if (mapSetting != null) {
             mapSdk.setMapSettings(mapSetting);
-        }
-
-        if (cache != null && mapSetting != null) {
             cache.setMapSettings(mapSetting);
         }
     }
 
-    private boolean isDefaultMap(MapSetting mapSetting) {
-        int mapType = mapSetting.getMapType();
-        return mapType == MapType.NORMAL_DAY
-                || mapType == MapType.NORMAL_NIGHT;
+    @Override
+    public void enableSatelite(boolean enable) {
+        MapSetting mapSetting = getMapSettings();
+        mapSetting.setMapType(getMapTypeForSatelite(mapSetting, enable));
+        saveNewMapSettings(mapSetting);
+    }
+
+    private int getMapTypeForSatelite(MapSetting mapSetting, boolean enable) {
+        boolean isDay = isDay(mapSetting);
+        boolean isTrafficMap = isTrafficMap(mapSetting);
+        if (enable) {
+            if (isTrafficMap) {
+                return isDay ? MapType.SATELLITE_TRAFFIC_DAY : MapType.SATELLITE_TRAFFIC_NIGHT;
+            } else {
+                return isDay ? MapType.SATELLITE_DAY : MapType.SATELLITE_NIGHT;
+            }
+        } else {
+            if (isTrafficMap) {
+                return isDay ? MapType.NORMAL_TRAFFIC_DAY : MapType.NORMAL_TRAFFIC_NIGHT;
+            } else {
+                return isDay ? MapType.NORMAL_DAY : MapType.NORMAL_NIGHT;
+            }
+        }
+    }
+
+    private boolean isTrafficMap(MapSetting mapSetting) {
+        return hasTrafficStamp(mapSetting.getMapType());
+    }
+
+    private boolean hasTrafficStamp(int mapType) {
+        return mapType == MapType.NORMAL_TRAFFIC_DAY
+                || mapType == MapType.NORMAL_TRAFFIC_NIGHT
+                || mapType == MapType.SATELLITE_TRAFFIC_DAY
+                || mapType == MapType.SATELLITE_TRAFFIC_NIGHT;
     }
 
     @Override
     public void enableNightMode(boolean enable) {
         MapSetting mapSetting = getMapSettings();
-        boolean isDefaultMap = isDefaultMap(mapSetting);
-        boolean isTrafficMap = isTrafficMap(mapSetting);
-        if (enable) {
-            mapSetting.setMapType(
-                    isDefaultMap ? MapType.TRAFFIC_NIGHT :
-                            isTrafficMap ? MapType.TRAFFIC_NIGHT : MapType.SATELLITE_NIGHT);
-        } else {
-            mapSetting.setMapType(
-                    isDefaultMap ? MapType.TRAFFIC_DAY :
-                            isTrafficMap ? MapType.TRAFFIC_DAY : MapType.SATELLITE_DAY);
-        }
+        mapSetting.setMapType(getMapTypeForNightMode(mapSetting, enable));
         saveNewMapSettings(mapSetting);
     }
 
-
-    private boolean isTrafficMap(MapSetting mapSetting) {
-        int mapType = mapSetting.getMapType();
-        return mapType == MapType.TRAFFIC_DAY
-                || mapType == MapType.TRAFFIC_NIGHT;
+    private int getMapTypeForNightMode(MapSetting mapSetting, boolean enable) {
+        boolean isSateliteMap = isSateliteMap(mapSetting);
+        boolean isTrafficMap = isTrafficMap(mapSetting);
+        if (enable) {
+            if (isTrafficMap) {
+                return isSateliteMap ? MapType.SATELLITE_TRAFFIC_NIGHT : MapType.NORMAL_TRAFFIC_NIGHT;
+            } else {
+                return isSateliteMap ? MapType.SATELLITE_NIGHT : MapType.NORMAL_NIGHT;
+            }
+        } else {
+            if (isTrafficMap) {
+                return isSateliteMap ? MapType.SATELLITE_TRAFFIC_DAY : MapType.NORMAL_TRAFFIC_DAY;
+            } else {
+                return isSateliteMap ? MapType.SATELLITE_DAY : MapType.NORMAL_DAY;
+            }
+        }
     }
 }

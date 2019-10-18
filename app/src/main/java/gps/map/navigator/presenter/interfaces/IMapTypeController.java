@@ -4,5 +4,7 @@ public interface IMapTypeController {
 
     void enableTraffic(boolean enable);
 
+    void enableSatelite(boolean enable);
+
     void enableNightMode(boolean enable);
 }
