@@ -56,4 +56,5 @@ ext {
     robolectricLibraryVersion = '4.3'
     mockitoVersion = '1.10.19'
     androidTestVersion = '1.2.0'
+    powerMockitoVersion = '2.0.4'
 }

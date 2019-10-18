@@ -13,7 +13,9 @@ import gps.map.navigator.model.impl.sdk.MapBoxSdkImpl;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.MapSdk;
 import gps.map.navigator.model.interfaces.MapSetting;
+import gps.map.navigator.presenter.impl.MapTypeController;
 import gps.map.navigator.presenter.impl.PresenterImpl;
+import gps.map.navigator.presenter.interfaces.IMapTypeController;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IViewInteraction;
 import gps.map.navigator.view.viewmodel.ViewInteractionImpl;
@@ -62,4 +64,10 @@ public class CoreModule {
     IViewInteraction provideIViewInteraction(ViewInteractionImpl interaction) {
         return interaction;
     }
+
+    @Provides
+    IMapTypeController provideIMapTypeController(MapTypeController controller) {
+        return controller;
+    }
 }
+
