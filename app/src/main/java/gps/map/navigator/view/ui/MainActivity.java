@@ -1,6 +1,7 @@
 package gps.map.navigator.view.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -19,18 +20,21 @@ import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.view.interfaces.IViewInteraction;
 import gps.map.navigator.view.ui.fragment.BottomNavigationDrawerFragment;
 import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
+import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.controller.NaviFragmentController;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FloatingActionButton floatingActionButton;
-    private BottomAppBar bottomAppBar;
-    private FragmentManager fragmentManager;
-    private IRoute activeRoute;
-    private NaviFragmentController fragmentController;
-
+    @Inject
+    FragmentManager fragmentManager;
+    @Inject
+    IFragmentController<Fragment> fragmentController;
     @Inject
     IViewInteraction interaction;
+
+    private FloatingActionButton floatingActionButton;
+    private BottomAppBar bottomAppBar;
+    private IRoute activeRoute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +52,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         setSupportActionBar(bottomAppBar);
-        fragmentManager = getSupportFragmentManager();
-
         prepareUiForMainSceen();
 
-        fragmentController = new NaviFragmentController(fragmentManager);
     }
 
     @Override
@@ -107,9 +108,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openMenuFragment() {
-        BottomNavigationDrawerFragment bottomNavDrawerFragment =
-                new BottomNavigationDrawerFragment();
-        bottomNavDrawerFragment.show(fragmentManager, bottomNavDrawerFragment.getTag());
+        BottomNavigationDrawerFragment drawerFragment = new BottomNavigationDrawerFragment();
+        drawerFragment.show(fragmentManager, drawerFragment.getTag());
     }
 
     public void openSearchFragment() {

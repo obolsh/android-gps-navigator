@@ -17,11 +17,8 @@ import gps.map.navigator.R;
 public class BottomNavigationDrawerFragment extends BottomSheetDialogFragment {
 
     private NavigationView navigationView;
-//    private IViewInteraction viewInteraction;
-
-//    public BottomNavigationDrawerFragment(IViewInteraction viewInteraction) {
-//        this.viewInteraction = viewInteraction;
-//    }
+//    @Inject
+//    IViewInteraction viewInteraction;
 
     @Nullable
     @Override
