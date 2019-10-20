@@ -125,6 +125,18 @@ public class PresenterImplTest {
     }
 
     @Test
+    public void receive_enableSateliteMode_verify() {
+        PresenterImpl presenter = new PresenterImpl();
+        initReferences(presenter);
+
+        presenter.enableSatelliteMode(true);
+        verify(mapTypeController).enableSatellite(eq(true));
+
+        presenter.enableSatelliteMode(false);
+        verify(mapTypeController).enableSatellite(eq(false));
+    }
+
+    @Test
     public void receive_enableNightMode_verify() {
         PresenterImpl presenter = new PresenterImpl();
         initReferences(presenter);

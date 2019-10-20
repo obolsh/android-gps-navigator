@@ -252,7 +252,7 @@ public class MapTypeControllerTest {
         setReferences(controller);
         when(mapSetting.getMapType()).thenReturn(MapType.NORMAL_TRAFFIC_DAY);
 
-        controller.enableSatelite(true);
+        controller.enableSatellite(true);
 
         verify(mapSetting).setMapType(eq(MapType.SATELLITE_TRAFFIC_DAY));
         verify(cache).setMapSettings(eq(mapSetting));
@@ -265,7 +265,7 @@ public class MapTypeControllerTest {
         setReferences(controller);
         when(mapSetting.getMapType()).thenReturn(MapType.NORMAL_DAY);
 
-        controller.enableSatelite(true);
+        controller.enableSatellite(true);
 
         verify(mapSetting).setMapType(eq(MapType.SATELLITE_DAY));
         verify(cache).setMapSettings(eq(mapSetting));
@@ -278,7 +278,7 @@ public class MapTypeControllerTest {
         setReferences(controller);
         when(mapSetting.getMapType()).thenReturn(MapType.NORMAL_TRAFFIC_NIGHT);
 
-        controller.enableSatelite(true);
+        controller.enableSatellite(true);
 
         verify(mapSetting).setMapType(eq(MapType.SATELLITE_TRAFFIC_NIGHT));
         verify(cache).setMapSettings(eq(mapSetting));
@@ -291,7 +291,7 @@ public class MapTypeControllerTest {
         setReferences(controller);
         when(mapSetting.getMapType()).thenReturn(MapType.NORMAL_NIGHT);
 
-        controller.enableSatelite(true);
+        controller.enableSatellite(true);
 
         verify(mapSetting).setMapType(eq(MapType.SATELLITE_NIGHT));
         verify(cache).setMapSettings(eq(mapSetting));
@@ -304,7 +304,7 @@ public class MapTypeControllerTest {
         setReferences(controller);
         when(mapSetting.getMapType()).thenReturn(MapType.SATELLITE_TRAFFIC_DAY);
 
-        controller.enableSatelite(false);
+        controller.enableSatellite(false);
 
         verify(mapSetting).setMapType(eq(MapType.NORMAL_TRAFFIC_DAY));
         verify(cache).setMapSettings(eq(mapSetting));
@@ -317,7 +317,7 @@ public class MapTypeControllerTest {
         setReferences(controller);
         when(mapSetting.getMapType()).thenReturn(MapType.SATELLITE_DAY);
 
-        controller.enableSatelite(false);
+        controller.enableSatellite(false);
 
         verify(mapSetting).setMapType(eq(MapType.NORMAL_DAY));
         verify(cache).setMapSettings(eq(mapSetting));
@@ -330,7 +330,7 @@ public class MapTypeControllerTest {
         setReferences(controller);
         when(mapSetting.getMapType()).thenReturn(MapType.SATELLITE_TRAFFIC_NIGHT);
 
-        controller.enableSatelite(false);
+        controller.enableSatellite(false);
 
         verify(mapSetting).setMapType(eq(MapType.NORMAL_TRAFFIC_NIGHT));
         verify(cache).setMapSettings(eq(mapSetting));
@@ -343,7 +343,7 @@ public class MapTypeControllerTest {
         setReferences(controller);
         when(mapSetting.getMapType()).thenReturn(MapType.SATELLITE_NIGHT);
 
-        controller.enableSatelite(false);
+        controller.enableSatellite(false);
 
         verify(mapSetting).setMapType(eq(MapType.NORMAL_NIGHT));
         verify(cache).setMapSettings(eq(mapSetting));
