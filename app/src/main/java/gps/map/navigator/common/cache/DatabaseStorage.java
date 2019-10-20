@@ -1,10 +1,10 @@
 package gps.map.navigator.common.cache;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteStatement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,6 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
     private static final String COLUMN_CACHE_KEY = "cache_key";
     private static final String COLUMN_CACHE_VALUE = "cache_value";
     private static final String COLUMN_CHUNKED_VALUE = "chunked_value";
-
-    private static final String SQL_CREATE_CACHE_TABLE = "create table " + TABLE_CACHE +
-            " (_id integer primary key autoincrement," +
-            " " + COLUMN_CACHE_KEY + " varchar(255), " + COLUMN_CACHE_VALUE + " blob);";
-    private static final String SQL_CREATE_CHUNKED_TABLE = "create table " + TABLE_CHUNKED +
-            " (_id integer primary key autoincrement," +
-            " " + COLUMN_CHUNKED_VALUE + " blob);";
 
     @Inject
     public DatabaseStorage(@Named(Constants.ApplicationContext) Context context,
@@ -70,16 +63,31 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
 
     @Override
     public boolean saveData(String key, byte[] data) {
+        SQLiteStatement statement = null;
         try {
-            ContentValues cv = new ContentValues();
-            cv.put(COLUMN_CACHE_KEY, key);
-            cv.put(COLUMN_CACHE_VALUE, data);
-            getWritableDatabase().insert(TABLE_CACHE, null, cv);
+            statement = getWritableDatabase().compileStatement(getTableCacheInsertSql());
+            statement.bindString(1, key);
+            if (data == null) {
+                statement.bindNull(2);
+            } else {
+                statement.bindBlob(2, data);
+            }
+            statement.executeInsert();
             return true;
         } catch (Throwable t) {
             Logger.error(t);
             return false;
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
         }
+    }
+
+    private String getTableCacheInsertSql() {
+        return String.format(Locale.US,
+                "insert or replace into '%s' (%s, %s) values (?,?)",
+                TABLE_CACHE, COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE);
     }
 
     @Override
@@ -104,19 +112,34 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
 
     @Override
     public boolean saveChunkedData(List<byte[]> data) {
+        SQLiteStatement statement = null;
         try {
-            SQLiteDatabase db = getWritableDatabase();
-            ContentValues cv;
+            statement = getWritableDatabase().compileStatement(getTableChunkedInsertSql());
+            byte[] value;
             for (int i = 0; i < data.size(); i++) {
-                cv = new ContentValues();
-                cv.put(COLUMN_CHUNKED_VALUE, data.get(i));
-                db.insert(TABLE_CHUNKED, null, cv);
+                value = data.get(i);
+                if (value == null) {
+                    statement.bindNull(1);
+                } else {
+                    statement.bindBlob(1, value);
+                }
+                statement.executeInsert();
             }
             return true;
         } catch (Throwable t) {
             Logger.error(t);
             return false;
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
         }
+    }
+
+    private String getTableChunkedInsertSql() {
+        return String.format(Locale.US,
+                "insert or replace into '%s' (%s) values (?)",
+                TABLE_CHUNKED, COLUMN_CHUNKED_VALUE);
     }
 
     @Override
@@ -155,8 +178,19 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_CACHE_TABLE);
-        db.execSQL(SQL_CREATE_CHUNKED_TABLE);
+        db.execSQL(getTableCacheCreateSql());
+        db.execSQL(getTableChunkedCreateSql());
+    }
+
+    private String getTableCacheCreateSql() {
+        return String.format(Locale.US,
+                "create table if not exists '%s' (%s varchar(100) primary key unique, %s blob)",
+                TABLE_CACHE, COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE);
+    }
+
+    private String getTableChunkedCreateSql() {
+        return String.format(Locale.US, "create table if not exists '%s' (%s blob)",
+                TABLE_CHUNKED, COLUMN_CHUNKED_VALUE);
     }
 
     @Override
