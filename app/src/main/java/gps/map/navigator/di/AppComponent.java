@@ -4,10 +4,10 @@ import android.app.Application;
 
 import dagger.BindsInstance;
 import dagger.Component;
-import dagger.android.AndroidInjectionModule;
+import dagger.android.support.AndroidSupportInjectionModule;
 import gps.map.navigator.NavigatorApp;
 
-@Component(modules = {AndroidInjectionModule.class, AppModule.class, ActivityBuilder.class})
+@Component(modules = {AndroidSupportInjectionModule.class, AppModule.class, ActivityBuilder.class})
 public interface AppComponent {
 
     @Component.Builder
