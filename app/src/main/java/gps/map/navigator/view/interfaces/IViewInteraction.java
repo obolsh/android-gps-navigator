@@ -20,6 +20,14 @@ public interface IViewInteraction {
 
     void enableNightMode(boolean enable);
 
+    void enableSatelliteMode(boolean enable);
+
+    boolean hasTrafficMode();
+
+    boolean hasNightMode();
+
+    boolean hasSatelliteMode();
+
     void backToMainScreen();
 
     void backToBuildRouteScreen();

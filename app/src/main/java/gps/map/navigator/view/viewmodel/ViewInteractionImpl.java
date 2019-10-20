@@ -58,6 +58,26 @@ public class ViewInteractionImpl implements IViewInteraction {
     }
 
     @Override
+    public void enableSatelliteMode(boolean enable) {
+        presenterStrategy.enableSatelliteMode(enable);
+    }
+
+    @Override
+    public boolean hasTrafficMode() {
+        return presenterStrategy.hasTrafficMode();
+    }
+
+    @Override
+    public boolean hasNightMode() {
+        return presenterStrategy.hasNightMode();
+    }
+
+    @Override
+    public boolean hasSatelliteMode() {
+        return presenterStrategy.hasSatelliteMode();
+    }
+
+    @Override
     public void backToMainScreen() {
 
     }

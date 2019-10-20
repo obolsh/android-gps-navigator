@@ -51,6 +51,26 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
+    public void enableSatelliteMode(boolean enable) {
+        mapTypeController.enableSatellite(enable);
+    }
+
+    @Override
+    public boolean hasTrafficMode() {
+        return mapTypeController.hasTrafficMode();
+    }
+
+    @Override
+    public boolean hasNightMode() {
+        return mapTypeController.hasNightMode();
+    }
+
+    @Override
+    public boolean hasSatelliteMode() {
+        return mapTypeController.hasSatelliteMode();
+    }
+
+    @Override
     public void findAndShowPlace(IPlaceShowListener placeShowListener) {
         if (mapSdk != null && placeShowListener != null) {
             mapSdk.findPlace(new FindAndShowListener(mapSdk, cache, placeShowListener));

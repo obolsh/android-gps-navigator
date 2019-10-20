@@ -88,7 +88,7 @@ public class MapTypeController implements IMapTypeController {
     }
 
     @Override
-    public void enableSatelite(boolean enable) {
+    public void enableSatellite(boolean enable) {
         MapSetting mapSetting = getMapSettings();
         mapSetting.setMapType(getMapTypeForSatelite(mapSetting, enable));
         saveNewMapSettings(mapSetting);
@@ -128,6 +128,24 @@ public class MapTypeController implements IMapTypeController {
         MapSetting mapSetting = getMapSettings();
         mapSetting.setMapType(getMapTypeForNightMode(mapSetting, enable));
         saveNewMapSettings(mapSetting);
+    }
+
+    @Override
+    public boolean hasTrafficMode() {
+        MapSetting mapSetting = getMapSettings();
+        return isTrafficMap(mapSetting);
+    }
+
+    @Override
+    public boolean hasSatelliteMode() {
+        MapSetting mapSetting = getMapSettings();
+        return isSateliteMap(mapSetting);
+    }
+
+    @Override
+    public boolean hasNightMode() {
+        MapSetting mapSetting = getMapSettings();
+        return !isDay(mapSetting);
     }
 
     private int getMapTypeForNightMode(MapSetting mapSetting, boolean enable) {
