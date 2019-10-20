@@ -15,16 +15,20 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import gps.map.navigator.R;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.view.interfaces.IViewInteraction;
-import gps.map.navigator.view.ui.fragment.BottomNavigationDrawerFragment;
+import gps.map.navigator.view.ui.fragment.BottomDrawerFragment;
 import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
-import gps.map.navigator.view.ui.fragment.controller.NaviFragmentController;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector {
 
+    @Inject
+    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
     @Inject
     FragmentManager fragmentManager;
     @Inject
@@ -35,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private BottomAppBar bottomAppBar;
     private IRoute activeRoute;
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return fragmentDispatchingAndroidInjector;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openMenuFragment() {
-        BottomNavigationDrawerFragment drawerFragment = new BottomNavigationDrawerFragment();
+        BottomDrawerFragment drawerFragment = new BottomDrawerFragment();
         drawerFragment.show(fragmentManager, drawerFragment.getTag());
     }
 
