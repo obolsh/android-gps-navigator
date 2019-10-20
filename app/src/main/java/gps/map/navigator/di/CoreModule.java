@@ -1,6 +1,7 @@
 package gps.map.navigator.di;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -35,36 +36,43 @@ public class CoreModule {
         return 1;
     }
 
+    @Singleton
     @Provides
     Storage provideStorage(DatabaseStorage storage) {
         return storage;
     }
 
+    @Singleton
     @Provides
     MapSdk provideMapSdk(MapBoxSdkImpl mapBoxSdk) {
         return mapBoxSdk;
     }
 
+    @Singleton
     @Provides
     MapSetting provideMapSettings(MapSettingImpl mapSetting) {
         return mapSetting;
     }
 
+    @Singleton
     @Provides
     Cache provideCache(DataCache cache) {
         return cache;
     }
 
+    @Singleton
     @Provides
     Presenter providePresenter(PresenterImpl presenter) {
         return presenter;
     }
 
+    @Singleton
     @Provides
     IViewInteraction provideIViewInteraction(ViewInteractionImpl interaction) {
         return interaction;
     }
 
+    @Singleton
     @Provides
     IMapTypeController provideIMapTypeController(MapTypeController controller) {
         return controller;
