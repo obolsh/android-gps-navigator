@@ -21,7 +21,7 @@ import dagger.android.support.HasSupportFragmentInjector;
 import gps.map.navigator.R;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.view.interfaces.IViewInteraction;
-import gps.map.navigator.view.ui.fragment.BottomDrawerFragment;
+import gps.map.navigator.view.ui.fragment.BottomMenuFragment;
 import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         setContentView(R.layout.activity_main);
 
         bottomAppBar = findViewById(R.id.bottom_app_bar);
-        bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_CENTER);
+
         floatingActionButton = findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     public void openMenuFragment() {
-        BottomDrawerFragment drawerFragment = new BottomDrawerFragment();
+        BottomMenuFragment drawerFragment = new BottomMenuFragment();
         drawerFragment.show(fragmentManager, drawerFragment.getTag());
     }
 

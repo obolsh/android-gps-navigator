@@ -28,7 +28,7 @@ import gps.map.navigator.view.ui.fragment.listener.NightModeListener;
 import gps.map.navigator.view.ui.fragment.listener.SatelliteModeListener;
 import gps.map.navigator.view.ui.fragment.listener.TrafficModeListener;
 
-public class BottomDrawerFragment extends BottomSheetDialogFragment {
+public class BottomMenuFragment extends BottomSheetDialogFragment {
 
     private NavigationView navigationView;
 
