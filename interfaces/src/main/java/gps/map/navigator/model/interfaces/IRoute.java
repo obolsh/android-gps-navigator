@@ -1,6 +1,6 @@
 package gps.map.navigator.model.interfaces;
 
-import java.io.Serializable;
+        import java.io.Serializable;
 
 public interface IRoute extends Serializable {
 

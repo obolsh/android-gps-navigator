@@ -47,4 +47,5 @@ dependencies {
 
     implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+    implementation project(path: ':interfaces')
 }
