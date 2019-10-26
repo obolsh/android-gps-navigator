@@ -36,7 +36,7 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
     public boolean thisFragmentIsActive(Class cls) {
         Fragment fragment = getVisibleFragment();
         if (fragment != null) {
-            return cls.getName().equals(fragment.getClass().getName());
+            return fragment.getClass().getName().startsWith(cls.getName());
         } else {
             Logger.error("Missing active fragment");
             return false;

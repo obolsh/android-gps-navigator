@@ -1,11 +1,22 @@
 package gps.map.navigator.view.ui.fragment.controller;
 
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+
+import gps.map.navigator.view.ui.fragment.MapFragment;
+import gps.map.navigator.view.ui.fragment.NavigatorFragment;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -13,9 +24,11 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.reflect.Whitebox.getInternalState;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.reflect.Whitebox.setInternalState;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Log.class, NaviFragmentController.class, Fragment.class})
 public class NaviFragmentControllerTest {
 
     private FragmentManager fragmentManager;
@@ -25,14 +38,16 @@ public class NaviFragmentControllerTest {
 
     @Before
     public void setUp() throws Exception {
+        mockStatic(Log.class);
         fragmentManager = mock(FragmentManager.class);
         fragment = mock(IFragment.class);
         transaction = mock(FragmentTransaction.class);
-        instance = mock(Fragment.class);
+        instance = mock(MapFragment.class);
 
         when(fragmentManager.beginTransaction()).thenReturn(transaction);
         when(fragment.getInstance()).thenReturn(instance);
-        when(fragment.getFragmentTag()).thenReturn("foo");
+        when(fragment.getFragmentTag()).thenReturn(instance.getClass().getName());
+        when(fragmentManager.findFragmentById(anyInt())).thenReturn(instance);
     }
 
     private void setReferences(NaviFragmentController controller) {
@@ -43,26 +58,22 @@ public class NaviFragmentControllerTest {
     public void make_openFragment_verify() {
         NaviFragmentController controller = new NaviFragmentController();
         setReferences(controller);
+        String tag = instance.getClass().getName();
 
         controller.openFragment(fragment);
 
-        verify(transaction).add(anyInt(), eq(instance), eq("foo"));
+        verify(transaction).replace(anyInt(), eq(instance), eq(tag));
+        verify(transaction).addToBackStack(eq(tag));
         verify(transaction).commit();
-
-        assertNotNull(getInternalState(controller, "activeFragment"));
     }
 
     @Test
-    public void make_backToLastFragment_verify() {
+    public void make_thisFragmentIsActive_verify() {
         NaviFragmentController controller = new NaviFragmentController();
         setReferences(controller);
-        setInternalState(controller, "activeFragment", fragment);
 
-        controller.backToLastFragment();
+        boolean is_active = controller.thisFragmentIsActive(MapFragment.class);
 
-        verify(transaction).remove(eq(instance));
-        verify(transaction).commit();
-
-        assertNull(getInternalState(controller, "activeFragment"));
+        assertTrue(is_active);
     }
 }

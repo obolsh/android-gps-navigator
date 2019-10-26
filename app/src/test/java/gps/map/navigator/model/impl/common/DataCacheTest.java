@@ -13,6 +13,7 @@ import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.model.interfaces.MapSetting;
 
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
@@ -30,7 +31,6 @@ public class DataCacheTest {
     private IMapPlace mapPlace;
     private IRoute route;
     private MapSetting mapSetting;
-
 
     @Before
     public void setUp() throws Exception {
@@ -121,7 +121,7 @@ public class DataCacheTest {
     @Test
     public void make_getMyLocation_verify_present() {
         byte[] locationData = "goo".getBytes();
-        when(storage.getData(eq(DataCache.KEY_MY_LOCATION), any(byte[].class))).thenReturn(locationData);
+        when(storage.getData(eq(DataCache.KEY_MY_LOCATION), nullable(byte[].class))).thenReturn(locationData);
         when(placeSerializationUtils.deserialize(eq(locationData))).thenReturn(mapPlace);
         DataCache cache = getCache();
 
@@ -153,7 +153,7 @@ public class DataCacheTest {
     @Test
     public void make_getLastOrigin_verify_present() {
         byte[] locationData = "goo".getBytes();
-        when(storage.getData(eq(DataCache.KEY_LAST_ORIGIN), any(byte[].class))).thenReturn(locationData);
+        when(storage.getData(eq(DataCache.KEY_LAST_ORIGIN), nullable(byte[].class))).thenReturn(locationData);
         when(placeSerializationUtils.deserialize(eq(locationData))).thenReturn(mapPlace);
         DataCache cache = getCache();
 
@@ -185,7 +185,7 @@ public class DataCacheTest {
     @Test
     public void make_getLastDestination_verify_present() {
         byte[] locationData = "goo".getBytes();
-        when(storage.getData(eq(DataCache.KEY_LAST_DESTINATION), any(byte[].class))).thenReturn(locationData);
+        when(storage.getData(eq(DataCache.KEY_LAST_DESTINATION), nullable(byte[].class))).thenReturn(locationData);
         when(placeSerializationUtils.deserialize(eq(locationData))).thenReturn(mapPlace);
         DataCache cache = getCache();
 
@@ -249,7 +249,7 @@ public class DataCacheTest {
     @Test
     public void make_getLastPlace_verify_present() {
         byte[] locationData = "goo".getBytes();
-        when(storage.getData(eq(DataCache.KEY_LAST_PLACE), any(byte[].class))).thenReturn(locationData);
+        when(storage.getData(eq(DataCache.KEY_LAST_PLACE), nullable(byte[].class))).thenReturn(locationData);
         when(placeSerializationUtils.deserialize(eq(locationData))).thenReturn(mapPlace);
         DataCache cache = getCache();
 
@@ -281,13 +281,13 @@ public class DataCacheTest {
     @Test
     public void make_getMapSettings_verify_present() {
         byte[] settingData = "goo".getBytes();
-        when(storage.getData(eq(DataCache.KEY_MAP_SETTINGS), any(byte[].class))).thenReturn(settingData);
+        when(storage.getData(eq(DataCache.KEY_MAP_SETTINGS), nullable(byte[].class))).thenReturn(settingData);
         when(mapSettingSerializationUtils.deserialize(eq(settingData))).thenReturn(mapSetting);
         DataCache cache = getCache();
 
         MapSetting setting = cache.getMapSettings();
 
-        assertSame(setting, mapSetting);
+        assertSame(mapSetting, setting);
     }
 
     @Test
@@ -313,12 +313,12 @@ public class DataCacheTest {
     @Test
     public void make_getRawData_verify_present() {
         byte[] settingData = "goo".getBytes();
-        when(storage.getData(eq(DataCache.KEY_MAP_SETTINGS), any(byte[].class))).thenReturn(settingData);
+        when(storage.getData(eq(DataCache.KEY_MAP_SETTINGS), nullable(byte[].class))).thenReturn(settingData);
         DataCache cache = getCache();
 
         byte[] data = cache.getRawData(DataCache.KEY_MAP_SETTINGS);
 
-        assertSame(data, settingData);
+        assertSame(settingData, data);
     }
 
     @Test
