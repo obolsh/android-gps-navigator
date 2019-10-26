@@ -4,7 +4,6 @@ import android.widget.CompoundButton;
 
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.presenter.interfaces.Presenter;
-import gps.map.navigator.view.interfaces.IViewInteraction;
 
 public class SatelliteModeListener implements CompoundButton.OnCheckedChangeListener {
 

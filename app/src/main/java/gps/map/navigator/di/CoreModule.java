@@ -18,8 +18,6 @@ import gps.map.navigator.presenter.impl.MapTypeController;
 import gps.map.navigator.presenter.impl.PresenterImpl;
 import gps.map.navigator.presenter.interfaces.IMapTypeController;
 import gps.map.navigator.presenter.interfaces.Presenter;
-import gps.map.navigator.view.interfaces.IViewInteraction;
-import gps.map.navigator.view.viewmodel.ViewInteractionImpl;
 
 @Module
 public class CoreModule {
@@ -64,12 +62,6 @@ public class CoreModule {
     @Provides
     Presenter providePresenter(PresenterImpl presenter) {
         return presenter;
-    }
-
-    @Singleton
-    @Provides
-    IViewInteraction provideIViewInteraction(ViewInteractionImpl interaction) {
-        return interaction;
     }
 
     @Singleton
