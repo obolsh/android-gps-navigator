@@ -4,13 +4,13 @@ import androidx.fragment.app.Fragment;
 
 import dagger.Module;
 import dagger.Provides;
-import gps.map.navigator.view.ui.fragment.BottomMenuFragment;
+import gps.map.navigator.view.ui.fragment.FindPlaceFragment;
 
 @Module
-class BottomDrawerFragmentModule {
+public class FindPlaceFragmentModule {
 
     @Provides
-    Fragment provideFragment(BottomMenuFragment fragment) {
+    Fragment provideFragment(FindPlaceFragment fragment) {
         return fragment;
     }
 }

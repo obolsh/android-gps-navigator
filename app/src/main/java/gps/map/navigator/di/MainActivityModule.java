@@ -17,7 +17,7 @@ import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.controller.NaviFragmentController;
 
 @Module
-public class MainActivityModule {
+class MainActivityModule {
 
     @Provides
     Activity provideActivity(MainActivity mainActivity) {

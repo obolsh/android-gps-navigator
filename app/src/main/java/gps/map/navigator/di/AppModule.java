@@ -11,7 +11,7 @@ import dagger.Provides;
 import gps.map.navigator.common.Constants;
 
 @Module(includes = {CoreModule.class})
-public class AppModule {
+class AppModule {
 
     @Provides
     @Singleton
