@@ -23,6 +23,8 @@ public interface Presenter {
 
     boolean hasSatelliteMode();
 
+    void showMap();
+
     void findAndShowPlace(IPlaceShowListener placeShowListener);
 
     void showRoute(IRoute route, IRouteReadyListener routeReadyListener);
