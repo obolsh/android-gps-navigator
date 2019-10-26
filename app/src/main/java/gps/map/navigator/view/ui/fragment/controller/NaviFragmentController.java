@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import gps.map.navigator.common.Constants;
+import gps.map.navigator.common.debug.Logger;
 
 public class NaviFragmentController implements IFragmentController<Fragment> {
 
@@ -18,27 +19,31 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
     @Named(Constants.ContainerId)
     int container;
 
-    private IFragment<Fragment> activeFragment;
-
     @Inject
     NaviFragmentController() {
     }
 
     @Override
     public void openFragment(IFragment<Fragment> fragment) {
+        String tag = fragment.getFragmentTag();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(container, fragment.getInstance(), fragment.getFragmentTag());
+        transaction.replace(container, fragment.getInstance(), tag);
+        transaction.addToBackStack(tag);
         transaction.commit();
-        activeFragment = fragment;
+        Logger.debug("Open fragment: " + tag);
     }
 
-    @Override
-    public void backToLastFragment() {
-        if (activeFragment != null) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.remove(activeFragment.getInstance());
-            transaction.commit();
+    public boolean thisFragmentIsActive(Class cls) {
+        Fragment fragment = getVisibleFragment();
+        if (fragment != null) {
+            return cls.getName().equals(fragment.getClass().getName());
+        } else {
+            Logger.error("Missing active fragment");
+            return false;
         }
-        activeFragment = null;
+    }
+
+    private Fragment getVisibleFragment() {
+        return fragmentManager.findFragmentById(container);
     }
 }

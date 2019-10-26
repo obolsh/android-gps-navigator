@@ -22,7 +22,7 @@ import dagger.android.support.AndroidSupportInjection;
 import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
-import gps.map.navigator.view.interfaces.IViewInteraction;
+import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.listener.NavigationViewListener;
 import gps.map.navigator.view.ui.fragment.listener.NightModeListener;
 import gps.map.navigator.view.ui.fragment.listener.SatelliteModeListener;
@@ -36,7 +36,7 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
     @Named(Constants.ApplicationContext)
     Context context;
     @Inject
-    IViewInteraction viewInteraction;
+    Presenter presenterStrategy;
 
     @Nullable
     @Override
@@ -74,8 +74,8 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
 
     private void addNightModeListener(MenuItem menuItem) {
         SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(viewInteraction.hasNightMode());
-        actionView.setOnCheckedChangeListener(new NightModeListener(viewInteraction));
+        actionView.setChecked(presenterStrategy.hasNightMode());
+        actionView.setOnCheckedChangeListener(new NightModeListener(presenterStrategy));
     }
 
     private SwitchCompat getView(MenuItem menuItem) {
@@ -84,13 +84,13 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
 
     private void addSatelliteModeListener(MenuItem menuItem) {
         SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(viewInteraction.hasSatelliteMode());
-        actionView.setOnCheckedChangeListener(new SatelliteModeListener(viewInteraction));
+        actionView.setChecked(presenterStrategy.hasSatelliteMode());
+        actionView.setOnCheckedChangeListener(new SatelliteModeListener(presenterStrategy));
     }
 
     private void addTrafficModeListener(MenuItem menuItem) {
         SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(viewInteraction.hasTrafficMode());
-        actionView.setOnCheckedChangeListener(new TrafficModeListener(viewInteraction));
+        actionView.setChecked(presenterStrategy.hasTrafficMode());
+        actionView.setOnCheckedChangeListener(new TrafficModeListener(presenterStrategy));
     }
 }
