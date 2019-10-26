@@ -57,4 +57,9 @@ public class MapBoxSdkImpl implements MapSdk {
     public void navigate(IRoute route, IRouteListener routeListener) {
 
     }
+
+    @Override
+    public void showMap() {
+
+    }
 }

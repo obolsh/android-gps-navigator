@@ -23,4 +23,6 @@ public interface MapSdk {
 
     void navigate(IRoute route, IRouteListener routeListener);
 
+    void showMap();
+
 }
