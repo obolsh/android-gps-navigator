@@ -4,4 +4,6 @@
     <string name="night_mode">night</string>
     <string name="rate_us">rate us</string>
     <string name="share_us">share</string>
+    <string name="satelite">Satelite view</string>
+    <string name="share_my_app">Check this app on play store</string>
 </resources>

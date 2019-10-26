@@ -4,5 +4,5 @@ public interface IFragmentController<T> {
 
     void openFragment(IFragment<T> fragment);
 
-    void backToLastFragment();
+    boolean thisFragmentIsActive(Class fragmentClass);
 }

@@ -1,6 +1,7 @@
 package gps.map.navigator.view.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import android.os.Bundle;
@@ -14,51 +15,78 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import gps.map.navigator.R;
-import gps.map.navigator.model.interfaces.IRoute;
-import gps.map.navigator.view.interfaces.IViewInteraction;
-import gps.map.navigator.view.ui.fragment.BottomNavigationDrawerFragment;
-import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
-import gps.map.navigator.view.ui.fragment.controller.NaviFragmentController;
+import gps.map.navigator.model.interfaces.Invalidator;
+import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.ui.callback.FindMyPlaceCallback;
+import gps.map.navigator.view.ui.callback.NextCallbackListener;
+import gps.map.navigator.view.ui.fragment.BottomMenuFragment;
+import gps.map.navigator.view.ui.fragment.FindPlaceFragment;
+import gps.map.navigator.view.ui.fragment.MapFragment;
+import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
+import gps.map.navigator.view.viewmodel.DecorController;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, DecorController, Invalidator {
+
+    @Inject
+    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
+    @Inject
+    FragmentManager fragmentManager;
+    @Inject
+    IFragmentController<Fragment> fragmentController;
+    @Inject
+    Presenter presenter;
 
     private FloatingActionButton floatingActionButton;
     private BottomAppBar bottomAppBar;
-    private FragmentManager fragmentManager;
-    private IRoute activeRoute;
-    private NaviFragmentController fragmentController;
+    private FloatingActionButton showMeOnMap;
+    private NextCallbackListener nextCallbackListener;
+    private FindMyPlaceCallback findMyPlaceCallback;
 
-    @Inject
-    IViewInteraction interaction;
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return fragmentDispatchingAndroidInjector;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupUiElements();
+        openMapFragment();
+    }
 
+    private void setupUiElements() {
         bottomAppBar = findViewById(R.id.bottom_app_bar);
-        bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_CENTER);
         floatingActionButton = findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                moveToNextFragment();
-            }
-        });
+        showMeOnMap = findViewById(R.id.show_me_on_map_fab);
+
+        addCallbackListeners();
         setSupportActionBar(bottomAppBar);
-        fragmentManager = getSupportFragmentManager();
+    }
 
-        prepareUiForMainSceen();
+    private void addCallbackListeners() {
+        nextCallbackListener = new NextCallbackListener(fragmentController);
+        floatingActionButton.setOnClickListener(nextCallbackListener);
+        findMyPlaceCallback = new FindMyPlaceCallback(presenter);
+        showMeOnMap.setOnClickListener(findMyPlaceCallback);
+    }
 
-        fragmentController = new NaviFragmentController(fragmentManager);
+    private void openMapFragment() {
+        fragmentController.openFragment(new MapFragment());
     }
 
     @Override
     public void onBackPressed() {
-        openMainScreenFragment();
-//        super.onBackPressed();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -71,10 +99,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                openMenuFragment();
+                openBottomMenuFragment();
                 break;
             case R.id.app_bar_search:
-                openSearchFragment();
+                openFindPlaceFragment();
                 break;
             default:
                 break;
@@ -82,55 +110,61 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void moveToNextFragment() {
-        if (activeRoute != null) {
-            openNavigateFragment();
+    private void openBottomMenuFragment() {
+        BottomMenuFragment drawerFragment = new BottomMenuFragment();
+        drawerFragment.show(fragmentManager, drawerFragment.getTag());
+    }
+
+    private void openFindPlaceFragment() {
+        fragmentController.openFragment(new FindPlaceFragment());
+    }
+
+    @Override
+    public void setBottomBarVisibility(boolean visible) {
+        bottomAppBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void setFabAlignmentMode(int mode) {
+        bottomAppBar.setFabAlignmentMode(mode);
+    }
+
+    @Override
+    public void setFabVisibility(boolean visible) {
+        if (visible) {
+            floatingActionButton.show();
         } else {
-            openBuildRouteFragment();
+            floatingActionButton.hide();
         }
     }
 
-    public void openNavigateFragment() {
-        interaction.startNavigate(activeRoute);
+    @Override
+    public void setShowMeOnMapFabVisibility(boolean visible) {
+        if (visible) {
+            showMeOnMap.show();
+        } else {
+            showMeOnMap.hide();
+        }
     }
 
-    public void openBuildRouteFragment() {
-        prepareUiForBuildRoute();
-        interaction.buildRoute();
-        fragmentController.openFragment(new BuildRouteFragment());
+    @Override
+    protected void onDestroy() {
+        invalidate();
+        super.onDestroy();
     }
 
-    public void openMainScreenFragment() {
-        prepareUiForMainSceen();
-        interaction.backToMainScreen();
-        fragmentController.backToLastFragment();
-    }
-
-    public void openMenuFragment() {
-        BottomNavigationDrawerFragment bottomNavDrawerFragment =
-                new BottomNavigationDrawerFragment();
-        bottomNavDrawerFragment.show(fragmentManager, bottomNavDrawerFragment.getTag());
-    }
-
-    public void openSearchFragment() {
-        prepareUiForFindPlace();
-        interaction.findPlaceAndShow();
-    }
-
-    public void prepareUiForBuildRoute() {
-        bottomAppBar.setVisibility(View.INVISIBLE);
-        bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_END);
-    }
-
-    public void prepareUiForFindPlace() {
-        bottomAppBar.setVisibility(View.INVISIBLE);
-        floatingActionButton.hide();
-        interaction.findPlace();
-    }
-
-    public void prepareUiForMainSceen() {
-        floatingActionButton.show();
-        bottomAppBar.setVisibility(View.VISIBLE);
-        bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_CENTER);
+    @Override
+    public void invalidate() {
+        if (nextCallbackListener != null) {
+            nextCallbackListener.invalidate();
+        }
+        if (findMyPlaceCallback != null) {
+            findMyPlaceCallback.invalidate();
+        }
+        nextCallbackListener = null;
+        findMyPlaceCallback = null;
+        floatingActionButton = null;
+        bottomAppBar = null;
+        showMeOnMap = null;
     }
 }

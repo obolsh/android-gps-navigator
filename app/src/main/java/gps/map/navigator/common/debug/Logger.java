@@ -39,7 +39,7 @@ public class Logger {
     }
 
     private static void log(String message) {
-        Log.d(TAG, message);
+        Log.e(TAG, message);
     }
 
     private static void exception(String message) {

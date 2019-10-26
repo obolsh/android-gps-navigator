@@ -4,29 +4,46 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import gps.map.navigator.R;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import gps.map.navigator.common.Constants;
+import gps.map.navigator.common.debug.Logger;
 
 public class NaviFragmentController implements IFragmentController<Fragment> {
 
-    private FragmentManager fragmentManager;
-    private IFragment<Fragment> activeFragment;
+    @Inject
+    FragmentManager fragmentManager;
 
-    public NaviFragmentController(FragmentManager fragmentManager) {
-        this.fragmentManager = fragmentManager;
+    @Inject
+    @Named(Constants.ContainerId)
+    int container;
+
+    @Inject
+    NaviFragmentController() {
     }
 
     @Override
     public void openFragment(IFragment<Fragment> fragment) {
+        String tag = fragment.getFragmentTag();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, fragment.getInstance(), fragment.getFragmentTag());
+        transaction.replace(container, fragment.getInstance(), tag);
+        transaction.addToBackStack(tag);
         transaction.commit();
-        activeFragment = fragment;
+        Logger.debug("Open fragment: " + tag);
     }
 
-    @Override
-    public void backToLastFragment() {
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.remove(activeFragment.getInstance());
-        transaction.commit();
+    public boolean thisFragmentIsActive(Class cls) {
+        Fragment fragment = getVisibleFragment();
+        if (fragment != null) {
+            return fragment.getClass().getName().startsWith(cls.getName());
+        } else {
+            Logger.error("Missing active fragment");
+            return false;
+        }
+    }
+
+    private Fragment getVisibleFragment() {
+        return fragmentManager.findFragmentById(container);
     }
 }

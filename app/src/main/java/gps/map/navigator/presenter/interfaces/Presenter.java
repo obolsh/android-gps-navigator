@@ -15,6 +15,16 @@ public interface Presenter {
 
     void enableNightMode(boolean enable);
 
+    void enableSatelliteMode(boolean enable);
+
+    boolean hasTrafficMode();
+
+    boolean hasNightMode();
+
+    boolean hasSatelliteMode();
+
+    void showMap();
+
     void findAndShowPlace(IPlaceShowListener placeShowListener);
 
     void showRoute(IRoute route, IRouteReadyListener routeReadyListener);

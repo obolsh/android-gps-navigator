@@ -1,18 +1,22 @@
 package gps.map.navigator.view.ui.fragment;
 
+import android.content.Context;
+
 import androidx.fragment.app.Fragment;
 
+import dagger.android.support.AndroidSupportInjection;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 
 public abstract class AbstractNaviFragment extends Fragment implements IFragment<Fragment> {
 
     @Override
-    public String getFragmentTag() {
-        return getTag();
+    public Fragment getInstance() {
+        return this;
     }
 
     @Override
-    public Fragment getInstance() {
-        return this;
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
     }
 }

@@ -4,15 +4,17 @@ import android.app.Application;
 import android.content.Context;
 
 import javax.inject.Named;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import gps.map.navigator.common.Constants;
 
 @Module(includes = {CoreModule.class})
-public class AppModule {
+class AppModule {
 
     @Provides
+    @Singleton
     @Named(Constants.ApplicationContext)
     Context provideContext(Application application) {
         return application;

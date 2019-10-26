@@ -14,6 +14,13 @@
             android:title="@string/night_mode"
             app:actionLayout="@layout/checked_menu_item"
             app:showAsAction="always" />
+
+        <item
+            android:id="@+id/enable_satelite"
+            android:icon="@drawable/outline_brightness_medium_white_24dp"
+            android:title="@string/satelite"
+            app:actionLayout="@layout/checked_menu_item"
+            app:showAsAction="always" />
         <item
             android:id="@+id/rate_us"
             android:icon="@drawable/outline_stars_white_24dp"
