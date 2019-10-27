@@ -1,25 +1,37 @@
 package gps.map.navigator.view.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
 
 import javax.inject.Inject;
 
+import dagger.android.support.AndroidSupportInjection;
+import demo.fragment.FragmentMap;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.viewmodel.DecorController;
 
-public class MapFragment extends AbstractNaviFragment {
+public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     @Inject
     DecorController decorController;
     @Inject
     Presenter presenter;
+
+    @Override
+    public Fragment getInstance() {
+        return this;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidSupportInjection.inject(this);
+        super.onAttach(context);
+    }
 
     @Override
     public String getFragmentTag() {
@@ -30,12 +42,6 @@ public class MapFragment extends AbstractNaviFragment {
     public void onStart() {
         super.onStart();
         presenter.showMap();
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
