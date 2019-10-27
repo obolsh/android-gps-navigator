@@ -3,6 +3,8 @@ package gps.map.navigator.model.impl.sdk;
 
 import javax.inject.Inject;
 
+import demo.place.FoundedPlace;
+import demo.place.MyLocation;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.MapSdk;
 import gps.map.navigator.model.interfaces.MapSetting;
@@ -20,7 +22,7 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void showMeOnMap(IPlaceListener placeListener) {
-
+        placeListener.onPlaceLocated(new MyLocation());
     }
 
     @Override
@@ -30,32 +32,32 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void showPlace(IMapPlace place, IPlaceShowListener placeShowListener) {
-
+        placeShowListener.onPlaceShown(place);
     }
 
     @Override
     public void showRoute(IRoute route, IRouteReadyListener routeListener) {
-
+        routeListener.onRouteReady(route);
     }
 
     @Override
     public void findPlace(IPlaceListener placeListener) {
-
+        placeListener.onPlaceLocated(new FoundedPlace());
     }
 
     @Override
     public IMapPlace getMyLocation() {
-        return null;
+        return new MyLocation();
     }
 
     @Override
     public IMapPlace getLastPickedPlace() {
-        return null;
+        return new FoundedPlace();
     }
 
     @Override
     public void navigate(IRoute route, IRouteListener routeListener) {
-
+        routeListener.onRouteStarted(route);
     }
 
     @Override
