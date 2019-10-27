@@ -47,10 +47,10 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        prepareUiForMainSceen();
+        prepareUiElements();
     }
 
-    private void prepareUiForMainSceen() {
+    private void prepareUiElements() {
         decorController.setBottomBarVisibility(true);
         decorController.setShowMeOnMapFabVisibility(true);
         decorController.setFabVisibility(true);
