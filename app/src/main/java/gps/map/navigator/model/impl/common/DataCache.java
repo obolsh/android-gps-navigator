@@ -44,10 +44,18 @@ public class DataCache implements Cache {
             for (int i = 0; i < cacheSize; i++) {
                 output.add(placeSerializationUtils.deserialize(arrays.get(i)));
             }
-            return output;
+            return appendMyLocation(output);
         } else {
-            return new ArrayList<>();
+            return appendMyLocation(new ArrayList<IMapPlace>());
         }
+    }
+
+    private List<IMapPlace> appendMyLocation(List<IMapPlace> output) {
+        IMapPlace myLocation = getMyLocation();
+        if (myLocation != null) {
+            output.add(getMyLocation());
+        }
+        return output;
     }
 
     @Override
@@ -79,7 +87,29 @@ public class DataCache implements Cache {
     public void setMyLocation(IMapPlace myLocation) {
         if (myLocation != null) {
             savePlace(myLocation, KEY_MY_LOCATION);
+
         }
+    }
+
+    private void appendPlaceToHistory(IMapPlace place) {
+        List<IMapPlace> historyPlaces = getHistoryPlaces();
+        if (historyPlaces.isEmpty()) {
+            historyPlaces.add(place);
+        } else {
+            if (!placeAlredyExist(historyPlaces, place)) {
+                historyPlaces.add(place);
+            }
+        }
+        setHistoryPlaces(historyPlaces);
+    }
+
+    private boolean placeAlredyExist(List<IMapPlace> historyPlaces, IMapPlace place) {
+        for (int i = 0; i < historyPlaces.size(); i++) {
+            if (place.getId().equals(historyPlaces.get(i).getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void savePlace(IMapPlace place, String key) {
@@ -88,6 +118,7 @@ public class DataCache implements Cache {
             if (data != null) {
                 setRawData(key, data);
             }
+            appendPlaceToHistory(place);
         }
     }
 
