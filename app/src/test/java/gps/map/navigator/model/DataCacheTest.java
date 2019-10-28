@@ -1,4 +1,4 @@
-package gps.map.navigator.model.impl.common;
+package gps.map.navigator.model;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +8,7 @@ import java.util.List;
 
 import gps.map.navigator.common.cache.Storage;
 import gps.map.navigator.common.utils.SerializationUtils;
+import gps.map.navigator.model.DataCache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.model.interfaces.MapSetting;

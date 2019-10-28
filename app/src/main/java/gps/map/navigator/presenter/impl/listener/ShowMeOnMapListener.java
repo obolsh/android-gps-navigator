@@ -17,6 +17,7 @@ public class ShowMeOnMapListener implements IPlaceListener {
     public void onPlaceLocated(IMapPlace place) {
         if (cache != null) {
             cache.setMyLocation(place);
+            cache.setLastOrigin(place);
         }
         if (placeListener != null) {
             placeListener.onPlaceLocated(place);

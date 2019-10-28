@@ -1,4 +1,4 @@
-package gps.map.navigator.model.impl.common;
+package gps.map.navigator.model;
 
 import java.util.ArrayList;
 import java.util.List;

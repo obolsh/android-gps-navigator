@@ -7,8 +7,9 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/fragment_build_route">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/history_places_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.core.widget.NestedScrollView>

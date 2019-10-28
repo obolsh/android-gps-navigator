@@ -6,4 +6,6 @@
     <string name="share_us">share</string>
     <string name="satelite">Satelite view</string>
     <string name="share_my_app">Check this app on play store</string>
+    <string name="choose_origin_default">Choose Origin</string>
+    <string name="choose_destination_default">Choose Destination</string>
 </resources>
