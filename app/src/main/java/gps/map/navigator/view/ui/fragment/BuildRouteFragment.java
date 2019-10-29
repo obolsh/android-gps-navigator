@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +22,9 @@ import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
+import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
+import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.BuildRouteCallback;
 import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
@@ -32,12 +36,18 @@ public class BuildRouteFragment extends AbstractNaviFragment {
     Cache cache;
     @Inject
     DecorController decorController;
+    @Inject
+    IFragmentController<Fragment> fragmentController;
+
     private MapPlaceAdapter adapter;
     private IMapPlace originPlace;
     private IMapPlace destinationPlace;
     private TextView originTitle;
     private TextView destinationTitle;
 
+    @Inject
+    public BuildRouteFragment() {
+    }
 
     @Nullable
     @Override
@@ -64,13 +74,17 @@ public class BuildRouteFragment extends AbstractNaviFragment {
 
     private void setupOrigin(View view) {
         originTitle = view.findViewById(R.id.origin_title);
-        originTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logger.debug("Requested to change origin");
-            }
-        });
-        setOriginPlace(cache.getLastOrigin());
+        originTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController));
+        pickBestLastOrigin();
+    }
+
+    private void pickBestLastOrigin() {
+        IMapPlace lastOrigin = cache.getLastOrigin();
+        if (lastOrigin != null) {
+            setOriginPlace(lastOrigin);
+        } else {
+            setOriginPlace(cache.getMyLocation());
+        }
     }
 
     private void setOriginPlace(IMapPlace place) {
@@ -81,6 +95,7 @@ public class BuildRouteFragment extends AbstractNaviFragment {
             setOriginTitle(getResources().getString(R.string.choose_origin_default));
             originPlace = null;
         }
+        cache.setLastOrigin(originPlace);
     }
 
     private void setOriginTitle(String title) {
@@ -91,27 +106,21 @@ public class BuildRouteFragment extends AbstractNaviFragment {
 
     private void setupDestination(View view) {
         destinationTitle = view.findViewById(R.id.destination_title);
-        destinationTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                fragmentController.openFragment(new FindPlaceFragment());
-                Logger.debug("Requested to change destination");
-            }
-        });
+        destinationTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController));
+        pickBestDestination();
+    }
+
+    private void pickBestDestination() {
+        IMapPlace mapPlace = cache.getLastDestination();
+        setDestinationPlace(mapPlace);
     }
 
     private void setupSwipeOriginAndDestination(View view) {
         ImageView button = view.findViewById(R.id.swipe_origin_and_destination_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logger.debug("Requested to swipe origin and destination");
-                swipeOriginAndDestination();
-            }
-        });
+        button.setOnClickListener(new SwipePlacesListener(this));
     }
 
-    private void swipeOriginAndDestination() {
+    public void swipeOriginAndDestination() {
         IMapPlace lastOrigin = originPlace;
         IMapPlace lastDestination = destinationPlace;
         setOriginPlace(lastDestination);
@@ -126,6 +135,7 @@ public class BuildRouteFragment extends AbstractNaviFragment {
             setDestinationTitle(getResources().getString(R.string.choose_destination_default));
             destinationPlace = null;
         }
+        cache.setLastDestination(destinationPlace);
     }
 
     private void setDestinationTitle(String title) {
@@ -165,5 +175,6 @@ public class BuildRouteFragment extends AbstractNaviFragment {
         } else {
             Logger.error("Can't use picked new place");
         }
+        fragmentController.openFragment(new ShowRouteFragment());
     }
 }
