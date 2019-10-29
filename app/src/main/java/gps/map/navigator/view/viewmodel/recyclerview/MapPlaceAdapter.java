@@ -25,7 +25,7 @@ public class MapPlaceAdapter extends RecyclerView.Adapter<MapPlaceViewHolder> {
 
     public void setPlaces(List<IMapPlace> places) {
         this.places = places;
-        notifyDataSetChanged();
+        notifyItemInserted(places.size() - 1);
     }
 
     @NonNull
