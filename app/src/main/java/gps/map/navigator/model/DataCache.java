@@ -6,6 +6,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import gps.map.navigator.common.cache.Storage;
+import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.common.utils.SerializationUtils;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
@@ -52,11 +53,15 @@ public class DataCache implements Cache {
 
     private List<IMapPlace> appendMyLocation(List<IMapPlace> output) {
         IMapPlace myLocation = getMyLocation();
-        if (myLocation != null) {
+        if (myLocation != null && !placeAlreadyExist(output, myLocation)) {
             output.add(getMyLocation());
+        } else {
+            Logger.debug("My Place already exist");
         }
+        Logger.debug("Provide history places of size: " + output.size());
         return output;
     }
+
 
     @Override
     public void setHistoryPlaces(List<IMapPlace> historyPlaces) {
@@ -66,6 +71,7 @@ public class DataCache implements Cache {
                 arrays.add(placeSerializationUtils.serialize(historyPlaces.get(i)));
             }
             storage.saveChunkedData(arrays);
+            Logger.debug("Saved history places of size: " + arrays.size());
         }
     }
 
@@ -87,31 +93,8 @@ public class DataCache implements Cache {
     public void setMyLocation(IMapPlace myLocation) {
         if (myLocation != null) {
             savePlace(myLocation, KEY_MY_LOCATION);
-
         }
     }
-
-    private void appendPlaceToHistory(IMapPlace place) {
-        List<IMapPlace> historyPlaces = getHistoryPlaces();
-        if (historyPlaces.isEmpty()) {
-            historyPlaces.add(place);
-        } else {
-            if (!placeAlredyExist(historyPlaces, place)) {
-                historyPlaces.add(place);
-            }
-        }
-        setHistoryPlaces(historyPlaces);
-    }
-
-    private boolean placeAlredyExist(List<IMapPlace> historyPlaces, IMapPlace place) {
-        for (int i = 0; i < historyPlaces.size(); i++) {
-            if (place.getId().equals(historyPlaces.get(i).getId())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void savePlace(IMapPlace place, String key) {
         if (place != null && key != null && !key.isEmpty()) {
             byte[] data = placeSerializationUtils.serialize(place);
@@ -120,6 +103,25 @@ public class DataCache implements Cache {
             }
             appendPlaceToHistory(place);
         }
+    }
+
+    private boolean placeAlreadyExist(List<IMapPlace> historyPlaces, IMapPlace place) {
+        for (int i = 0; i < historyPlaces.size(); i++) {
+            if (place.getId().equals(historyPlaces.get(i).getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void appendPlaceToHistory(IMapPlace place) {
+        List<IMapPlace> historyPlaces = getHistoryPlaces();
+        if (historyPlaces.isEmpty()) {
+            historyPlaces.add(place);
+        } else if (!placeAlreadyExist(historyPlaces, place)){
+            historyPlaces.add(place);
+        }
+        setHistoryPlaces(historyPlaces);
     }
 
     @Override
@@ -131,6 +133,8 @@ public class DataCache implements Cache {
     public void setLastOrigin(IMapPlace lastOrigin) {
         if (lastOrigin != null) {
             savePlace(lastOrigin, KEY_LAST_ORIGIN);
+        } else {
+            setRawData(KEY_LAST_ORIGIN, null);
         }
     }
 
@@ -143,6 +147,8 @@ public class DataCache implements Cache {
     public void setLastDestination(IMapPlace lastDestination) {
         if (lastDestination != null) {
             savePlace(lastDestination, KEY_LAST_DESTINATION);
+        } else {
+            setRawData(KEY_LAST_DESTINATION, null);
         }
     }
 
@@ -163,6 +169,8 @@ public class DataCache implements Cache {
             if (data != null) {
                 setRawData(KEY_LAST_ROUTE, data);
             }
+        } else {
+            setRawData(KEY_LAST_ROUTE, null);
         }
     }
 
@@ -175,6 +183,8 @@ public class DataCache implements Cache {
     public void setLastPlace(IMapPlace lastPlace) {
         if (lastPlace != null) {
             savePlace(lastPlace, KEY_LAST_PLACE);
+        } else {
+            setRawData(KEY_LAST_PLACE, null);
         }
     }
 

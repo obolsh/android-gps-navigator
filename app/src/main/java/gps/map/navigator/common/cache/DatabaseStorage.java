@@ -115,6 +115,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
         SQLiteStatement statement = null;
         try {
             statement = getWritableDatabase().compileStatement(getTableChunkedInsertSql());
+            cleanChunckedStorage();
             byte[] value;
             for (int i = 0; i < data.size(); i++) {
                 value = data.get(i);
@@ -134,6 +135,10 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
                 statement.close();
             }
         }
+    }
+
+    private void cleanChunckedStorage() {
+        getWritableDatabase().execSQL("delete from "+ TABLE_CHUNKED);
     }
 
     private String getTableChunkedInsertSql() {
