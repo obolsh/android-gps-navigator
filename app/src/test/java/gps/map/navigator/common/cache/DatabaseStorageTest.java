@@ -77,12 +77,15 @@ public class DatabaseStorageTest {
         list.add(first);
         list.add(secont);
 
-        boolean save_result = storage.saveChunkedData(list);
+        storage.saveChunkedData(list);
+        storage.getChunkedData();
 
+        boolean save_result = storage.saveChunkedData(list);
         List<byte[]> result = storage.getChunkedData();
 
         assertTrue(save_result);
         assertEquals("first", new String(result.get(0)));
         assertEquals("second", new String(result.get(1)));
+        assertEquals(2, result.size());
     }
 }
