@@ -1,4 +1,4 @@
-package gps.map.navigator.model.impl.common;
+package gps.map.navigator.model;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,6 +8,7 @@ import java.util.List;
 
 import gps.map.navigator.common.cache.Storage;
 import gps.map.navigator.common.utils.SerializationUtils;
+import gps.map.navigator.model.DataCache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.model.interfaces.MapSetting;
@@ -137,8 +138,9 @@ public class DataCacheTest {
 
         cache.setMyLocation(mapPlace);
 
-        verify(placeSerializationUtils).serialize(eq(mapPlace));
+        verify(placeSerializationUtils, times(2)).serialize(eq(mapPlace));
         verify(storage).saveData(eq(DataCache.KEY_MY_LOCATION), any(byte[].class));
+        verify(storage).saveChunkedData(any(List.class));
     }
 
     @Test
@@ -169,8 +171,9 @@ public class DataCacheTest {
 
         cache.setLastOrigin(mapPlace);
 
-        verify(placeSerializationUtils).serialize(eq(mapPlace));
+        verify(placeSerializationUtils, times(2)).serialize(eq(mapPlace));
         verify(storage).saveData(eq(DataCache.KEY_LAST_ORIGIN), any(byte[].class));
+        verify(storage).saveChunkedData(any(List.class));
     }
 
     @Test
@@ -201,8 +204,9 @@ public class DataCacheTest {
 
         cache.setLastDestination(mapPlace);
 
-        verify(placeSerializationUtils).serialize(eq(mapPlace));
+        verify(placeSerializationUtils, times(2)).serialize(eq(mapPlace));
         verify(storage).saveData(eq(DataCache.KEY_LAST_DESTINATION), any(byte[].class));
+        verify(storage).saveChunkedData(any(List.class));
     }
 
     @Test
@@ -265,8 +269,9 @@ public class DataCacheTest {
 
         cache.setLastPlace(mapPlace);
 
-        verify(placeSerializationUtils).serialize(eq(mapPlace));
+        verify(placeSerializationUtils, times(2)).serialize(eq(mapPlace));
         verify(storage).saveData(eq(DataCache.KEY_LAST_PLACE), any(byte[].class));
+        verify(storage).saveChunkedData(any(List.class));
     }
 
     @Test

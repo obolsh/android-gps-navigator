@@ -8,7 +8,7 @@ import dagger.Provides;
 import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.cache.DatabaseStorage;
 import gps.map.navigator.common.cache.Storage;
-import gps.map.navigator.model.impl.common.DataCache;
+import gps.map.navigator.model.DataCache;
 import gps.map.navigator.model.impl.data.MapSettingImpl;
 import gps.map.navigator.model.impl.sdk.MapBoxSdkImpl;
 import gps.map.navigator.model.interfaces.Cache;

@@ -43,6 +43,14 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
         }
     }
 
+    @Override
+    public void removeFromBackStack(IFragment<Fragment> fragment) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.remove(fragment.getInstance());
+        transaction.commit();
+        fragmentManager.popBackStack();
+    }
+
     private Fragment getVisibleFragment() {
         return fragmentManager.findFragmentById(container);
     }

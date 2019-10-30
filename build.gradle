@@ -38,7 +38,7 @@ ext {
     activateProguard = false
 
     // Sdk and tools
-    minSdkVersion = 19
+    minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
 

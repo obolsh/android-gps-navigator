@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import javax.inject.Inject;
 
+import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.FindPlaceCallback;
@@ -21,12 +22,7 @@ public class FindPlaceFragment extends AbstractNaviFragment {
     DecorController decorController;
     @Inject
     Presenter presenter;
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        presenter.findPlace(new FindPlaceCallback());
-    }
+    private PlaceProxyListener listener;
 
     @Nullable
     @Override
@@ -38,6 +34,7 @@ public class FindPlaceFragment extends AbstractNaviFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         hideBottomBarAndFab();
+        presenter.findPlace(new FindPlaceCallback(listener));
     }
 
     private void hideBottomBarAndFab() {
@@ -49,5 +46,9 @@ public class FindPlaceFragment extends AbstractNaviFragment {
     @Override
     public String getFragmentTag() {
         return FindPlaceFragment.class.getName();
+    }
+
+    public void setTask(PlaceProxyListener listener) {
+        this.listener = listener;
     }
 }

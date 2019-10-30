@@ -41,36 +41,6 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void enableTraffic(boolean enable) {
-        mapTypeController.enableTraffic(enable);
-    }
-
-    @Override
-    public void enableNightMode(boolean enable) {
-        mapTypeController.enableNightMode(enable);
-    }
-
-    @Override
-    public void enableSatelliteMode(boolean enable) {
-        mapTypeController.enableSatellite(enable);
-    }
-
-    @Override
-    public boolean hasTrafficMode() {
-        return mapTypeController.hasTrafficMode();
-    }
-
-    @Override
-    public boolean hasNightMode() {
-        return mapTypeController.hasNightMode();
-    }
-
-    @Override
-    public boolean hasSatelliteMode() {
-        return mapTypeController.hasSatelliteMode();
-    }
-
-    @Override
     public void showMap() {
         if (mapSdk != null) {
             mapSdk.showMap();
@@ -115,6 +85,36 @@ public class PresenterImpl implements Presenter {
                 placeHistoryListener.onHistoryPlacesError(new Exception("Cache invalid"));
             }
         }
+    }
+
+    @Override
+    public void enableTraffic(boolean enable) {
+        mapTypeController.enableTraffic(enable);
+    }
+
+    @Override
+    public void enableNightMode(boolean enable) {
+        mapTypeController.enableNightMode(enable);
+    }
+
+    @Override
+    public void enableSatelliteMode(boolean enable) {
+        mapTypeController.enableSatellite(enable);
+    }
+
+    @Override
+    public boolean hasTrafficMode() {
+        return mapTypeController.hasTrafficMode();
+    }
+
+    @Override
+    public boolean hasNightMode() {
+        return mapTypeController.hasNightMode();
+    }
+
+    @Override
+    public boolean hasSatelliteMode() {
+        return mapTypeController.hasSatelliteMode();
     }
 
 }
