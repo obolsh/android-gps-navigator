@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,6 +63,7 @@ public class BuildRouteFragment extends AbstractNaviFragment {
         setupOrigin(view);
         setupDestination(view);
         setupSwipeOriginAndDestination(view);
+        setupToolbarNavigation(view);
         return view;
     }
 
@@ -139,6 +141,16 @@ public class BuildRouteFragment extends AbstractNaviFragment {
     private void setupSwipeOriginAndDestination(View view) {
         ImageView button = view.findViewById(R.id.swipe_origin_and_destination_button);
         button.setOnClickListener(new SwipePlacesListener(this));
+    }
+
+    private void setupToolbarNavigation(View view) {
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     public void swipeOriginAndDestination() {

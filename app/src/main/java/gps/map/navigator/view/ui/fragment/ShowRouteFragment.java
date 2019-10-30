@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
@@ -70,6 +71,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         routeContainer.addView(routeView);
         setupOrigin(root);
         setupDestination(root);
+        setupToolbarNavigation(root);
         return root;
     }
 
@@ -107,5 +109,15 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     @Override
     public String getFragmentTag() {
         return ShowRouteFragment.class.getName();
+    }
+
+    private void setupToolbarNavigation(View view) {
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 }
