@@ -19,8 +19,11 @@ import javax.inject.Inject;
 
 import gps.map.navigator.R;
 import gps.map.navigator.common.debug.Logger;
+import gps.map.navigator.model.impl.data.Route;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
+import gps.map.navigator.model.interfaces.IRoute;
+import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
@@ -74,16 +77,23 @@ public class BuildRouteFragment extends AbstractNaviFragment {
 
     private void setupOrigin(View view) {
         originTitle = view.findViewById(R.id.origin_title);
-        originTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController));
-        pickBestLastOrigin();
+        originTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
+                new PlaceProxyListener() {
+
+                    @Override
+                    public void onPlaceLocated(IMapPlace mapPlace) {
+                        cache.setLastOrigin(mapPlace);
+                    }
+                }));
+        setOriginPlace(getBestOrigin());
     }
 
-    private void pickBestLastOrigin() {
+    private IMapPlace getBestOrigin() {
         IMapPlace lastOrigin = cache.getLastOrigin();
         if (lastOrigin != null) {
-            setOriginPlace(lastOrigin);
+            return lastOrigin;
         } else {
-            setOriginPlace(cache.getMyLocation());
+            return cache.getMyLocation();
         }
     }
 
@@ -91,9 +101,11 @@ public class BuildRouteFragment extends AbstractNaviFragment {
         if (place != null) {
             setOriginTitle(place.getTitle());
             originPlace = place;
+            Logger.debug("Set origin as: " + place);
         } else {
             setOriginTitle(getResources().getString(R.string.choose_origin_default));
             originPlace = null;
+            Logger.debug("Clean last origin");
         }
         cache.setLastOrigin(originPlace);
     }
@@ -106,13 +118,22 @@ public class BuildRouteFragment extends AbstractNaviFragment {
 
     private void setupDestination(View view) {
         destinationTitle = view.findViewById(R.id.destination_title);
-        destinationTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController));
-        pickBestDestination();
+        destinationTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
+                new PlaceProxyListener() {
+                    @Override
+                    public void onPlaceLocated(IMapPlace mapPlace) {
+                        cache.setLastDestination(mapPlace);
+                    }
+                }));
+        setDestinationPlace(getBestDestination());
     }
-
-    private void pickBestDestination() {
-        IMapPlace mapPlace = cache.getLastDestination();
-        setDestinationPlace(mapPlace);
+    private IMapPlace getBestDestination() {
+        IMapPlace lastDestination = cache.getLastDestination();
+        if (lastDestination != null) {
+            return lastDestination;
+        } else {
+            return null;
+        }
     }
 
     private void setupSwipeOriginAndDestination(View view) {
@@ -131,9 +152,11 @@ public class BuildRouteFragment extends AbstractNaviFragment {
         if (place != null) {
             setDestinationTitle(place.getTitle());
             destinationPlace = place;
+            Logger.debug("Set destination as: " + place);
         } else {
             setDestinationTitle(getResources().getString(R.string.choose_destination_default));
             destinationPlace = null;
+            Logger.debug("Clean last destination");
         }
         cache.setLastDestination(destinationPlace);
     }
@@ -148,6 +171,7 @@ public class BuildRouteFragment extends AbstractNaviFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         hideBottomBarAndMoveFabToRight();
+        openShowRouteFragmentIfRequied();
     }
 
     private void hideBottomBarAndMoveFabToRight() {
@@ -168,13 +192,30 @@ public class BuildRouteFragment extends AbstractNaviFragment {
     }
 
     public void setNewPickedPlace(IMapPlace mapPlace) {
-        if (originPlace == null && destinationPlace != null) {
+        if (originPlace == null) {
             setOriginPlace(mapPlace);
-        } else if (destinationPlace == null && originPlace != null) {
+        } else if (destinationPlace == null) {
             setDestinationPlace(mapPlace);
         } else {
             Logger.error("Can't use picked new place");
         }
-        fragmentController.openFragment(new ShowRouteFragment());
+        openShowRouteFragmentIfRequied();
+    }
+
+    private void openShowRouteFragmentIfRequied() {
+        if (originPlace != null && destinationPlace != null) {
+            fragmentController.removeFromBackStack(this);
+            IRoute route = buildNewRoute();
+            cache.setLastRoute(route);
+            cache.setLastOrigin(null);
+            cache.setLastDestination(null);
+            fragmentController.openFragment(new ShowRouteFragment());
+        }
+    }
+
+    private IRoute buildNewRoute() {
+        IMapPlace origin = cache.getLastOrigin();
+        IMapPlace destination = cache.getLastDestination();
+        return new Route("route_id", origin, destination, "Route", System.currentTimeMillis());
     }
 }
