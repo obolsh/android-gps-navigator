@@ -8,4 +8,5 @@
     <string name="share_my_app">Check this app on play store</string>
     <string name="choose_origin_default">Choose Origin</string>
     <string name="choose_destination_default">Choose Destination</string>
+    <string name="choose_place_default">Choose place</string>
 </resources>
