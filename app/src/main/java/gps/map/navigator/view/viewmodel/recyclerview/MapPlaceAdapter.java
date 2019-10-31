@@ -12,14 +12,14 @@ import java.util.List;
 import gps.map.navigator.R;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.IMapPlace;
-import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
+import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 
 public class MapPlaceAdapter extends RecyclerView.Adapter<MapPlaceViewHolder> {
 
     private List<IMapPlace> places;
-    private BuildRouteFragment fragment;
+    private IPlacePickerCallback fragment;
 
-    public MapPlaceAdapter(BuildRouteFragment fragment) {
+    public MapPlaceAdapter(IPlacePickerCallback fragment) {
         this.fragment = fragment;
     }
 

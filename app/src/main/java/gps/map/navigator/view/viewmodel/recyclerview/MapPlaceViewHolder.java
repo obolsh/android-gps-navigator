@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import gps.map.navigator.R;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.IMapPlace;
-import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
+import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 
 class MapPlaceViewHolder extends RecyclerView.ViewHolder {
 
@@ -19,7 +19,7 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
     private TextView addressView;
     private IMapPlace mapPlace;
 
-    MapPlaceViewHolder(@NonNull View itemView, final BuildRouteFragment fragment) {
+    MapPlaceViewHolder(@NonNull View itemView, final IPlacePickerCallback fragment) {
         super(itemView);
         favouriteImage = itemView.findViewById(R.id.favourite_map_place);
         titleView = itemView.findViewById(R.id.map_place_title);
