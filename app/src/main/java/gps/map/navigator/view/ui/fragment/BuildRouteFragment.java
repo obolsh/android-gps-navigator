@@ -28,12 +28,13 @@ import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
+import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
 import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.BuildRouteCallback;
 import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
 
-public class BuildRouteFragment extends AbstractNaviFragment {
+public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRoute {
     @Inject
     Presenter presenter;
     @Inject
@@ -129,6 +130,7 @@ public class BuildRouteFragment extends AbstractNaviFragment {
                 }));
         setDestinationPlace(getBestDestination());
     }
+
     private IMapPlace getBestDestination() {
         IMapPlace lastDestination = cache.getLastDestination();
         if (lastDestination != null) {
@@ -153,6 +155,7 @@ public class BuildRouteFragment extends AbstractNaviFragment {
         });
     }
 
+    @Override
     public void swipeOriginAndDestination() {
         IMapPlace lastOrigin = originPlace;
         IMapPlace lastDestination = destinationPlace;

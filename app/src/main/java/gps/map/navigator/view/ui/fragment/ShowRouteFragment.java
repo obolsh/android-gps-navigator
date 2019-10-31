@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -21,14 +22,17 @@ import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentRoute;
 import gps.map.navigator.R;
 import gps.map.navigator.model.interfaces.Cache;
+import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
+import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
+import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.ShowRouteCallback;
 
-public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragment> {
+public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragment>, ISwipeRoute {
 
     @Inject
     DecorController decorController;
@@ -38,6 +42,8 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     Cache cache;
     @Inject
     IFragmentController<Fragment> fragmentController;
+    private TextView originTitle;
+    private TextView destinationTitle;
 
     @Inject
     public ShowRouteFragment() {
@@ -72,11 +78,16 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         setupOrigin(root);
         setupDestination(root);
         setupToolbarNavigation(root);
+        setupSwipeOriginAndDestination(root);
         return root;
     }
 
     private void setupOrigin(View view) {
-        TextView originTitle = view.findViewById(R.id.origin_title);
+        originTitle = view.findViewById(R.id.origin_title);
+        setOriginTitle();
+    }
+
+    private void setOriginTitle() {
         originTitle.setText(getOriginTitle());
     }
 
@@ -85,12 +96,21 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     }
 
     private void setupDestination(View view) {
-        TextView destinationTitle = view.findViewById(R.id.destination_title);
+        destinationTitle = view.findViewById(R.id.destination_title);
+        setDestinationTitle();
+    }
+
+    private void setDestinationTitle() {
         destinationTitle.setText(getDestinationTitle());
     }
 
     private String getDestinationTitle() {
         return cache.getLastRoute().getDestination().getTitle();
+    }
+
+    private void setupSwipeOriginAndDestination(View view) {
+        ImageView button = view.findViewById(R.id.swipe_origin_and_destination_button);
+        button.setOnClickListener(new SwipePlacesListener(this));
     }
 
     @Override
@@ -119,5 +139,18 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    @Override
+    public void swipeOriginAndDestination() {
+        IRoute route = cache.getLastRoute();
+        IMapPlace newOrigin = route.getDestination();
+        IMapPlace newDestination = route.getOrigin();
+        route.setOrigin(newOrigin);
+        route.setDestination(newDestination);
+        cache.setLastRoute(route);
+
+        setOriginTitle();
+        setDestinationTitle();
     }
 }

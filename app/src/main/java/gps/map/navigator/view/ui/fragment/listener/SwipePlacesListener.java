@@ -2,12 +2,10 @@ package gps.map.navigator.view.ui.fragment.listener;
 
 import android.view.View;
 
-import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
-
 public class SwipePlacesListener implements View.OnClickListener {
-    private BuildRouteFragment fragment;
+    private ISwipeRoute fragment;
 
-    public SwipePlacesListener(BuildRouteFragment fragment) {
+    public SwipePlacesListener(ISwipeRoute fragment) {
         this.fragment = fragment;
     }
 
