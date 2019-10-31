@@ -9,6 +9,7 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -42,6 +43,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         View root = inflater.inflate(R.layout.find_place_fragment, container, false);
         addPlacesToRecyclerView(root);
         setupSearchView(root);
+        setupToolbarNavigation(root);
         presenter.buildRoute(new BuildRouteCallback(this));
         return root;
     }
@@ -59,6 +61,16 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     private void setupSearchView(View root) {
         searchView = root.findViewById(R.id.search_view_box);
         searchView.setIconifiedByDefault(false);
+    }
+
+    private void setupToolbarNavigation(View view) {
+        Toolbar toolbar = view.findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     @Override
