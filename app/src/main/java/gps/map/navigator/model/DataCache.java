@@ -1,6 +1,8 @@
 package gps.map.navigator.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -66,12 +68,26 @@ public class DataCache implements Cache {
     @Override
     public void setHistoryPlaces(List<IMapPlace> historyPlaces) {
         if (historyPlaces != null) {
+            sortByLastUsedTime(historyPlaces);
             List<byte[]> arrays = new ArrayList<>();
             for (int i = 0; i < historyPlaces.size(); i++) {
                 arrays.add(placeSerializationUtils.serialize(historyPlaces.get(i)));
             }
             storage.saveChunkedData(arrays);
             Logger.debug("Saved history places of size: " + arrays.size());
+        }
+    }
+
+    private void sortByLastUsedTime(List<IMapPlace> places) {
+        Collections.sort(places, new TimeComparator());
+    }
+
+    public class TimeComparator implements Comparator<IMapPlace> {
+        @Override
+        public int compare(IMapPlace one, IMapPlace two) {
+            Long oneTime = one.getLastUsedTime();
+            Long twoTime = two.getLastUsedTime();
+            return Integer.compare(twoTime.compareTo(oneTime), 0);
         }
     }
 

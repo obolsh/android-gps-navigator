@@ -24,9 +24,11 @@ import gps.map.navigator.R;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
+import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
+import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
 import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
@@ -64,6 +66,10 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     public void onStart() {
         super.onStart();
         IRoute route = cache.getLastRoute();
+        showRouteOnMap(route);
+    }
+
+    private void showRouteOnMap(IRoute route) {
         presenter.showRoute(route, new ShowRouteCallback());
     }
 
@@ -84,6 +90,14 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     private void setupOrigin(View view) {
         originTitle = view.findViewById(R.id.origin_title);
+        originTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
+                new PlaceProxyListener() {
+
+                    @Override
+                    public void onPlaceLocated(IMapPlace origin) {
+                        changeActiveRoute(origin, null);
+                    }
+                }));
         setOriginTitle();
     }
 
@@ -97,6 +111,13 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     private void setupDestination(View view) {
         destinationTitle = view.findViewById(R.id.destination_title);
+        destinationTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
+                new PlaceProxyListener() {
+                    @Override
+                    public void onPlaceLocated(IMapPlace destination) {
+                        changeActiveRoute(null, destination);
+                    }
+                }));
         setDestinationTitle();
     }
 
@@ -146,11 +167,23 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         IRoute route = cache.getLastRoute();
         IMapPlace newOrigin = route.getDestination();
         IMapPlace newDestination = route.getOrigin();
-        route.setOrigin(newOrigin);
-        route.setDestination(newDestination);
+
+        changeActiveRoute(newOrigin, newDestination);
+    }
+
+    private void changeActiveRoute(IMapPlace newOrigin, IMapPlace newDestination) {
+        IRoute route = cache.getLastRoute();
+        if (newOrigin != null) {
+            route.setOrigin(newOrigin);
+            setOriginTitle();
+        }
+        if (newDestination != null) {
+            route.setDestination(newDestination);
+            setDestinationTitle();
+        }
+
         cache.setLastRoute(route);
 
-        setOriginTitle();
-        setDestinationTitle();
+        showRouteOnMap(route);
     }
 }

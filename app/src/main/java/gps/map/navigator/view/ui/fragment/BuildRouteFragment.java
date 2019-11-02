@@ -28,13 +28,15 @@ import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
+import gps.map.navigator.view.ui.fragment.listener.ICachedPlaceCallback;
+import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
 import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.BuildRouteCallback;
 import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
 
-public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRoute {
+public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRoute, IPlacePickerCallback, ICachedPlaceCallback {
     @Inject
     Presenter presenter;
     @Inject
@@ -200,12 +202,14 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         return BuildRouteFragment.class.getName();
     }
 
+    @Override
     public void setHistoryPlaces(List<IMapPlace> placeList) {
         if (adapter != null) {
             adapter.setPlaces(placeList);
         }
     }
 
+    @Override
     public void setNewPickedPlace(IMapPlace mapPlace) {
         if (originPlace == null) {
             setOriginPlace(mapPlace);

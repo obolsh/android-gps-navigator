@@ -47,10 +47,18 @@ public class PresenterImpl implements Presenter {
         }
     }
 
+    @Deprecated
     @Override
     public void findAndShowPlace(IPlaceShowListener placeShowListener) {
         if (mapSdk != null && placeShowListener != null) {
             mapSdk.findPlace(new FindAndShowListener(mapSdk, cache, placeShowListener));
+        }
+    }
+
+    @Override
+    public void showPlace(IMapPlace place, IPlaceShowListener placeShowListener) {
+        if (mapSdk != null && placeShowListener != null) {
+            mapSdk.showPlace(place, placeShowListener);
         }
     }
 
