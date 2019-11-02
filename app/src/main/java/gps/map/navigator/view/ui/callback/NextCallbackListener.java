@@ -36,7 +36,7 @@ public class NextCallbackListener implements View.OnClickListener, Invalidator {
         if (mapFragmentIsActive()) {
             openBuildRouteFragment();
         } else if (showPlaceFragmentIsActive()) {
-            openShowRouteFragment();
+            openBuildRouteFragment();
         } else if (showRouteFragmentIsActive()) {
             openNavigateFragment();
         } else {
@@ -54,10 +54,6 @@ public class NextCallbackListener implements View.OnClickListener, Invalidator {
 
     private boolean showPlaceFragmentIsActive() {
         return fragmentController.thisFragmentIsActive(ShowPlaceFragment.class);
-    }
-
-    private void openShowRouteFragment() {
-        fragmentController.openFragment(new ShowRouteFragment());
     }
 
     private boolean showRouteFragmentIsActive() {

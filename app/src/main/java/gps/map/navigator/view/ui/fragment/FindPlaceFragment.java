@@ -10,6 +10,7 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,11 +19,14 @@ import java.util.List;
 import javax.inject.Inject;
 
 import gps.map.navigator.R;
+import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.listener.ICachedPlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
+import gps.map.navigator.view.ui.fragment.listener.SearchTextListener;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.BuildRouteCallback;
 import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
@@ -33,6 +37,10 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     DecorController decorController;
     @Inject
     Presenter presenter;
+    @Inject
+    Cache cache;
+    @Inject
+    IFragmentController<Fragment> fragmentController;
     private PlaceProxyListener listener;
     private MapPlaceAdapter adapter;
     private SearchView searchView;
@@ -61,6 +69,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     private void setupSearchView(View root) {
         searchView = root.findViewById(R.id.search_view_box);
         searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchTextListener(adapter, presenter));
     }
 
     private void setupToolbarNavigation(View view) {
@@ -108,6 +117,10 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         if (listener != null) {
             listener.onPlaceLocated(mapPlace);
             getActivity().onBackPressed();
+        } else {
+            cache.setLastPlace(mapPlace);
+            fragmentController.removeFromBackStack(this);
+            fragmentController.openFragment(new ShowPlaceFragment());
         }
     }
 

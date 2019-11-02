@@ -4,9 +4,7 @@ import java.util.List;
 
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
-import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
 import gps.map.navigator.view.ui.fragment.listener.ICachedPlaceCallback;
-import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 
 public class BuildRouteCallback implements IPlaceHistoryListener {
 

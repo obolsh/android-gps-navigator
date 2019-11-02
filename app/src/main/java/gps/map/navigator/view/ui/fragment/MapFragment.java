@@ -9,11 +9,9 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomappbar.BottomAppBar;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentMap;
-import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
@@ -51,6 +49,8 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     public void onStart() {
         super.onStart();
         presenter.showMap();
+        cache.setLastOrigin(null);
+        cache.setLastDestination(null);
     }
 
     @Override
