@@ -8,6 +8,7 @@ import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
 import gps.map.navigator.view.ui.fragment.FindPlaceFragment;
 import gps.map.navigator.view.ui.fragment.MapFragment;
 import gps.map.navigator.view.ui.fragment.NavigatorFragment;
+import gps.map.navigator.view.ui.fragment.ShowPlaceFragment;
 import gps.map.navigator.view.ui.fragment.ShowRouteFragment;
 
 @Module(includes = {DecorModule.class})
@@ -30,4 +31,7 @@ public abstract class FragmentProvider {
 
     @ContributesAndroidInjector(modules = FindPlaceFragmentModule.class)
     abstract FindPlaceFragment provideFindPlaceFragmentFactory();
+
+    @ContributesAndroidInjector(modules = ShowPlaceFragmentModule.class)
+    abstract ShowPlaceFragment provideShowPlaceFragmentFactory();
 }
