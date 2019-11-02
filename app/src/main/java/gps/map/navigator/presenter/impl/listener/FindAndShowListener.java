@@ -6,6 +6,7 @@ import gps.map.navigator.model.interfaces.MapSdk;
 import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
 
+@Deprecated
 public class FindAndShowListener implements IPlaceListener {
 
     private MapSdk mapSdk;

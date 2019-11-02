@@ -1,5 +1,6 @@
 package gps.map.navigator.presenter.interfaces;
 
+import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.interfaces.IPlaceListener;
@@ -25,7 +26,10 @@ public interface Presenter {
 
     void showMap();
 
+    @Deprecated
     void findAndShowPlace(IPlaceShowListener placeShowListener);
+
+    void showPlace(IMapPlace place, IPlaceShowListener placeShowListener);
 
     void showRoute(IRoute route, IRouteReadyListener routeReadyListener);
 
