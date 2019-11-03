@@ -244,6 +244,11 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     }
 
     @Override
+    public void setNewFoundPlace(IMapPlace mapPlace) {
+        cache.addNewHistoryPlace(mapPlace);
+    }
+
+    @Override
     public void markAdNotFavouritePlace(IMapPlace mapPlace) {
         setFavouriteState(mapPlace, false);
     }

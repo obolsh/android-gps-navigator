@@ -37,4 +37,6 @@ public interface Cache {
     void setRawData(String key, byte[] rawData);
 
     void removeHistoryPlace(IMapPlace placeToRemove);
+
+    void addNewHistoryPlace(IMapPlace newPlace);
 }

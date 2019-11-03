@@ -152,6 +152,11 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     }
 
     @Override
+    public void setNewFoundPlace(IMapPlace mapPlace) {
+        cache.addNewHistoryPlace(mapPlace);
+    }
+
+    @Override
     public void setHistoryPlaces(List<IMapPlace> placeList) {
         if (adapter != null) {
             adapter.setPlaces(placeList);

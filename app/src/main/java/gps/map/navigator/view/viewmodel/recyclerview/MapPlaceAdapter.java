@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import gps.map.navigator.R;
@@ -29,6 +31,7 @@ public class MapPlaceAdapter extends RecyclerView.Adapter<MapPlaceViewHolder> im
 
     public void setPlaces(List<IMapPlace> places) {
         this.originalPlacesList = places;
+        sortByLastUsedTime(originalPlacesList);
         this.places = originalPlacesList;
         notifyItemInserted(places.size() - 1);
     }
@@ -82,7 +85,13 @@ public class MapPlaceAdapter extends RecyclerView.Adapter<MapPlaceViewHolder> im
             places = new ArrayList<>();
         }
         places.add(mapPlace);
+        if (originalPlacesList == null) {
+            originalPlacesList = new ArrayList<>();
+        }
+        originalPlacesList.add(mapPlace);
+        sortByLastUsedTime(originalPlacesList);
         notifyDataSetChanged();
+        fragment.setNewFoundPlace(mapPlace);
     }
 
     public void removePlace(int position, IMapPlace place) {
@@ -151,6 +160,19 @@ public class MapPlaceAdapter extends RecyclerView.Adapter<MapPlaceViewHolder> im
                 }
             }
             return results;
+        }
+    }
+
+    private void sortByLastUsedTime(List<IMapPlace> places) {
+        Collections.sort(places, new TimeComparator());
+    }
+
+    public class TimeComparator implements Comparator<IMapPlace> {
+        @Override
+        public int compare(IMapPlace one, IMapPlace two) {
+            Long oneTime = one.getLastUsedTime();
+            Long twoTime = two.getLastUsedTime();
+            return Integer.compare(twoTime.compareTo(oneTime), 0);
         }
     }
 }

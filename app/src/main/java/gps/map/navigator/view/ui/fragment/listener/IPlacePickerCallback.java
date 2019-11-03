@@ -11,4 +11,6 @@ public interface IPlacePickerCallback {
     void markAdFavouritePlace(IMapPlace mapPlace);
 
     void markAdNotFavouritePlace(IMapPlace mapPlace);
+
+    void setNewFoundPlace(IMapPlace mapPlace);
 }

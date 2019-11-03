@@ -249,6 +249,16 @@ public class DataCache implements Cache {
         setHistoryPlaces(places);
     }
 
+    @Override
+    public void addNewHistoryPlace(IMapPlace newPlace) {
+        List<IMapPlace> places = getHistoryPlaces();
+        if (!placeAlreadyExist(places, newPlace)) {
+            places.add(newPlace);
+            setHistoryPlaces(places);
+        }
+
+    }
+
     private int getPosition(List<IMapPlace> places, IMapPlace item) {
         for (int i = 0; i < places.size(); i++) {
             if (item.getId().equals(places.get(i).getId())){
@@ -257,4 +267,5 @@ public class DataCache implements Cache {
         }
         return 0;
     }
+
 }
