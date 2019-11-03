@@ -26,9 +26,6 @@ public interface Presenter {
 
     void showMap();
 
-    @Deprecated
-    void findAndShowPlace(IPlaceShowListener placeShowListener);
-
     void showPlace(IMapPlace place, IPlaceShowListener placeShowListener);
 
     void showRoute(IRoute route, IRouteReadyListener routeReadyListener);

@@ -8,7 +8,6 @@ import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.MapSdk;
 import gps.map.navigator.model.interfaces.IRoute;
-import gps.map.navigator.presenter.impl.listener.FindAndShowListener;
 import gps.map.navigator.presenter.impl.listener.FindPlaceListener;
 import gps.map.navigator.presenter.impl.listener.NavigateListener;
 import gps.map.navigator.presenter.impl.listener.ShowMeOnMapListener;
@@ -44,14 +43,6 @@ public class PresenterImpl implements Presenter {
     public void showMap() {
         if (mapSdk != null) {
             mapSdk.showMap();
-        }
-    }
-
-    @Deprecated
-    @Override
-    public void findAndShowPlace(IPlaceShowListener placeShowListener) {
-        if (mapSdk != null && placeShowListener != null) {
-            mapSdk.findPlace(new FindAndShowListener(mapSdk, cache, placeShowListener));
         }
     }
 

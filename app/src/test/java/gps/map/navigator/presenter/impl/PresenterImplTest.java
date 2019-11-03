@@ -13,7 +13,6 @@ import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.model.interfaces.MapSdk;
-import gps.map.navigator.presenter.impl.listener.FindAndShowListener;
 import gps.map.navigator.presenter.impl.listener.FindPlaceListener;
 import gps.map.navigator.presenter.impl.listener.NavigateListener;
 import gps.map.navigator.presenter.impl.listener.ShowMeOnMapListener;
@@ -35,7 +34,7 @@ import static org.powermock.reflect.Whitebox.setInternalState;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({
-        PresenterImpl.class, ShowMeOnMapListener.class, FindAndShowListener.class,
+        PresenterImpl.class, ShowMeOnMapListener.class,
         ShowRouteListener.class, FindPlaceListener.class, NavigateListener.class})
 public class PresenterImplTest {
 
@@ -45,7 +44,6 @@ public class PresenterImplTest {
     private IRoute route;
 
     private ShowMeOnMapListener showMeOnMapListener;
-    private FindAndShowListener findAndShowListener;
     private ShowRouteListener showRouteListener;
     private FindPlaceListener findPlaceListener;
     private NavigateListener navigateListener;
@@ -66,7 +64,6 @@ public class PresenterImplTest {
 
 
         showMeOnMapListener = mock(ShowMeOnMapListener.class);
-        findAndShowListener = mock(FindAndShowListener.class);
         showRouteListener = mock(ShowRouteListener.class);
         findPlaceListener = mock(FindPlaceListener.class);
         navigateListener = mock(NavigateListener.class);
@@ -81,9 +78,6 @@ public class PresenterImplTest {
         whenNew(ShowMeOnMapListener.class)
                 .withArguments(eq(cache), eq(placeListener))
                 .thenReturn(showMeOnMapListener);
-        whenNew(FindAndShowListener.class)
-                .withArguments(eq(mapSdk), eq(cache), eq(placeShowListener))
-                .thenReturn(findAndShowListener);
         whenNew(ShowRouteListener.class)
                 .withArguments(eq(cache), eq(routeReadyListener))
                 .thenReturn(showRouteListener);
@@ -146,16 +140,6 @@ public class PresenterImplTest {
 
         presenter.enableNightMode(false);
         verify(mapTypeController).enableNightMode(eq(false));
-    }
-
-    @Test
-    public void receive_findAndShowPlace_verify() {
-        PresenterImpl presenter = new PresenterImpl();
-        initReferences(presenter);
-
-        presenter.findAndShowPlace(placeShowListener);
-
-        verify(mapSdk).findPlace(eq(findAndShowListener));
     }
 
     @Test
