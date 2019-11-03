@@ -13,16 +13,16 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import gps.map.navigator.R;
+import gps.map.navigator.common.Constants;
 import gps.map.navigator.model.interfaces.Invalidator;
 import gps.map.navigator.presenter.interfaces.Presenter;
-import gps.map.navigator.view.ui.callback.FindMyPlaceCallback;
-import gps.map.navigator.view.ui.callback.NextCallbackListener;
 import gps.map.navigator.view.ui.fragment.BottomMenuFragment;
 import gps.map.navigator.view.ui.fragment.FindPlaceFragment;
 import gps.map.navigator.view.ui.fragment.MapFragment;
@@ -39,12 +39,16 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     IFragmentController<Fragment> fragmentController;
     @Inject
     Presenter presenter;
+    @Inject
+    @Named(Constants.NextCallbackListener)
+    View.OnClickListener nextCallbackListener;
+    @Inject
+    @Named(Constants.FindMyPlaceCallback)
+    View.OnClickListener findMyPlaceCallback;
 
     private FloatingActionButton floatingActionButton;
     private BottomAppBar bottomAppBar;
     private FloatingActionButton showMeOnMap;
-    private NextCallbackListener nextCallbackListener;
-    private FindMyPlaceCallback findMyPlaceCallback;
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
@@ -70,9 +74,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void addCallbackListeners() {
-        nextCallbackListener = new NextCallbackListener(fragmentController);
         floatingActionButton.setOnClickListener(nextCallbackListener);
-        findMyPlaceCallback = new FindMyPlaceCallback(presenter);
         showMeOnMap.setOnClickListener(findMyPlaceCallback);
     }
 
@@ -156,10 +158,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public void invalidate() {
         if (nextCallbackListener != null) {
-            nextCallbackListener.invalidate();
+            ((Invalidator)nextCallbackListener).invalidate();
         }
         if (findMyPlaceCallback != null) {
-            findMyPlaceCallback.invalidate();
+            ((Invalidator)findMyPlaceCallback).invalidate();
         }
         nextCallbackListener = null;
         findMyPlaceCallback = null;
