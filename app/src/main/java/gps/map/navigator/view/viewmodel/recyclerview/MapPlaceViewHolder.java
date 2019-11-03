@@ -22,6 +22,17 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
     MapPlaceViewHolder(@NonNull View itemView, final IPlacePickerCallback fragment) {
         super(itemView);
         favouriteImage = itemView.findViewById(R.id.favourite_map_place);
+        favouriteImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.debug("Requested mark as favourite of: " + titleView.getText().toString());
+                if (mapPlace.isFavourite()) {
+                    fragment.markAdNotFavouritePlace(mapPlace);
+                } else {
+                    fragment.markAdFavouritePlace(mapPlace);
+                }
+            }
+        });
         titleView = itemView.findViewById(R.id.map_place_title);
         addressView = itemView.findViewById(R.id.map_place_address);
         ImageView deleteButton = itemView.findViewById(R.id.delete_map_place);
@@ -29,6 +40,7 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 Logger.debug("Requested deleting of: " + titleView.getText().toString());
+                fragment.deleteHistoryPlace(getAdapterPosition(), mapPlace);
             }
         });
         itemView.setOnClickListener(new View.OnClickListener() {

@@ -125,9 +125,45 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     }
 
     @Override
+    public void deleteHistoryPlace(int position, IMapPlace mapPlace) {
+        cache.removeHistoryPlace(mapPlace);
+        adapter.removePlace(position, mapPlace);
+    }
+
+    @Override
+    public void markAdFavouritePlace(IMapPlace mapPlace) {
+        setFavouriteState(mapPlace, true);
+    }
+
+    private void setFavouriteState(IMapPlace mapPlace, boolean favourite) {
+        List<IMapPlace> places = cache.getHistoryPlaces();
+        int position = getPosition(places, mapPlace);
+
+        mapPlace.setFavourite(favourite);
+        places.set(position, mapPlace);
+
+        cache.setHistoryPlaces(places);
+        adapter.updatePlace(mapPlace);
+    }
+
+    @Override
+    public void markAdNotFavouritePlace(IMapPlace mapPlace) {
+        setFavouriteState(mapPlace, false);
+    }
+
+    @Override
     public void setHistoryPlaces(List<IMapPlace> placeList) {
         if (adapter != null) {
             adapter.setPlaces(placeList);
         }
+    }
+
+    private int getPosition(List<IMapPlace> places, IMapPlace item) {
+        for (int i = 0; i < places.size(); i++) {
+            if (item.getId().equals(places.get(i).getId())){
+                return i;
+            }
+        }
+        return 0;
     }
 }

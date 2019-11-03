@@ -85,6 +85,30 @@ public class MapPlaceAdapter extends RecyclerView.Adapter<MapPlaceViewHolder> im
         notifyDataSetChanged();
     }
 
+    public void removePlace(int position, IMapPlace place) {
+        places.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, places.size());
+        originalPlacesList.remove(place);
+    }
+
+    public void updatePlace(IMapPlace update) {
+        int position = getPosition(places, update);
+        places.set(position, update);
+        int originalPosition = getPosition(originalPlacesList, update);
+        originalPlacesList.set(originalPosition, update);
+        notifyItemChanged(position);
+    }
+
+    private int getPosition(List<IMapPlace> places, IMapPlace item) {
+        for (int i = 0; i < places.size(); i++) {
+            if (item.getId().equals(places.get(i).getId())){
+                return i;
+            }
+        }
+        return 0;
+    }
+
     private static class AdapterFiler extends Filter {
 
         private MapPlaceAdapter adapter;

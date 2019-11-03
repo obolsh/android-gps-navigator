@@ -111,6 +111,7 @@ public class DataCache implements Cache {
             savePlace(myLocation, KEY_MY_LOCATION);
         }
     }
+
     private void savePlace(IMapPlace place, String key) {
         if (place != null && key != null && !key.isEmpty()) {
             byte[] data = placeSerializationUtils.serialize(place);
@@ -134,7 +135,7 @@ public class DataCache implements Cache {
         List<IMapPlace> historyPlaces = getHistoryPlaces();
         if (historyPlaces.isEmpty()) {
             historyPlaces.add(place);
-        } else if (!placeAlreadyExist(historyPlaces, place)){
+        } else if (!placeAlreadyExist(historyPlaces, place)) {
             historyPlaces.add(place);
         }
         setHistoryPlaces(historyPlaces);
@@ -238,5 +239,22 @@ public class DataCache implements Cache {
         if (key != null && !key.isEmpty()) {
             storage.saveData(key, rawData);
         }
+    }
+
+    @Override
+    public void removeHistoryPlace(IMapPlace placeToRemove) {
+        List<IMapPlace> places = getHistoryPlaces();
+        int position = getPosition(places, placeToRemove);
+        places.remove(position);
+        setHistoryPlaces(places);
+    }
+
+    private int getPosition(List<IMapPlace> places, IMapPlace item) {
+        for (int i = 0; i < places.size(); i++) {
+            if (item.getId().equals(places.get(i).getId())){
+                return i;
+            }
+        }
+        return 0;
     }
 }
