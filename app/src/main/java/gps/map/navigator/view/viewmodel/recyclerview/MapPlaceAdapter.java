@@ -25,6 +25,8 @@ public class MapPlaceAdapter extends AbstractAdapter {
     private List<IMapPlace> originalPlacesList;
     @Inject
     IPlacePickerCallback fragment;
+    @Inject
+    Logger logger;
 
     @Inject
     MapPlaceAdapter() {
@@ -38,7 +40,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logger.debug("Picked new place item");
+                logger.debug("Picked new place item");
             }
         });
         return new MapPlaceViewHolder(itemView, fragment);

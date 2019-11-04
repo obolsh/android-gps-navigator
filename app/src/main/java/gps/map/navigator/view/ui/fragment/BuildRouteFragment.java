@@ -51,6 +51,8 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     IPlaceHistoryListener buildRouteCallback;
     @Inject
     AbstractAdapter adapter;
+    @Inject
+    Logger logger;
     private IMapPlace originPlace;
     private IMapPlace destinationPlace;
     private TextView originTitle;
@@ -109,11 +111,11 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         if (place != null) {
             setOriginTitle(place.getTitle());
             originPlace = place;
-            Logger.debug("Set origin as: " + place);
+            logger.debug("Set origin as: " + place);
         } else {
             setOriginTitle(getResources().getString(R.string.choose_origin_default));
             originPlace = null;
-            Logger.debug("Clean last origin");
+            logger.debug("Clean last origin");
         }
         cache.setLastOrigin(originPlace);
     }
@@ -172,11 +174,11 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         if (place != null) {
             setDestinationTitle(place.getTitle());
             destinationPlace = place;
-            Logger.debug("Set destination as: " + place);
+            logger.debug("Set destination as: " + place);
         } else {
             setDestinationTitle(getResources().getString(R.string.choose_destination_default));
             destinationPlace = null;
-            Logger.debug("Clean last destination");
+            logger.debug("Clean last destination");
         }
         cache.setLastDestination(destinationPlace);
     }
@@ -219,7 +221,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         } else if (destinationPlace == null) {
             setDestinationPlace(mapPlace);
         } else {
-            Logger.error("Can't use picked new place");
+            logger.error("Can't use picked new place");
         }
         openShowRouteFragmentIfRequied();
     }

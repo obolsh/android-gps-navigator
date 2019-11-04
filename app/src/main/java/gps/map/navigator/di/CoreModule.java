@@ -8,6 +8,8 @@ import dagger.Provides;
 import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.cache.DatabaseStorage;
 import gps.map.navigator.common.cache.Storage;
+import gps.map.navigator.common.debug.Logger;
+import gps.map.navigator.common.debug.LoggerImpl;
 import gps.map.navigator.model.DataCache;
 import gps.map.navigator.model.impl.data.MapSettingImpl;
 import gps.map.navigator.model.impl.sdk.MapBoxSdkImpl;
@@ -68,6 +70,12 @@ public class CoreModule {
     @Provides
     IMapTypeController provideIMapTypeController(MapTypeController controller) {
         return controller;
+    }
+
+    @Provides
+    @Singleton
+    Logger provideLogger(LoggerImpl logger) {
+        return logger;
     }
 }
 

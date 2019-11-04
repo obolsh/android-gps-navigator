@@ -17,6 +17,8 @@ import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
 
 public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
+    @Inject
+    Logger logger;
 
     private Integer databaseVersion;
 
@@ -27,9 +29,9 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
     private static final String COLUMN_CHUNKED_VALUE = "chunked_value";
 
     @Inject
-    public DatabaseStorage(@Named(Constants.ApplicationContext) Context context,
-                           @Named(Constants.DatabaseInfo) String databaseName,
-                           @Named(Constants.DatabaseInfo) Integer databaseVersion) {
+    DatabaseStorage(@Named(Constants.ApplicationContext) Context context,
+                    @Named(Constants.DatabaseInfo) String databaseName,
+                    @Named(Constants.DatabaseInfo) Integer databaseVersion) {
         super(context, databaseName, null, databaseVersion);
         this.databaseVersion = databaseVersion;
     }
@@ -43,7 +45,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             result = result && cursor.moveToFirst() && cursor.getCount() > 0;
             return result;
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
             return defaultValue;
         } finally {
             if (cursor != null) {
@@ -75,7 +77,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             statement.executeInsert();
             return true;
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
             return false;
         } finally {
             if (statement != null) {
@@ -100,7 +102,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
                 return cursor.getBlob(cursor.getColumnIndex(COLUMN_CACHE_VALUE));
             }
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -128,7 +130,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             }
             return true;
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
             return false;
         } finally {
             if (statement != null) {
@@ -138,7 +140,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
     }
 
     private void cleanChunckedStorage() {
-        getWritableDatabase().execSQL("delete from "+ TABLE_CHUNKED);
+        getWritableDatabase().execSQL("delete from " + TABLE_CHUNKED);
     }
 
     private String getTableChunkedInsertSql() {
@@ -167,7 +169,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
                 }
             }
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
         }
         return data;
     }

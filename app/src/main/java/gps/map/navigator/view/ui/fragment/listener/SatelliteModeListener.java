@@ -11,6 +11,8 @@ public class SatelliteModeListener implements CompoundButton.OnCheckedChangeList
 
     @Inject
     Presenter presenterStrategy;
+    @Inject
+    Logger logger;
 
     @Inject
     SatelliteModeListener() {
@@ -19,6 +21,6 @@ public class SatelliteModeListener implements CompoundButton.OnCheckedChangeList
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         presenterStrategy.enableSatelliteMode(isChecked);
-        Logger.debug("Satellite mode is active: " + isChecked);
+        logger.debug("Satellite mode is active: " + isChecked);
     }
 }

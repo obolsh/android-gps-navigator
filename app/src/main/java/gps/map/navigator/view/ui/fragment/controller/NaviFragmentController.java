@@ -14,10 +14,11 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
 
     @Inject
     FragmentManager fragmentManager;
-
     @Inject
     @Named(Constants.ContainerId)
     int container;
+    @Inject
+    Logger logger;
 
     @Inject
     NaviFragmentController() {
@@ -30,7 +31,7 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
         transaction.replace(container, fragment.getInstance(), tag);
         transaction.addToBackStack(tag);
         transaction.commit();
-        Logger.debug("Open fragment: " + tag);
+        logger.debug("Open fragment: " + tag);
     }
 
     public boolean thisFragmentIsActive(Class cls) {
@@ -38,7 +39,7 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
         if (fragment != null) {
             return fragment.getClass().getName().startsWith(cls.getName());
         } else {
-            Logger.error("Missing active fragment");
+            logger.error("Missing active fragment");
             return false;
         }
     }

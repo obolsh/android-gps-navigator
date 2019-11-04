@@ -13,6 +13,8 @@ public class FindMyPlaceCallback implements View.OnClickListener, Invalidator {
 
     @Inject
     Presenter presenter;
+    @Inject
+    Logger logger;
 
     @Inject
     FindMyPlaceCallback() {
@@ -20,7 +22,7 @@ public class FindMyPlaceCallback implements View.OnClickListener, Invalidator {
 
     @Override
     public void onClick(View v) {
-        Logger.debug("Find me on map triggered");
+        logger.debug("Find me on map triggered");
         presenter.showMeOnMap(new ShowMeOnMapCallback());
     }
 

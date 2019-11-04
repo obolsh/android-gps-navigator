@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import gps.map.navigator.R;
-import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 
@@ -25,7 +24,7 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
         favouriteImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logger.debug("Requested mark as favourite of: " + titleView.getText().toString());
+//                LoggerImpl.debug("Requested mark as favourite of: " + titleView.getText().toString());
                 if (mapPlace.isFavourite()) {
                     fragment.markAdNotFavouritePlace(mapPlace);
                 } else {
@@ -39,7 +38,7 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Logger.debug("Requested deleting of: " + titleView.getText().toString());
+//                LoggerImpl.debug("Requested deleting of: " + titleView.getText().toString());
                 fragment.deleteHistoryPlace(getAdapterPosition(), mapPlace);
             }
         });

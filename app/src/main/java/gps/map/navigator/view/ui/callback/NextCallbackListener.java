@@ -19,6 +19,8 @@ public class NextCallbackListener implements View.OnClickListener, Invalidator {
 
     @Inject
     IFragmentController<Fragment> fragmentController;
+    @Inject
+    Logger logger;
 
     @Inject
     NextCallbackListener() {
@@ -43,7 +45,7 @@ public class NextCallbackListener implements View.OnClickListener, Invalidator {
         } else if (showRouteFragmentIsActive()) {
             openNavigateFragment();
         } else {
-            Logger.error("Can't move to next fragment");
+            logger.error("Can't move to next fragment");
         }
     }
 

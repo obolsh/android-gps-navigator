@@ -18,7 +18,9 @@ import gps.map.navigator.model.interfaces.IRoute;
 public class DataCache implements Cache {
 
     @Inject
-    public Storage storage;
+    Storage storage;
+    @Inject
+    Logger logger;
 
     private SerializationUtils<IMapPlace> placeSerializationUtils;
     private SerializationUtils<IRoute> routeSerializationUtils;
@@ -58,9 +60,9 @@ public class DataCache implements Cache {
         if (myLocation != null && !placeAlreadyExist(output, myLocation)) {
             output.add(getMyLocation());
         } else {
-            Logger.debug("My Place already exist");
+            logger.debug("My Place already exist");
         }
-        Logger.debug("Provide history places of size: " + output.size());
+        logger.debug("Provide history places of size: " + output.size());
         return output;
     }
 
@@ -74,7 +76,7 @@ public class DataCache implements Cache {
                 arrays.add(placeSerializationUtils.serialize(historyPlaces.get(i)));
             }
             storage.saveChunkedData(arrays);
-            Logger.debug("Saved history places of size: " + arrays.size());
+            logger.debug("Saved history places of size: " + arrays.size());
         }
     }
 

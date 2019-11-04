@@ -24,10 +24,6 @@ import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.presenter.interfaces.Presenter;
-import gps.map.navigator.view.ui.fragment.listener.NavigationViewListener;
-import gps.map.navigator.view.ui.fragment.listener.NightModeListener;
-import gps.map.navigator.view.ui.fragment.listener.SatelliteModeListener;
-import gps.map.navigator.view.ui.fragment.listener.TrafficModeListener;
 
 public class BottomMenuFragment extends BottomSheetDialogFragment {
 
@@ -49,6 +45,8 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
     @Inject
     @Named(Constants.TrafficModeListener)
     CompoundButton.OnCheckedChangeListener trafficModeListener;
+    @Inject
+    Logger logger;
 
     @Nullable
     @Override
@@ -80,7 +78,7 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
             addSatelliteModeListener(menu.findItem(R.id.enable_satelite));
             addTrafficModeListener(menu.findItem(R.id.enable_traffic));
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
         }
     }
 

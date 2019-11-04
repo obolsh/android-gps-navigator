@@ -11,6 +11,8 @@ public class TrafficModeListener implements CompoundButton.OnCheckedChangeListen
 
     @Inject
     Presenter presenterStrategy;
+    @Inject
+    Logger logger;
 
     @Inject
     TrafficModeListener() {
@@ -19,6 +21,6 @@ public class TrafficModeListener implements CompoundButton.OnCheckedChangeListen
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         presenterStrategy.enableTraffic(isChecked);
-        Logger.debug("Traffic mode is active: " + isChecked);
+        logger.debug("Traffic mode is active: " + isChecked);
     }
 }

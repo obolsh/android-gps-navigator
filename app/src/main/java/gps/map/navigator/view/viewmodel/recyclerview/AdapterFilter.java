@@ -5,7 +5,6 @@ import android.widget.Filter;
 import java.util.ArrayList;
 import java.util.List;
 
-import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.IMapPlace;
 
 public class AdapterFilter extends Filter {
@@ -25,7 +24,6 @@ public class AdapterFilter extends Filter {
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
-        Logger.debug("perform Filtering: " + constraint);
         List<IMapPlace> filteredResults;
         if (constraint.length() == 0) {
             filteredResults = adapter.getOriginalPlacesList();
@@ -51,8 +49,6 @@ public class AdapterFilter extends Filter {
                     results.add(item);
                 }
             }
-        } else {
-            Logger.error("Adapter missing originalPlacesList");
         }
         return results;
     }

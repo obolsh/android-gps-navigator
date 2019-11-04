@@ -21,6 +21,8 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
     @Inject
     @Named(Constants.ApplicationContext)
     Context context;
+    @Inject
+    Logger logger;
 
     @Inject
     NavigationViewListener() {
@@ -31,11 +33,11 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
         switch (menuItem.getItemId()) {
             case R.id.rate_us:
                 showMyAppPage();
-                Logger.debug("Rate us picked");
+                logger.debug("Rate us picked");
                 break;
             case R.id.share:
                 shareThisApp();
-                Logger.debug("Share picked");
+                logger.debug("Share picked");
                 break;
 
             default:
@@ -47,7 +49,7 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
         try {
             startActivity(getLaunchIntent());
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
         }
     }
 
@@ -55,7 +57,7 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
         try {
             context.getApplicationContext().startActivity(intent);
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
         }
     }
 
@@ -72,7 +74,7 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
         try {
             startActivity(getShareIntent());
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
         }
     }
 

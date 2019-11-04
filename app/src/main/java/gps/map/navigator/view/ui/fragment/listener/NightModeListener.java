@@ -12,6 +12,8 @@ public class NightModeListener implements CompoundButton.OnCheckedChangeListener
 
     @Inject
     Presenter presenterStrategy;
+    @Inject
+    Logger logger;
 
     @Inject
     NightModeListener() {
@@ -22,6 +24,6 @@ public class NightModeListener implements CompoundButton.OnCheckedChangeListener
         if (presenterStrategy != null) {
             presenterStrategy.enableNightMode(isChecked);
         }
-        Logger.debug("Night mode is active: " + isChecked);
+        logger.debug("Night mode is active: " + isChecked);
     }
 }
