@@ -9,15 +9,21 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.navigation.NavigationView;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import gps.map.navigator.R;
+import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
 
 public class NavigationViewListener implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Context context;
+    @Inject
+    @Named(Constants.ApplicationContext)
+    Context context;
 
-    public NavigationViewListener(Context context) {
-        this.context = context;
+    @Inject
+    NavigationViewListener() {
     }
 
     @Override

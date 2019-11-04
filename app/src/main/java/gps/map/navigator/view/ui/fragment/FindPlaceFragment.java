@@ -17,20 +17,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import gps.map.navigator.R;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.listener.ICachedPlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
-import gps.map.navigator.view.ui.fragment.listener.SearchTextListener;
 import gps.map.navigator.view.viewmodel.DecorController;
-import gps.map.navigator.view.viewmodel.callback.BuildRouteCallback;
-import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
+import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
+@Singleton
 public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePickerCallback, ICachedPlaceCallback {
 
     @Inject
@@ -41,8 +42,13 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     Cache cache;
     @Inject
     IFragmentController<Fragment> fragmentController;
+    @Inject
+    IPlaceHistoryListener buildRouteCallback;
+    @Inject
+    AbstractAdapter adapter;
+    @Inject
+    SearchView.OnQueryTextListener searchListener;
     private PlaceProxyListener listener;
-    private MapPlaceAdapter adapter;
     private SearchView searchView;
 
     @Nullable
@@ -52,7 +58,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         addPlacesToRecyclerView(root);
         setupSearchView(root);
         setupToolbarNavigation(root);
-        presenter.buildRoute(new BuildRouteCallback(this));
+        presenter.buildRoute(buildRouteCallback);
         return root;
     }
 
@@ -62,14 +68,13 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(manager);
-        adapter = new MapPlaceAdapter(this);
         recyclerView.setAdapter(adapter);
     }
 
     private void setupSearchView(View root) {
         searchView = root.findViewById(R.id.search_view_box);
         searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchTextListener(adapter, presenter));
+        searchView.setOnQueryTextListener(searchListener);
     }
 
     private void setupToolbarNavigation(View view) {
@@ -158,14 +163,12 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
 
     @Override
     public void setHistoryPlaces(List<IMapPlace> placeList) {
-        if (adapter != null) {
-            adapter.setPlaces(placeList);
-        }
+        adapter.setPlaces(placeList);
     }
 
     private int getPosition(List<IMapPlace> places, IMapPlace item) {
         for (int i = 0; i < places.size(); i++) {
-            if (item.getId().equals(places.get(i).getId())){
+            if (item.getId().equals(places.get(i).getId())) {
                 return i;
             }
         }

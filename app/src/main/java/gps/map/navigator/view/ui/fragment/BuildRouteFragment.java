@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import gps.map.navigator.R;
 import gps.map.navigator.common.debug.Logger;
@@ -26,6 +27,7 @@ import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.ICachedPlaceCallback;
@@ -33,9 +35,9 @@ import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
 import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
-import gps.map.navigator.view.viewmodel.callback.BuildRouteCallback;
-import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
+import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
+@Singleton
 public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRoute, IPlacePickerCallback, ICachedPlaceCallback {
     @Inject
     Presenter presenter;
@@ -45,8 +47,10 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     DecorController decorController;
     @Inject
     IFragmentController<Fragment> fragmentController;
-
-    private MapPlaceAdapter adapter;
+    @Inject
+    IPlaceHistoryListener buildRouteCallback;
+    @Inject
+    AbstractAdapter adapter;
     private IMapPlace originPlace;
     private IMapPlace destinationPlace;
     private TextView originTitle;
@@ -62,7 +66,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_build_route, container, false);
         addHistoryPlacesToRecyclerView(view);
-        presenter.buildRoute(new BuildRouteCallback(this));
+        presenter.buildRoute(buildRouteCallback);
         setupOrigin(view);
         setupDestination(view);
         setupSwipeOriginAndDestination(view);
@@ -76,7 +80,6 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(manager);
-        adapter = new MapPlaceAdapter(this);
         recyclerView.setAdapter(adapter);
     }
 

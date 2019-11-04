@@ -3,20 +3,23 @@ package gps.map.navigator.view.ui.fragment.listener;
 
 import android.widget.SearchView;
 
+import javax.inject.Inject;
+
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.viewmodel.callback.FindPlaceCallback;
-import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
+import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
 public class SearchTextListener implements SearchView.OnQueryTextListener {
 
-    private MapPlaceAdapter adapter;
-    private Presenter presenter;
+    @Inject
+    AbstractAdapter adapter;
+    @Inject
+    Presenter presenter;
 
-    public SearchTextListener(MapPlaceAdapter adapter, Presenter presenter) {
-        this.adapter = adapter;
-        this.presenter = presenter;
+    @Inject
+    SearchTextListener() {
     }
 
     @Override
