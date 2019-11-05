@@ -17,10 +17,12 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.bottomappbar.BottomAppBar;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentRoute;
 import gps.map.navigator.R;
+import gps.map.navigator.common.Constants;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
@@ -44,6 +46,9 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     Cache cache;
     @Inject
     IFragmentController<Fragment> fragmentController;
+    @Inject
+    @Named(Constants.BackPressListener)
+    View.OnClickListener backPressListener;
     private TextView originTitle;
     private TextView destinationTitle;
 
@@ -154,12 +159,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     private void setupToolbarNavigation(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(backPressListener);
     }
 
     @Override

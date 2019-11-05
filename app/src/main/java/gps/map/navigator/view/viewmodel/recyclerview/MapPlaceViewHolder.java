@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import gps.map.navigator.R;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
+import gps.map.navigator.view.viewmodel.recyclerview.listener.DeleteListener;
+import gps.map.navigator.view.viewmodel.recyclerview.listener.FavouriteListener;
+import gps.map.navigator.view.viewmodel.recyclerview.listener.PickedListener;
 
 class MapPlaceViewHolder extends RecyclerView.ViewHolder {
 
@@ -17,39 +20,16 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
     private TextView titleView;
     private TextView addressView;
     private IMapPlace mapPlace;
+    private IPlacePickerCallback fragment;
+    private ImageView deleteButton;
 
-    MapPlaceViewHolder(@NonNull View itemView, final IPlacePickerCallback fragment) {
+    MapPlaceViewHolder(@NonNull View itemView, IPlacePickerCallback fragment) {
         super(itemView);
+        this.fragment = fragment;
         favouriteImage = itemView.findViewById(R.id.favourite_map_place);
-        favouriteImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                LoggerImpl.debug("Requested mark as favourite of: " + titleView.getText().toString());
-                if (mapPlace.isFavourite()) {
-                    fragment.markAdNotFavouritePlace(mapPlace);
-                } else {
-                    fragment.markAdFavouritePlace(mapPlace);
-                }
-            }
-        });
         titleView = itemView.findViewById(R.id.map_place_title);
         addressView = itemView.findViewById(R.id.map_place_address);
-        ImageView deleteButton = itemView.findViewById(R.id.delete_map_place);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                LoggerImpl.debug("Requested deleting of: " + titleView.getText().toString());
-                fragment.deleteHistoryPlace(getAdapterPosition(), mapPlace);
-            }
-        });
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fragment != null && mapPlace != null) {
-                    fragment.setNewPickedPlace(mapPlace);
-                }
-            }
-        });
+        deleteButton = itemView.findViewById(R.id.delete_map_place);
     }
 
     void setMapPlace(IMapPlace mapPlace) {
@@ -57,6 +37,13 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
         setPlaceFavourite(mapPlace.isFavourite());
         setTitle(mapPlace.getTitle());
         setAddress(mapPlace.getAddress());
+        addListeners();
+    }
+
+    private void addListeners() {
+        favouriteImage.setOnClickListener(new FavouriteListener(mapPlace, fragment));
+        deleteButton.setOnClickListener(new DeleteListener(this, mapPlace, fragment));
+        itemView.setOnClickListener(new PickedListener(mapPlace, fragment));
     }
 
     private void setPlaceFavourite(boolean favourite) {

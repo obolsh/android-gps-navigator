@@ -10,4 +10,5 @@ public class Constants {
     public static final String NightModeListener = "night_mode_listener";
     public static final String TrafficModeListener = "traffic_mode_listener";
     public static final String SatelliteModeListener = "satellite_mode_listener";
+    public static final String BackPressListener = "back_press_listener";
 }

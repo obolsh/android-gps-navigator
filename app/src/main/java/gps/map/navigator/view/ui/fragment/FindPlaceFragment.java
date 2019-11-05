@@ -17,9 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import gps.map.navigator.R;
+import gps.map.navigator.common.Constants;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.PlaceProxyListener;
@@ -48,6 +50,9 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     AbstractAdapter adapter;
     @Inject
     SearchView.OnQueryTextListener searchListener;
+    @Inject
+    @Named(Constants.BackPressListener)
+    View.OnClickListener backPressListener;
     private PlaceProxyListener listener;
     private SearchView searchView;
 
@@ -79,12 +84,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
 
     private void setupToolbarNavigation(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(backPressListener);
     }
 
     @Override

@@ -17,9 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import gps.map.navigator.R;
+import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.impl.data.Route;
 import gps.map.navigator.model.interfaces.Cache;
@@ -53,6 +55,9 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     AbstractAdapter adapter;
     @Inject
     Logger logger;
+    @Inject
+    @Named(Constants.BackPressListener)
+    View.OnClickListener backPressListener;
     private IMapPlace originPlace;
     private IMapPlace destinationPlace;
     private TextView originTitle;
@@ -154,12 +159,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     private void setupToolbarNavigation(View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(backPressListener);
     }
 
     @Override
