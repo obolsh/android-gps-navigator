@@ -27,15 +27,12 @@ import gps.map.navigator.model.impl.data.Route;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
-import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
-import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.ICachedPlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
-import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
@@ -58,6 +55,15 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     @Inject
     @Named(Constants.BackPressListener)
     View.OnClickListener backPressListener;
+    @Inject
+    @Named(Constants.SwipePlacesListener)
+    View.OnClickListener swipeListener;
+    @Inject
+    @Named(Constants.OriginClickListener)
+    View.OnClickListener originClickListener;
+    @Inject
+    @Named(Constants.DestinationClickListener)
+    View.OnClickListener destinationClickListener;
     private IMapPlace originPlace;
     private IMapPlace destinationPlace;
     private TextView originTitle;
@@ -92,14 +98,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     private void setupOrigin(View view) {
         originTitle = view.findViewById(R.id.origin_title);
-        originTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
-                new PlaceProxyListener() {
-
-                    @Override
-                    public void onPlaceLocated(IMapPlace mapPlace) {
-                        cache.setLastOrigin(mapPlace);
-                    }
-                }));
+        originTitle.setOnClickListener(originClickListener);
         setOriginPlace(getBestOrigin());
     }
 
@@ -133,13 +132,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     private void setupDestination(View view) {
         destinationTitle = view.findViewById(R.id.destination_title);
-        destinationTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
-                new PlaceProxyListener() {
-                    @Override
-                    public void onPlaceLocated(IMapPlace mapPlace) {
-                        cache.setLastDestination(mapPlace);
-                    }
-                }));
+        destinationTitle.setOnClickListener(destinationClickListener);
         setDestinationPlace(getBestDestination());
     }
 
@@ -154,7 +147,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     private void setupSwipeOriginAndDestination(View view) {
         ImageView button = view.findViewById(R.id.swipe_origin_and_destination_button);
-        button.setOnClickListener(new SwipePlacesListener(this));
+        button.setOnClickListener(swipeListener);
     }
 
     private void setupToolbarNavigation(View view) {
@@ -168,6 +161,16 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         IMapPlace lastDestination = destinationPlace;
         setOriginPlace(lastDestination);
         setDestinationPlace(lastOrigin);
+    }
+
+    @Override
+    public void setOnlyOrigin(IMapPlace origin) {
+        cache.setLastOrigin(origin);
+    }
+
+    @Override
+    public void setOnlyDestination(IMapPlace destination) {
+        cache.setLastDestination(destination);
     }
 
     private void setDestinationPlace(IMapPlace place) {
@@ -260,7 +263,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     private int getPosition(List<IMapPlace> places, IMapPlace item) {
         for (int i = 0; i < places.size(); i++) {
-            if (item.getId().equals(places.get(i).getId())){
+            if (item.getId().equals(places.get(i).getId())) {
                 return i;
             }
         }

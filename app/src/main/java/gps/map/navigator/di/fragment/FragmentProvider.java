@@ -22,6 +22,7 @@ public abstract class FragmentProvider {
     @ContributesAndroidInjector(modules = BuildRouteFragmentModule.class)
     public abstract BuildRouteFragment provideBuildRouteFragmentFactory();
 
+    @FragmentScope
     @ContributesAndroidInjector(modules = ShowRouteFragmentModule.class)
     public abstract ShowRouteFragment provideShowRouteFragmentFactory();
 

@@ -1,6 +1,7 @@
 package gps.map.navigator.view.ui.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,8 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     @Inject
     @Named(Constants.BackPressListener)
     View.OnClickListener backPressListener;
+    @Inject
+    Activity activity;
     private PlaceProxyListener listener;
     private SearchView searchView;
 
@@ -121,7 +124,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     public void setNewPickedPlace(IMapPlace mapPlace) {
         if (listener != null) {
             listener.onPlaceLocated(mapPlace);
-            getActivity().onBackPressed();
+            activity.onBackPressed();
         } else {
             cache.setLastPlace(mapPlace);
             fragmentController.removeFromBackStack(this);

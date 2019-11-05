@@ -26,13 +26,9 @@ import gps.map.navigator.common.Constants;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
-import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
-import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
-import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
-import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.ShowRouteCallback;
 
@@ -45,10 +41,17 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     @Inject
     Cache cache;
     @Inject
-    IFragmentController<Fragment> fragmentController;
-    @Inject
     @Named(Constants.BackPressListener)
     View.OnClickListener backPressListener;
+    @Inject
+    @Named(Constants.SwipePlacesListener)
+    View.OnClickListener swipeListener;
+    @Inject
+    @Named(Constants.OriginClickListener)
+    View.OnClickListener originClickListener;
+    @Inject
+    @Named(Constants.DestinationClickListener)
+    View.OnClickListener destinationClickListener;
     private TextView originTitle;
     private TextView destinationTitle;
 
@@ -95,14 +98,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     private void setupOrigin(View view) {
         originTitle = view.findViewById(R.id.origin_title);
-        originTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
-                new PlaceProxyListener() {
-
-                    @Override
-                    public void onPlaceLocated(IMapPlace origin) {
-                        changeActiveRoute(origin, null);
-                    }
-                }));
+        originTitle.setOnClickListener(originClickListener);
         setOriginTitle();
     }
 
@@ -116,13 +112,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     private void setupDestination(View view) {
         destinationTitle = view.findViewById(R.id.destination_title);
-        destinationTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
-                new PlaceProxyListener() {
-                    @Override
-                    public void onPlaceLocated(IMapPlace destination) {
-                        changeActiveRoute(null, destination);
-                    }
-                }));
+        destinationTitle.setOnClickListener(destinationClickListener);
         setDestinationTitle();
     }
 
@@ -136,7 +126,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     private void setupSwipeOriginAndDestination(View view) {
         ImageView button = view.findViewById(R.id.swipe_origin_and_destination_button);
-        button.setOnClickListener(new SwipePlacesListener(this));
+        button.setOnClickListener(swipeListener);
     }
 
     @Override
@@ -171,18 +161,34 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         changeActiveRoute(newOrigin, newDestination);
     }
 
+    @Override
+    public void setOnlyOrigin(IMapPlace origin) {
+        changeActiveRoute(origin, null);
+    }
+
+    @Override
+    public void setOnlyDestination(IMapPlace destination) {
+        changeActiveRoute(null, destination);
+    }
+
     private void changeActiveRoute(IMapPlace newOrigin, IMapPlace newDestination) {
         IRoute route = cache.getLastRoute();
         if (newOrigin != null) {
             route.setOrigin(newOrigin);
-            setOriginTitle();
         }
         if (newDestination != null) {
             route.setDestination(newDestination);
-            setDestinationTitle();
         }
 
         cache.setLastRoute(route);
+
+        if (newOrigin != null) {
+            setOriginTitle();
+        }
+
+        if (newDestination != null) {
+            setDestinationTitle();
+        }
 
         showRouteOnMap(route);
     }
