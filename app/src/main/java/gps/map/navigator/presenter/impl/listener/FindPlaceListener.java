@@ -7,11 +7,11 @@ import gps.map.navigator.view.interfaces.IPlaceListener;
 public class FindPlaceListener implements IPlaceListener {
 
     private Cache cache;
-    private IPlaceListener placeListener;
+    private IPlaceListener listener;
 
-    public FindPlaceListener(Cache cache, IPlaceListener placeListener) {
+    public FindPlaceListener(Cache cache, IPlaceListener listener) {
         this.cache = cache;
-        this.placeListener = placeListener;
+        this.listener = listener;
     }
 
     @Override
@@ -19,22 +19,22 @@ public class FindPlaceListener implements IPlaceListener {
         if (cache != null) {
             cache.setLastPlace(place);
         }
-        if (placeListener != null) {
-            placeListener.onPlaceLocated(place);
+        if (listener != null) {
+            listener.onPlaceLocated(place);
         }
         invalidate();
     }
 
     @Override
     public void onPlaceLocationFailed(Exception reason) {
-        if (placeListener != null) {
-            placeListener.onPlaceLocationFailed(reason);
+        if (listener != null) {
+            listener.onPlaceLocationFailed(reason);
         }
         invalidate();
     }
 
     private void invalidate() {
         cache = null;
-        placeListener = null;
+        listener = null;
     }
 }

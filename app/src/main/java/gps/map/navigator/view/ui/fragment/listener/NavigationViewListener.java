@@ -33,11 +33,9 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
         switch (menuItem.getItemId()) {
             case R.id.rate_us:
                 showMyAppPage();
-                logger.debug("Rate us picked");
                 break;
             case R.id.share:
                 shareThisApp();
-                logger.debug("Share picked");
                 break;
 
             default:

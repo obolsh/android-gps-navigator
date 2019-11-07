@@ -6,11 +6,11 @@ import gps.map.navigator.view.interfaces.IPlaceListener;
 
 public class ShowMeOnMapListener implements IPlaceListener {
     private Cache cache;
-    private IPlaceListener placeListener;
+    private IPlaceListener listener;
 
-    public ShowMeOnMapListener(Cache cache, IPlaceListener placeListener) {
+    public ShowMeOnMapListener(Cache cache, IPlaceListener listener) {
         this.cache = cache;
-        this.placeListener = placeListener;
+        this.listener = listener;
     }
 
     @Override
@@ -18,22 +18,22 @@ public class ShowMeOnMapListener implements IPlaceListener {
         if (cache != null) {
             cache.setMyLocation(place);
         }
-        if (placeListener != null) {
-            placeListener.onPlaceLocated(place);
+        if (listener != null) {
+            listener.onPlaceLocated(place);
         }
         invalidate();
     }
 
     @Override
     public void onPlaceLocationFailed(Exception reason) {
-        if (placeListener != null) {
-            placeListener.onPlaceLocationFailed(reason);
+        if (listener != null) {
+            listener.onPlaceLocationFailed(reason);
         }
         invalidate();
     }
 
     private void invalidate() {
         cache = null;
-        placeListener = null;
+        listener = null;
     }
 }

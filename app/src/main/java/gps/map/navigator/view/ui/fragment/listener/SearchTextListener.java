@@ -1,6 +1,5 @@
 package gps.map.navigator.view.ui.fragment.listener;
 
-
 import android.widget.SearchView;
 
 import javax.inject.Inject;

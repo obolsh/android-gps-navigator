@@ -73,10 +73,14 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     private void addPlacesToRecyclerView(View root) {
         RecyclerView recyclerView = root.findViewById(R.id.history_places_container);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(getLayoutManager());
+        recyclerView.setAdapter(adapter);
+    }
+
+    private LinearLayoutManager getLayoutManager() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
+        return manager;
     }
 
     private void setupSearchView(View root) {
@@ -139,7 +143,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     }
 
     @Override
-    public void markAdFavouritePlace(IMapPlace mapPlace) {
+    public void markAsFavouritePlace(IMapPlace mapPlace) {
         setFavouriteState(mapPlace, true);
     }
 
@@ -166,7 +170,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
 
     @Override
     public void setHistoryPlaces(List<IMapPlace> placeList) {
-        adapter.setPlaces(placeList);
+        adapter.setInitialPlacesList(placeList);
     }
 
     private int getPosition(List<IMapPlace> places, IMapPlace item) {

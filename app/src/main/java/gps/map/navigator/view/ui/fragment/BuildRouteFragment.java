@@ -90,10 +90,14 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     private void addHistoryPlacesToRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.history_places_container);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(getLayoutManager());
+        recyclerView.setAdapter(adapter);
+    }
+
+    private LinearLayoutManager getLayoutManager() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);
-        recyclerView.setLayoutManager(manager);
-        recyclerView.setAdapter(adapter);
+        return manager;
     }
 
     private void setupOrigin(View view) {
@@ -213,7 +217,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     @Override
     public void setHistoryPlaces(List<IMapPlace> placeList) {
         if (adapter != null) {
-            adapter.setPlaces(placeList);
+            adapter.setInitialPlacesList(placeList);
         }
     }
 
@@ -236,7 +240,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     }
 
     @Override
-    public void markAdFavouritePlace(IMapPlace mapPlace) {
+    public void markAsFavouritePlace(IMapPlace mapPlace) {
         setFavouriteState(mapPlace, true);
     }
 

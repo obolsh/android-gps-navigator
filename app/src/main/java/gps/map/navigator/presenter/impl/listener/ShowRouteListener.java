@@ -7,11 +7,11 @@ import gps.map.navigator.view.interfaces.IRouteReadyListener;
 public class ShowRouteListener implements IRouteReadyListener {
 
     private Cache cache;
-    private IRouteReadyListener routeReadyListener;
+    private IRouteReadyListener listener;
 
-    public ShowRouteListener(Cache cache, IRouteReadyListener routeReadyListener) {
+    public ShowRouteListener(Cache cache, IRouteReadyListener listener) {
         this.cache = cache;
-        this.routeReadyListener = routeReadyListener;
+        this.listener = listener;
     }
 
     @Override
@@ -19,22 +19,22 @@ public class ShowRouteListener implements IRouteReadyListener {
         if (cache != null) {
             cache.setLastRoute(route);
         }
-        if (routeReadyListener != null) {
-            routeReadyListener.onRouteReady(route);
+        if (listener != null) {
+            listener.onRouteReady(route);
         }
         invalidate();
     }
 
     @Override
     public void onRouteFailed(Exception reason) {
-        if (routeReadyListener != null) {
-            routeReadyListener.onRouteFailed(reason);
+        if (listener != null) {
+            listener.onRouteFailed(reason);
         }
         invalidate();
     }
 
     private void invalidate() {
         cache = null;
-        routeReadyListener = null;
+        listener = null;
     }
 }

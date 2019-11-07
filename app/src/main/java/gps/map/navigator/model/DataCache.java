@@ -2,13 +2,12 @@ package gps.map.navigator.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import gps.map.navigator.common.cache.Storage;
-import gps.map.navigator.common.debug.Logger;
+import gps.map.navigator.common.utils.DescendingTimeComparator;
 import gps.map.navigator.common.utils.SerializationUtils;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
@@ -19,8 +18,6 @@ public class DataCache implements Cache {
 
     @Inject
     Storage storage;
-    @Inject
-    Logger logger;
 
     private SerializationUtils<IMapPlace> placeSerializationUtils;
     private SerializationUtils<IRoute> routeSerializationUtils;
@@ -34,7 +31,7 @@ public class DataCache implements Cache {
     static final String KEY_MAP_SETTINGS = "key_map_settings";
 
     @Inject
-    public DataCache() {
+    DataCache() {
         placeSerializationUtils = new SerializationUtils<>();
         routeSerializationUtils = new SerializationUtils<>();
         mapSettingSerializationUtils = new SerializationUtils<>();
@@ -59,10 +56,7 @@ public class DataCache implements Cache {
         IMapPlace myLocation = getMyLocation();
         if (myLocation != null && !placeAlreadyExist(output, myLocation)) {
             output.add(getMyLocation());
-        } else {
-            logger.debug("My Place already exist");
         }
-        logger.debug("Provide history places of size: " + output.size());
         return output;
     }
 
@@ -76,21 +70,11 @@ public class DataCache implements Cache {
                 arrays.add(placeSerializationUtils.serialize(historyPlaces.get(i)));
             }
             storage.saveChunkedData(arrays);
-            logger.debug("Saved history places of size: " + arrays.size());
         }
     }
 
     private void sortByLastUsedTime(List<IMapPlace> places) {
-        Collections.sort(places, new TimeComparator());
-    }
-
-    public class TimeComparator implements Comparator<IMapPlace> {
-        @Override
-        public int compare(IMapPlace one, IMapPlace two) {
-            Long oneTime = one.getLastUsedTime();
-            Long twoTime = two.getLastUsedTime();
-            return Integer.compare(twoTime.compareTo(oneTime), 0);
-        }
+        Collections.sort(places, new DescendingTimeComparator());
     }
 
     @Override
@@ -258,16 +242,14 @@ public class DataCache implements Cache {
             places.add(newPlace);
             setHistoryPlaces(places);
         }
-
     }
 
     private int getPosition(List<IMapPlace> places, IMapPlace item) {
         for (int i = 0; i < places.size(); i++) {
-            if (item.getId().equals(places.get(i).getId())){
+            if (item.getId().equals(places.get(i).getId())) {
                 return i;
             }
         }
         return 0;
     }
-
 }

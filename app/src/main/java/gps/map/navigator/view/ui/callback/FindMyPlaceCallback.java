@@ -4,7 +4,6 @@ import android.view.View;
 
 import javax.inject.Inject;
 
-import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.Invalidator;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.viewmodel.callback.ShowMeOnMapCallback;
@@ -13,8 +12,6 @@ public class FindMyPlaceCallback implements View.OnClickListener, Invalidator {
 
     @Inject
     Presenter presenter;
-    @Inject
-    Logger logger;
 
     @Inject
     FindMyPlaceCallback() {
@@ -22,7 +19,6 @@ public class FindMyPlaceCallback implements View.OnClickListener, Invalidator {
 
     @Override
     public void onClick(View v) {
-        logger.debug("Find me on map triggered");
         presenter.showMeOnMap(new ShowMeOnMapCallback());
     }
 

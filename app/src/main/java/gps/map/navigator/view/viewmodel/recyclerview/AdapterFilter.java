@@ -18,7 +18,7 @@ public class AdapterFilter extends Filter {
     @SuppressWarnings("unchecked")
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        adapter.setPlacesList((List<IMapPlace>) results.values);
+        adapter.changePlacesList((List<IMapPlace>) results.values);
         adapter.notifyDataSetChanged();
     }
 

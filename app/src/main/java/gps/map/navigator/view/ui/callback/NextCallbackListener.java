@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 
 import javax.inject.Inject;
 
-import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.Invalidator;
 import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
 import gps.map.navigator.view.ui.fragment.MapFragment;
@@ -19,8 +18,6 @@ public class NextCallbackListener implements View.OnClickListener, Invalidator {
 
     @Inject
     IFragmentController<Fragment> fragmentController;
-    @Inject
-    Logger logger;
 
     @Inject
     NextCallbackListener() {
@@ -44,8 +41,6 @@ public class NextCallbackListener implements View.OnClickListener, Invalidator {
             openBuildRouteFragment();
         } else if (showRouteFragmentIsActive()) {
             openNavigateFragment();
-        } else {
-            logger.error("Can't move to next fragment");
         }
     }
 
@@ -68,7 +63,6 @@ public class NextCallbackListener implements View.OnClickListener, Invalidator {
     private void openNavigateFragment() {
         fragmentController.openFragment(new NavigatorFragment());
     }
-
 
     @Override
     public void invalidate() {

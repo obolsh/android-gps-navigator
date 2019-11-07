@@ -20,7 +20,7 @@ public class FavouriteListener implements View.OnClickListener {
             if (mapPlace.isFavourite()) {
                 placePickerCallback.markAdNotFavouritePlace(mapPlace);
             } else {
-                placePickerCallback.markAdFavouritePlace(mapPlace);
+                placePickerCallback.markAsFavouritePlace(mapPlace);
             }
         }
     }

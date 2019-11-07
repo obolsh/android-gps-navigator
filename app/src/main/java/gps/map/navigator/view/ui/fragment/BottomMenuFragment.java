@@ -83,9 +83,9 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
     }
 
     private void addNightModeListener(MenuItem menuItem) {
-        SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(presenterStrategy.hasNightMode());
-        actionView.setOnCheckedChangeListener(nightModeListener);
+        SwitchCompat view = getView(menuItem);
+        view.setChecked(presenterStrategy.hasNightMode());
+        view.setOnCheckedChangeListener(nightModeListener);
     }
 
     private SwitchCompat getView(MenuItem menuItem) {
@@ -93,14 +93,14 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
     }
 
     private void addSatelliteModeListener(MenuItem menuItem) {
-        SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(presenterStrategy.hasSatelliteMode());
-        actionView.setOnCheckedChangeListener(satelliteModeListener);
+        SwitchCompat view = getView(menuItem);
+        view.setChecked(presenterStrategy.hasSatelliteMode());
+        view.setOnCheckedChangeListener(satelliteModeListener);
     }
 
     private void addTrafficModeListener(MenuItem menuItem) {
-        SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(presenterStrategy.hasTrafficMode());
-        actionView.setOnCheckedChangeListener(trafficModeListener);
+        SwitchCompat view = getView(menuItem);
+        view.setChecked(presenterStrategy.hasTrafficMode());
+        view.setOnCheckedChangeListener(trafficModeListener);
     }
 }

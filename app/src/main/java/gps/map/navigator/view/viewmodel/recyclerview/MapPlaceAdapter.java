@@ -21,12 +21,13 @@ import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 
 public class MapPlaceAdapter extends AbstractAdapter {
 
-    private List<IMapPlace> places;
-    private List<IMapPlace> originalPlacesList;
     @Inject
     IPlacePickerCallback fragment;
     @Inject
     Logger logger;
+
+    private List<IMapPlace> places;
+    private List<IMapPlace> originalPlacesList;
 
     @Inject
     MapPlaceAdapter() {
@@ -37,12 +38,6 @@ public class MapPlaceAdapter extends AbstractAdapter {
     public MapPlaceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.map_place_view, parent, false);
-        itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logger.debug("Picked new place item");
-            }
-        });
         return new MapPlaceViewHolder(itemView, fragment);
     }
 
@@ -67,7 +62,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     @Override
-    public void setPlacesList(List<IMapPlace> placeList) {
+    public void changePlacesList(List<IMapPlace> placeList) {
         this.places = placeList;
     }
 
@@ -111,7 +106,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     @Override
-    public void setPlaces(List<IMapPlace> places) {
+    public void setInitialPlacesList(List<IMapPlace> places) {
         this.originalPlacesList = places;
         sortByLastUsedTime(originalPlacesList);
         this.places = originalPlacesList;
