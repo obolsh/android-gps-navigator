@@ -19,7 +19,6 @@ import gps.map.navigator.common.debug.Logger;
 public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
     @Inject
     Logger logger;
-
     private Integer databaseVersion;
 
     private static final String TABLE_CHUNKED = "table_chunked";
@@ -41,16 +40,12 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
         Cursor cursor = null;
         try {
             cursor = getCacheCursor(key);
-            boolean result = cursor != null;
-            result = result && cursor.moveToFirst() && cursor.getCount() > 0;
-            return result;
+            return cursor != null && cursor.moveToFirst() && cursor.getCount() > 0;
         } catch (Throwable t) {
             logger.error(t);
             return defaultValue;
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+            closeCursorSilently(cursor);
         }
     }
 
@@ -61,6 +56,12 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
 
     private Cursor makeQuery(String table, String[] columns, String selection) {
         return getReadableDatabase().query(table, columns, selection, null, null, null, null);
+    }
+
+    private void closeCursorSilently(Cursor cursor) {
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 
     @Override
@@ -80,9 +81,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             logger.error(t);
             return false;
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
+            closeStatementSilently(statement);
         }
     }
 
@@ -92,24 +91,38 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
                 TABLE_CACHE, COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE);
     }
 
+    private void closeStatementSilently(SQLiteStatement statement) {
+        if (statement != null) {
+            statement.close();
+        }
+    }
+
     @Override
     public byte[] getData(String key, byte[] defaultValue) {
         Cursor cursor = null;
         try {
             cursor = getCacheCursor(key);
-            if (cursor != null && cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                return cursor.getBlob(cursor.getColumnIndex(COLUMN_CACHE_VALUE));
+            if (cursorCanMoveToFirst(cursor)) {
+                return getBlob(cursor, cursor.getColumnIndex(COLUMN_CACHE_VALUE));
             }
         } catch (Throwable t) {
             logger.error(t);
         } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
+            closeCursorSilently(cursor);
         }
         return defaultValue;
+    }
 
+    private boolean cursorCanMoveToFirst(Cursor cursor) {
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            return true;
+        }
+        return false;
+    }
+
+    private byte[] getBlob(Cursor cursor, int columnIndex) {
+        return cursor.getBlob(columnIndex);
     }
 
     @Override
@@ -133,9 +146,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
             logger.error(t);
             return false;
         } finally {
-            if (statement != null) {
-                statement.close();
-            }
+            closeStatementSilently(statement);
         }
     }
 
@@ -144,38 +155,32 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
     }
 
     private String getTableChunkedInsertSql() {
-        return String.format(Locale.US,
-                "insert or replace into '%s' (%s) values (?)",
+        return String.format(Locale.US, "insert or replace into '%s' (%s) values (?)",
                 TABLE_CHUNKED, COLUMN_CHUNKED_VALUE);
     }
 
     @Override
     public List<byte[]> getChunkedData() {
         List<byte[]> data = new ArrayList<>();
+        Cursor cursor = null;
         try {
-            Cursor cursor;
             cursor = makeQuery(TABLE_CHUNKED, new String[]{COLUMN_CHUNKED_VALUE}, null);
-            if (cursor != null) {
-                try {
-                    if (cursor.getCount() > 0) {
-                        cursor.moveToFirst();
-                        data.add(getRawChunckedData(cursor));
-                        while (cursor.moveToNext()) {
-                            data.add(getRawChunckedData(cursor));
-                        }
-                    }
-                } finally {
-                    cursor.close();
+            if (cursorCanMoveToFirst(cursor)) {
+                data.add(getRawChunckedData(cursor));
+                while (cursor.moveToNext()) {
+                    data.add(getRawChunckedData(cursor));
                 }
             }
         } catch (Throwable t) {
             logger.error(t);
+        } finally {
+            closeCursorSilently(cursor);
         }
         return data;
     }
 
     private byte[] getRawChunckedData(Cursor cursor) {
-        return cursor.getBlob(cursor.getColumnIndex(COLUMN_CHUNKED_VALUE));
+        return getBlob(cursor, cursor.getColumnIndex(COLUMN_CHUNKED_VALUE));
     }
 
     @Override
