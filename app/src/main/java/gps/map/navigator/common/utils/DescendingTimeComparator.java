@@ -4,6 +4,9 @@ import java.util.Comparator;
 
 import gps.map.navigator.model.interfaces.IMapPlace;
 
+/**
+ * Sort list descending by last used time.
+ */
 public class DescendingTimeComparator implements Comparator<IMapPlace> {
     @Override
     public int compare(IMapPlace one, IMapPlace two) {

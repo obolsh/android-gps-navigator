@@ -9,7 +9,12 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
 public class SerializationUtils<T> {
-
+    /**
+     * Create byte array from serializable object.
+     *
+     * @param serializable - serializable object.
+     * @return byte array or null if issue happened.
+     */
     public byte[] serialize(T serializable) {
         if (serializable == null) {
             return null;
@@ -35,6 +40,12 @@ public class SerializationUtils<T> {
         }
     }
 
+    /**
+     * Create serializable object from byte array.
+     *
+     * @param bytes - byte array.
+     * @return serializable object or null if issue happened.
+     */
     public T deserialize(byte[] bytes) {
         if (bytes == null || bytes.length == 0) {
             return null;
