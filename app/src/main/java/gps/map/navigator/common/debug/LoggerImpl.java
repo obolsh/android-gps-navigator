@@ -14,16 +14,19 @@ public class LoggerImpl implements Logger {
     LoggerImpl() {
     }
 
+    @Override
     public void debug(String message) {
         if (BuildConfig.DEBUG) {
             printInLogcat(message, false);
         }
     }
 
+    @Override
     public void error(String message) {
         printInLogcat(message, true);
     }
 
+    @Override
     public void error(Throwable throwable) {
         Log.e(TAG, "", throwable);
     }
