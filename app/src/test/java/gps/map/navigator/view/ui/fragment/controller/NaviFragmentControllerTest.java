@@ -28,7 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.reflect.Whitebox.setInternalState;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Log.class, NaviFragmentController.class, Fragment.class})
+@PrepareForTest({Log.class, NaviFragmentController.class})
 public class NaviFragmentControllerTest {
 
     private FragmentManager fragmentManager;
