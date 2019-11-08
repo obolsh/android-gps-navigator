@@ -6,6 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -36,7 +39,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
     }
 
     @Override
-    public boolean hasData(String key, boolean defaultValue) {
+    public boolean hasData(@NonNull String key, boolean defaultValue) {
         Cursor cursor = null;
         try {
             cursor = getCacheCursor(key);
@@ -49,23 +52,23 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
         }
     }
 
-    private Cursor getCacheCursor(String key) {
+    private Cursor getCacheCursor(@NonNull String key) {
         return makeQuery(TABLE_CACHE, new String[]{COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE},
                 String.format(Locale.US, "%s='%s'", COLUMN_CACHE_KEY, key));
     }
 
-    private Cursor makeQuery(String table, String[] columns, String selection) {
+    private Cursor makeQuery(@NonNull String table, @NonNull String[] columns, @Nullable String selection) {
         return getReadableDatabase().query(table, columns, selection, null, null, null, null);
     }
 
-    private void closeCursorSilently(Cursor cursor) {
+    private void closeCursorSilently(@Nullable Cursor cursor) {
         if (cursor != null) {
             cursor.close();
         }
     }
 
     @Override
-    public boolean saveData(String key, byte[] data) {
+    public boolean saveData(@NonNull String key, @Nullable byte[] data) {
         SQLiteStatement statement = null;
         try {
             statement = getWritableDatabase().compileStatement(getTableCacheInsertSql());
@@ -85,20 +88,22 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
         }
     }
 
+    @NonNull
     private String getTableCacheInsertSql() {
         return String.format(Locale.US,
                 "insert or replace into '%s' (%s, %s) values (?,?)",
                 TABLE_CACHE, COLUMN_CACHE_KEY, COLUMN_CACHE_VALUE);
     }
 
-    private void closeStatementSilently(SQLiteStatement statement) {
+    private void closeStatementSilently(@Nullable SQLiteStatement statement) {
         if (statement != null) {
             statement.close();
         }
     }
 
+    @Nullable
     @Override
-    public byte[] getData(String key, byte[] defaultValue) {
+    public byte[] getData(@NonNull String key, @Nullable byte[] defaultValue) {
         Cursor cursor = null;
         try {
             cursor = getCacheCursor(key);
@@ -113,7 +118,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
         return defaultValue;
     }
 
-    private boolean cursorCanMoveToFirst(Cursor cursor) {
+    private boolean cursorCanMoveToFirst(@Nullable Cursor cursor) {
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
             return true;
@@ -121,12 +126,12 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
         return false;
     }
 
-    private byte[] getBlob(Cursor cursor, int columnIndex) {
+    private byte[] getBlob(@NonNull Cursor cursor, int columnIndex) {
         return cursor.getBlob(columnIndex);
     }
 
     @Override
-    public boolean saveChunkedData(List<byte[]> data) {
+    public boolean saveChunkedData(@NonNull List<byte[]> data) {
         SQLiteStatement statement = null;
         try {
             statement = getWritableDatabase().compileStatement(getTableChunkedInsertSql());
@@ -154,11 +159,13 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
         getWritableDatabase().execSQL("delete from " + TABLE_CHUNKED);
     }
 
+    @NonNull
     private String getTableChunkedInsertSql() {
         return String.format(Locale.US, "insert or replace into '%s' (%s) values (?)",
                 TABLE_CHUNKED, COLUMN_CHUNKED_VALUE);
     }
 
+    @NonNull
     @Override
     public List<byte[]> getChunkedData() {
         List<byte[]> data = new ArrayList<>();

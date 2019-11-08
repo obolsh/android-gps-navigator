@@ -23,7 +23,7 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
     private IPlacePickerCallback fragment;
     private ImageView deleteButton;
 
-    MapPlaceViewHolder(@NonNull View itemView, IPlacePickerCallback fragment) {
+    MapPlaceViewHolder(@NonNull View itemView, @NonNull IPlacePickerCallback fragment) {
         super(itemView);
         this.fragment = fragment;
         favouriteImage = itemView.findViewById(R.id.favourite_map_place);
@@ -32,7 +32,7 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
         deleteButton = itemView.findViewById(R.id.delete_map_place);
     }
 
-    void setMapPlace(IMapPlace mapPlace) {
+    void setMapPlace(@NonNull IMapPlace mapPlace) {
         this.mapPlace = mapPlace;
         setPlaceFavourite(mapPlace.isFavourite());
         setTitle(mapPlace.getTitle());

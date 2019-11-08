@@ -1,5 +1,7 @@
 package gps.map.navigator.presenter.impl.listener;
 
+import androidx.annotation.NonNull;
+
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.interfaces.IPlaceListener;
@@ -14,7 +16,7 @@ public class ShowMeOnMapListener implements IPlaceListener {
     }
 
     @Override
-    public void onPlaceLocated(IMapPlace place) {
+    public void onPlaceLocated(@NonNull IMapPlace place) {
         if (cache != null) {
             cache.setMyLocation(place);
         }
@@ -25,7 +27,7 @@ public class ShowMeOnMapListener implements IPlaceListener {
     }
 
     @Override
-    public void onPlaceLocationFailed(Exception reason) {
+    public void onPlaceLocationFailed(@NonNull Exception reason) {
         if (listener != null) {
             listener.onPlaceLocationFailed(reason);
         }

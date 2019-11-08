@@ -3,6 +3,7 @@ package gps.map.navigator.view.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -11,6 +12,7 @@ import javax.inject.Inject;
 import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentNavigation;
 import gps.map.navigator.model.interfaces.Cache;
+import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.viewmodel.DecorController;
@@ -25,6 +27,7 @@ public class NavigatorFragment extends FragmentNavigation implements IFragment<F
     @Inject
     Cache cache;
 
+    @NonNull
     @Override
     public Fragment getInstance() {
         return this;
@@ -39,7 +42,10 @@ public class NavigatorFragment extends FragmentNavigation implements IFragment<F
     @Override
     public void onStart() {
         super.onStart();
-        presenter.navigate(cache.getLastRoute(), new NavigateCallback());
+        IRoute route = cache.getLastRoute();
+        if (route != null) {
+            presenter.navigate(route, new NavigateCallback());
+        }
     }
 
     @Override
@@ -54,6 +60,7 @@ public class NavigatorFragment extends FragmentNavigation implements IFragment<F
         decorController.setShowMeOnMapFabVisibility(false);
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return NavigatorFragment.class.getName();

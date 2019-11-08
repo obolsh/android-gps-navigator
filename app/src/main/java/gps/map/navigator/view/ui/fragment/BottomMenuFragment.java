@@ -30,10 +30,7 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
     private NavigationView navigationView;
 
     @Inject
-    @Named(Constants.ApplicationContext)
-    Context context;
-    @Inject
-    Presenter presenterStrategy;
+    Presenter presenter;
     @Inject
     NavigationView.OnNavigationItemSelectedListener listener;
     @Inject
@@ -47,6 +44,10 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
     CompoundButton.OnCheckedChangeListener trafficModeListener;
     @Inject
     Logger logger;
+
+    @Inject
+    public BottomMenuFragment() {
+    }
 
     @Nullable
     @Override
@@ -82,25 +83,26 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
         }
     }
 
-    private void addNightModeListener(MenuItem menuItem) {
+    private void addNightModeListener(@NonNull MenuItem menuItem) {
         SwitchCompat view = getView(menuItem);
-        view.setChecked(presenterStrategy.hasNightMode());
+        view.setChecked(presenter.hasNightMode());
         view.setOnCheckedChangeListener(nightModeListener);
     }
 
-    private SwitchCompat getView(MenuItem menuItem) {
+    @NonNull
+    private SwitchCompat getView(@NonNull MenuItem menuItem) {
         return (SwitchCompat) menuItem.getActionView();
     }
 
-    private void addSatelliteModeListener(MenuItem menuItem) {
+    private void addSatelliteModeListener(@NonNull MenuItem menuItem) {
         SwitchCompat view = getView(menuItem);
-        view.setChecked(presenterStrategy.hasSatelliteMode());
+        view.setChecked(presenter.hasSatelliteMode());
         view.setOnCheckedChangeListener(satelliteModeListener);
     }
 
-    private void addTrafficModeListener(MenuItem menuItem) {
+    private void addTrafficModeListener(@NonNull MenuItem menuItem) {
         SwitchCompat view = getView(menuItem);
-        view.setChecked(presenterStrategy.hasTrafficMode());
+        view.setChecked(presenter.hasTrafficMode());
         view.setOnCheckedChangeListener(trafficModeListener);
     }
 }

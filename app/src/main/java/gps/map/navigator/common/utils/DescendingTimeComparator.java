@@ -1,5 +1,7 @@
 package gps.map.navigator.common.utils;
 
+import androidx.annotation.NonNull;
+
 import java.util.Comparator;
 
 import gps.map.navigator.model.interfaces.IMapPlace;
@@ -9,7 +11,7 @@ import gps.map.navigator.model.interfaces.IMapPlace;
  */
 public class DescendingTimeComparator implements Comparator<IMapPlace> {
     @Override
-    public int compare(IMapPlace one, IMapPlace two) {
+    public int compare(@NonNull IMapPlace one, @NonNull IMapPlace two) {
         Long oneTime = one.getLastUsedTime();
         Long twoTime = two.getLastUsedTime();
         return Integer.compare(twoTime.compareTo(oneTime), 0);

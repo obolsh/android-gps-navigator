@@ -1,5 +1,7 @@
 package gps.map.navigator.view.viewmodel.callback;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 
 import gps.map.navigator.model.interfaces.IMapPlace;
@@ -15,12 +17,12 @@ public class FindPlaceCallback implements IPlaceListener {
     }
 
     @Override
-    public void onPlaceLocated(IMapPlace place) {
+    public void onPlaceLocated(@NonNull IMapPlace place) {
         listener.onPlaceLocated(place);
     }
 
     @Override
-    public void onPlaceLocationFailed(Exception reason) {
+    public void onPlaceLocationFailed(@NonNull Exception reason) {
 
     }
 }

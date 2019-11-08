@@ -62,7 +62,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     @Override
-    public void changePlacesList(List<IMapPlace> placeList) {
+    public void changePlacesList(@NonNull List<IMapPlace> placeList) {
         this.places = placeList;
     }
 
@@ -72,7 +72,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     @Override
-    public void showSinglePlace(IMapPlace mapPlace) {
+    public void showSinglePlace(@NonNull IMapPlace mapPlace) {
         if (places != null) {
             places.clear();
         } else {
@@ -89,7 +89,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     @Override
-    public void removePlace(int position, IMapPlace place) {
+    public void removePlace(int position, @NonNull IMapPlace place) {
         places.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, places.size());
@@ -97,7 +97,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     @Override
-    public void updatePlace(IMapPlace update) {
+    public void updatePlace(@NonNull IMapPlace update) {
         int position = getPosition(places, update);
         places.set(position, update);
         int originalPosition = getPosition(originalPlacesList, update);
@@ -106,14 +106,14 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     @Override
-    public void setInitialPlacesList(List<IMapPlace> places) {
+    public void setInitialPlacesList(@NonNull List<IMapPlace> places) {
         this.originalPlacesList = places;
         sortByLastUsedTime(originalPlacesList);
         this.places = originalPlacesList;
         notifyItemInserted(places.size() - 1);
     }
 
-    private int getPosition(List<IMapPlace> places, IMapPlace item) {
+    private int getPosition(@NonNull List<IMapPlace> places, @NonNull IMapPlace item) {
         for (int i = 0; i < places.size(); i++) {
             if (item.getId().equals(places.get(i).getId())) {
                 return i;
@@ -122,7 +122,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
         return 0;
     }
 
-    private void sortByLastUsedTime(List<IMapPlace> places) {
+    private void sortByLastUsedTime(@NonNull List<IMapPlace> places) {
         Collections.sort(places, new DescendingTimeComparator());
     }
 }

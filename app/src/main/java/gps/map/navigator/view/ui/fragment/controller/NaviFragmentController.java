@@ -1,5 +1,7 @@
 package gps.map.navigator.view.ui.fragment.controller;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,7 +24,7 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
     }
 
     @Override
-    public void openFragment(IFragment<Fragment> fragment) {
+    public void openFragment(@NonNull IFragment<Fragment> fragment) {
         String tag = fragment.getFragmentTag();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(container, fragment.getInstance(), tag);
@@ -31,7 +33,7 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
     }
 
     @Override
-    public boolean thisFragmentIsActive(Class cls) {
+    public boolean thisFragmentIsActive(@NonNull Class cls) {
         Fragment fragment = getVisibleFragment();
         if (fragment != null) {
             return fragment.getClass().getName().startsWith(cls.getName());
@@ -40,13 +42,14 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
     }
 
     @Override
-    public void removeFromBackStack(IFragment<Fragment> fragment) {
+    public void removeFromBackStack(@NonNull IFragment<Fragment> fragment) {
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.remove(fragment.getInstance());
         transaction.commit();
         fragmentManager.popBackStack();
     }
 
+    @Nullable
     private Fragment getVisibleFragment() {
         return fragmentManager.findFragmentById(container);
     }

@@ -1,5 +1,8 @@
 package gps.map.navigator.presenter.interfaces;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
@@ -14,7 +17,7 @@ public interface Presenter {
      *
      * @param placeListener - listener.
      */
-    void showMeOnMap(IPlaceListener placeListener);
+    void showMeOnMap(@Nullable IPlaceListener placeListener);
 
     /**
      * Show/hide traffic on map.
@@ -69,7 +72,7 @@ public interface Presenter {
      * @param place             - place to be shown.
      * @param placeShowListener - listener to get callback.
      */
-    void showPlace(IMapPlace place, IPlaceShowListener placeShowListener);
+    void showPlace(@NonNull IMapPlace place, @Nullable IPlaceShowListener placeShowListener);
 
     /**
      * Show route on map.
@@ -77,7 +80,7 @@ public interface Presenter {
      * @param route              - place to be shown.
      * @param routeReadyListener - listener to get callback.
      */
-    void showRoute(IRoute route, IRouteReadyListener routeReadyListener);
+    void showRoute(@NonNull IRoute route, @Nullable IRouteReadyListener routeReadyListener);
 
     /**
      * Find place on map.
@@ -85,7 +88,7 @@ public interface Presenter {
      * @param query         - query to search.
      * @param placeListener - listener to get callback.
      */
-    void findPlace(String query, IPlaceListener placeListener);
+    void findPlace(@NonNull String query, @Nullable IPlaceListener placeListener);
 
     /**
      * Navigate route.
@@ -93,12 +96,12 @@ public interface Presenter {
      * @param route         - route to navigate.
      * @param routeListener - listener to get callback.
      */
-    void navigate(IRoute route, IRouteListener routeListener);
+    void navigate(@NonNull IRoute route, @Nullable IRouteListener routeListener);
 
     /**
      * Build route.
      *
      * @param placeHistoryListener - listener to get callback about history places.
      */
-    void buildRoute(IPlaceHistoryListener placeHistoryListener);
+    void buildRoute(@Nullable IPlaceHistoryListener placeHistoryListener);
 }

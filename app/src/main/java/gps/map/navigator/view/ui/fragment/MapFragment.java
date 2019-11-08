@@ -3,6 +3,7 @@ package gps.map.navigator.view.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -29,6 +30,7 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     public MapFragment() {
     }
 
+    @NonNull
     @Override
     public Fragment getInstance() {
         return this;
@@ -40,6 +42,7 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
         super.onAttach(context);
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return MapFragment.class.getName();

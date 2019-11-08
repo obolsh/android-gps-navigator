@@ -59,6 +59,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     public ShowRouteFragment() {
     }
 
+    @NonNull
     @Override
     public Fragment getInstance() {
         return this;
@@ -74,10 +75,12 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     public void onStart() {
         super.onStart();
         IRoute route = cache.getLastRoute();
-        showRouteOnMap(route);
+        if (route != null) {
+            showRouteOnMap(route);
+        }
     }
 
-    private void showRouteOnMap(IRoute route) {
+    private void showRouteOnMap(@NonNull IRoute route) {
         presenter.showRoute(route, new ShowRouteCallback());
     }
 
@@ -96,7 +99,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         return root;
     }
 
-    private void setupOrigin(View view) {
+    private void setupOrigin(@NonNull View view) {
         originTitle = view.findViewById(R.id.origin_title);
         originTitle.setOnClickListener(originClickListener);
         setOriginTitle();
@@ -106,11 +109,13 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         originTitle.setText(getOriginTitle());
     }
 
+    @Nullable
     private String getOriginTitle() {
-        return cache.getLastRoute().getOrigin().getTitle();
+        IRoute route = cache.getLastRoute();
+        return route != null ? route.getOrigin().getTitle() : null;
     }
 
-    private void setupDestination(View view) {
+    private void setupDestination(@NonNull View view) {
         destinationTitle = view.findViewById(R.id.destination_title);
         destinationTitle.setOnClickListener(destinationClickListener);
         setDestinationTitle();
@@ -120,8 +125,10 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         destinationTitle.setText(getDestinationTitle());
     }
 
+    @Nullable
     private String getDestinationTitle() {
-        return cache.getLastRoute().getDestination().getTitle();
+        IRoute route = cache.getLastRoute();
+        return route != null ? route.getDestination().getTitle() : null;
     }
 
     private void setupSwipeOriginAndDestination(View view) {
@@ -142,12 +149,13 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         decorController.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_END);
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return ShowRouteFragment.class.getName();
     }
 
-    private void setupToolbarNavigation(View view) {
+    private void setupToolbarNavigation(@NonNull View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(backPressListener);
     }
@@ -155,24 +163,29 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     @Override
     public void swipeOriginAndDestination() {
         IRoute route = cache.getLastRoute();
-        IMapPlace newOrigin = route.getDestination();
-        IMapPlace newDestination = route.getOrigin();
+        if (route != null) {
+            IMapPlace newOrigin = route.getDestination();
+            IMapPlace newDestination = route.getOrigin();
 
-        changeActiveRoute(newOrigin, newDestination);
+            changeActiveRoute(newOrigin, newDestination);
+        }
     }
 
     @Override
-    public void setOnlyOrigin(IMapPlace origin) {
+    public void setOnlyOrigin(@NonNull IMapPlace origin) {
         changeActiveRoute(origin, null);
     }
 
     @Override
-    public void setOnlyDestination(IMapPlace destination) {
+    public void setOnlyDestination(@NonNull IMapPlace destination) {
         changeActiveRoute(null, destination);
     }
 
-    private void changeActiveRoute(IMapPlace newOrigin, IMapPlace newDestination) {
+    private void changeActiveRoute(@Nullable IMapPlace newOrigin, @Nullable IMapPlace newDestination) {
         IRoute route = cache.getLastRoute();
+        if (route == null) {
+            return;
+        }
         if (newOrigin != null) {
             route.setOrigin(newOrigin);
         }

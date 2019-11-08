@@ -1,5 +1,8 @@
 package gps.map.navigator.common.cache;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.List;
 
 public interface Storage {
@@ -10,7 +13,7 @@ public interface Storage {
      * @param defaultValue - default value if missing or error.
      * @return true if exist, or defaultValue.
      */
-    boolean hasData(String key, boolean defaultValue);
+    boolean hasData(@NonNull String key, boolean defaultValue);
 
     /**
      * Save value for key.
@@ -19,7 +22,7 @@ public interface Storage {
      * @param data - byte array of data to be saved.
      * @return true if saved successfully, false otherwise.
      */
-    boolean saveData(String key, byte[] data);
+    boolean saveData(@NonNull String key, @Nullable byte[] data);
 
     /**
      * Get byte array from cache.
@@ -28,7 +31,7 @@ public interface Storage {
      * @param defaultValue - default value if missing or error.
      * @return byte array from cache, or defaultValue.
      */
-    byte[] getData(String key, byte[] defaultValue);
+    byte[] getData(@NonNull String key, @Nullable byte[] defaultValue);
 
     /**
      * Save list of raw byte arrays.
@@ -36,13 +39,14 @@ public interface Storage {
      * @param data - list of byte arrays to be saved.
      * @return true if saved successfully, false otherwise.
      */
-    boolean saveChunkedData(List<byte[]> data);
+    boolean saveChunkedData(@NonNull List<byte[]> data);
 
     /**
      * Get list of raw byte arrays.
      *
      * @return list of byte arrayw or null if missing.
      */
+    @Nullable
     List<byte[]> getChunkedData();
 
     /**

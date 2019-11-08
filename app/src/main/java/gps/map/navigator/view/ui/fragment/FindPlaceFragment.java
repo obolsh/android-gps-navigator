@@ -70,26 +70,27 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         return root;
     }
 
-    private void addPlacesToRecyclerView(View root) {
+    private void addPlacesToRecyclerView(@NonNull View root) {
         RecyclerView recyclerView = root.findViewById(R.id.history_places_container);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setAdapter(adapter);
     }
 
+    @NonNull
     private LinearLayoutManager getLayoutManager() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);
         return manager;
     }
 
-    private void setupSearchView(View root) {
+    private void setupSearchView(@NonNull View root) {
         searchView = root.findViewById(R.id.search_view_box);
         searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(searchListener);
     }
 
-    private void setupToolbarNavigation(View view) {
+    private void setupToolbarNavigation(@NonNull View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(backPressListener);
     }
@@ -115,17 +116,18 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         searchView.setIconified(false);
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return FindPlaceFragment.class.getName();
     }
 
-    public void setTask(PlaceProxyListener listener) {
+    public void setTask(@Nullable PlaceProxyListener listener) {
         this.listener = listener;
     }
 
     @Override
-    public void setNewPickedPlace(IMapPlace mapPlace) {
+    public void setNewPickedPlace(@NonNull IMapPlace mapPlace) {
         if (listener != null) {
             listener.onPlaceLocated(mapPlace);
             activity.onBackPressed();
@@ -137,43 +139,45 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     }
 
     @Override
-    public void deleteHistoryPlace(int position, IMapPlace mapPlace) {
+    public void deleteHistoryPlace(int position, @NonNull IMapPlace mapPlace) {
         cache.removeHistoryPlace(mapPlace);
         adapter.removePlace(position, mapPlace);
     }
 
     @Override
-    public void markAsFavouritePlace(IMapPlace mapPlace) {
+    public void markAsFavouritePlace(@NonNull IMapPlace mapPlace) {
         setFavouriteState(mapPlace, true);
     }
 
-    private void setFavouriteState(IMapPlace mapPlace, boolean favourite) {
+    private void setFavouriteState(@NonNull IMapPlace mapPlace, boolean favourite) {
         List<IMapPlace> places = cache.getHistoryPlaces();
-        int position = getPosition(places, mapPlace);
+        if (places != null) {
+            int position = getPosition(places, mapPlace);
 
-        mapPlace.setFavourite(favourite);
-        places.set(position, mapPlace);
+            mapPlace.setFavourite(favourite);
+            places.set(position, mapPlace);
 
-        cache.setHistoryPlaces(places);
-        adapter.updatePlace(mapPlace);
+            cache.setHistoryPlaces(places);
+            adapter.updatePlace(mapPlace);
+        }
     }
 
     @Override
-    public void markAdNotFavouritePlace(IMapPlace mapPlace) {
+    public void markAdNotFavouritePlace(@NonNull IMapPlace mapPlace) {
         setFavouriteState(mapPlace, false);
     }
 
     @Override
-    public void setNewFoundPlace(IMapPlace mapPlace) {
+    public void setNewFoundPlace(@NonNull IMapPlace mapPlace) {
         cache.addNewHistoryPlace(mapPlace);
     }
 
     @Override
-    public void setHistoryPlaces(List<IMapPlace> placeList) {
+    public void setHistoryPlaces(@NonNull List<IMapPlace> placeList) {
         adapter.setInitialPlacesList(placeList);
     }
 
-    private int getPosition(List<IMapPlace> places, IMapPlace item) {
+    private int getPosition(@NonNull List<IMapPlace> places, @NonNull IMapPlace item) {
         for (int i = 0; i < places.size(); i++) {
             if (item.getId().equals(places.get(i).getId())) {
                 return i;

@@ -2,6 +2,8 @@ package gps.map.navigator.common.debug;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 
 import gps.map.navigator.BuildConfig;
@@ -15,23 +17,23 @@ public class LoggerImpl implements Logger {
     }
 
     @Override
-    public void debug(String message) {
+    public void debug(@NonNull String message) {
         if (BuildConfig.DEBUG) {
             printInLogcat(message, false);
         }
     }
 
     @Override
-    public void error(String message) {
+    public void error(@NonNull String message) {
         printInLogcat(message, true);
     }
 
     @Override
-    public void error(Throwable throwable) {
+    public void error(@NonNull Throwable throwable) {
         Log.e(TAG, "", throwable);
     }
 
-    private void printInLogcat(String message, boolean isError) {
+    private void printInLogcat(@NonNull String message, boolean isError) {
         int maxLogSize = 2000;
         String text;
         for (int i = 0; i <= message.length() / maxLogSize; i++) {
@@ -47,11 +49,11 @@ public class LoggerImpl implements Logger {
         }
     }
 
-    private void log(String message) {
+    private void log(@NonNull String message) {
         Log.e(TAG, message);
     }
 
-    private void exception(String message) {
+    private void exception(@NonNull String message) {
         Log.e(TAG, message);
     }
 }

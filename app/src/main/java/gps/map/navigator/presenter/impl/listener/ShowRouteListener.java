@@ -1,5 +1,7 @@
 package gps.map.navigator.presenter.impl.listener;
 
+import androidx.annotation.NonNull;
+
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
@@ -15,7 +17,7 @@ public class ShowRouteListener implements IRouteReadyListener {
     }
 
     @Override
-    public void onRouteReady(IRoute route) {
+    public void onRouteReady(@NonNull IRoute route) {
         if (cache != null) {
             cache.setLastRoute(route);
         }
@@ -26,7 +28,7 @@ public class ShowRouteListener implements IRouteReadyListener {
     }
 
     @Override
-    public void onRouteFailed(Exception reason) {
+    public void onRouteFailed(@NonNull Exception reason) {
         if (listener != null) {
             listener.onRouteFailed(reason);
         }

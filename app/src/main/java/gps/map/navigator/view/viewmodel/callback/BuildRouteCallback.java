@@ -1,5 +1,7 @@
 package gps.map.navigator.view.viewmodel.callback;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,12 +20,12 @@ public class BuildRouteCallback implements IPlaceHistoryListener {
     }
 
     @Override
-    public void onHistoryPlacesFound(List<IMapPlace> placeList) {
+    public void onHistoryPlacesFound(@NonNull List<IMapPlace> placeList) {
         fragment.setHistoryPlaces(placeList);
     }
 
     @Override
-    public void onHistoryPlacesError(Exception reason) {
+    public void onHistoryPlacesError(@NonNull Exception reason) {
 
     }
 }

@@ -1,5 +1,8 @@
 package gps.map.navigator.presenter.impl;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,7 +36,7 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void showMeOnMap(IPlaceListener placeListener) {
+    public void showMeOnMap(@Nullable IPlaceListener placeListener) {
         if (mapSdk != null && placeListener != null) {
             mapSdk.showMeOnMap(new ShowMeOnMapListener(cache, placeListener));
         }
@@ -47,35 +50,35 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void showPlace(IMapPlace place, IPlaceShowListener placeShowListener) {
+    public void showPlace(@NonNull IMapPlace place, @Nullable IPlaceShowListener placeShowListener) {
         if (mapSdk != null && placeShowListener != null) {
             mapSdk.showPlace(place, placeShowListener);
         }
     }
 
     @Override
-    public void showRoute(IRoute route, IRouteReadyListener routeReadyListener) {
+    public void showRoute(@NonNull IRoute route, @Nullable IRouteReadyListener routeReadyListener) {
         if (mapSdk != null && routeReadyListener != null) {
             mapSdk.showRoute(route, new ShowRouteListener(cache, routeReadyListener));
         }
     }
 
     @Override
-    public void findPlace(String query, IPlaceListener placeListener) {
+    public void findPlace(@NonNull String query, @Nullable IPlaceListener placeListener) {
         if (mapSdk != null && placeListener != null) {
             mapSdk.findPlace(query, new FindPlaceListener(cache, placeListener));
         }
     }
 
     @Override
-    public void navigate(IRoute route, IRouteListener routeListener) {
+    public void navigate(@NonNull IRoute route, @Nullable IRouteListener routeListener) {
         if (mapSdk != null && routeListener != null) {
             mapSdk.navigate(route, new NavigateListener(routeListener));
         }
     }
 
     @Override
-    public void buildRoute(IPlaceHistoryListener placeHistoryListener) {
+    public void buildRoute(@Nullable IPlaceHistoryListener placeHistoryListener) {
         if (placeHistoryListener != null) {
             List<IMapPlace> places = cache.getHistoryPlaces();
             if (places != null && !places.isEmpty()) {

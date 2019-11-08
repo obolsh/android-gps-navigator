@@ -51,7 +51,7 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
         }
     }
 
-    private void startActivity(Intent intent) {
+    private void startActivity(@NonNull Intent intent) {
         try {
             context.getApplicationContext().startActivity(intent);
         } catch (Throwable t) {
@@ -59,18 +59,21 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
         }
     }
 
+    @NonNull
     private Intent getLaunchIntent() {
         Intent intent = createIntentWithAction(Intent.ACTION_VIEW);
         intent.setData(getRateUsUri());
         return intent;
     }
 
-    private Intent createIntentWithAction(String action) {
+    @NonNull
+    private Intent createIntentWithAction(@NonNull String action) {
         Intent intent = new Intent();
         intent.setAction(action);
         return intent;
     }
 
+    @NonNull
     private Uri getRateUsUri() {
         String appPackageName = context.getApplicationContext().getPackageName();
         try {
@@ -88,6 +91,7 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
         }
     }
 
+    @NonNull
     private Intent getShareIntent() {
         Intent intent = createIntentWithAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_my_app));

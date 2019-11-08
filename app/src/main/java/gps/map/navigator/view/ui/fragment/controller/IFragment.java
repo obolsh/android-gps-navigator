@@ -1,11 +1,14 @@
 package gps.map.navigator.view.ui.fragment.controller;
 
+import androidx.annotation.NonNull;
+
 public interface IFragment<T> {
     /**
      * Get fragment instance object.
      *
      * @return - instance object.
      */
+    @NonNull
     T getInstance();
 
     /**
@@ -13,5 +16,6 @@ public interface IFragment<T> {
      *
      * @return - gragment tag.
      */
+    @NonNull
     String getFragmentTag();
 }

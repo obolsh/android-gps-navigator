@@ -87,25 +87,27 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         return view;
     }
 
-    private void addHistoryPlacesToRecyclerView(View view) {
+    private void addHistoryPlacesToRecyclerView(@NonNull View view) {
         RecyclerView recyclerView = view.findViewById(R.id.history_places_container);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setAdapter(adapter);
     }
 
+    @NonNull
     private LinearLayoutManager getLayoutManager() {
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setOrientation(RecyclerView.VERTICAL);
         return manager;
     }
 
-    private void setupOrigin(View view) {
+    private void setupOrigin(@NonNull View view) {
         originTitle = view.findViewById(R.id.origin_title);
         originTitle.setOnClickListener(originClickListener);
         setOriginPlace(getBestOrigin());
     }
 
+    @Nullable
     private IMapPlace getBestOrigin() {
         IMapPlace lastOrigin = cache.getLastOrigin();
         if (lastOrigin != null) {
@@ -115,7 +117,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         }
     }
 
-    private void setOriginPlace(IMapPlace place) {
+    private void setOriginPlace(@Nullable IMapPlace place) {
         if (place != null) {
             setOriginTitle(place.getTitle());
             originPlace = place;
@@ -128,18 +130,19 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         cache.setLastOrigin(originPlace);
     }
 
-    private void setOriginTitle(String title) {
+    private void setOriginTitle(@NonNull String title) {
         if (originTitle != null) {
             originTitle.setText(title);
         }
     }
 
-    private void setupDestination(View view) {
+    private void setupDestination(@NonNull View view) {
         destinationTitle = view.findViewById(R.id.destination_title);
         destinationTitle.setOnClickListener(destinationClickListener);
         setDestinationPlace(getBestDestination());
     }
 
+    @Nullable
     private IMapPlace getBestDestination() {
         IMapPlace lastDestination = cache.getLastDestination();
         if (lastDestination != null) {
@@ -149,12 +152,12 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         }
     }
 
-    private void setupSwipeOriginAndDestination(View view) {
+    private void setupSwipeOriginAndDestination(@NonNull View view) {
         ImageView button = view.findViewById(R.id.swipe_origin_and_destination_button);
         button.setOnClickListener(swipeListener);
     }
 
-    private void setupToolbarNavigation(View view) {
+    private void setupToolbarNavigation(@NonNull View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(backPressListener);
     }
@@ -168,16 +171,16 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     }
 
     @Override
-    public void setOnlyOrigin(IMapPlace origin) {
+    public void setOnlyOrigin(@NonNull IMapPlace origin) {
         cache.setLastOrigin(origin);
     }
 
     @Override
-    public void setOnlyDestination(IMapPlace destination) {
+    public void setOnlyDestination(@NonNull IMapPlace destination) {
         cache.setLastDestination(destination);
     }
 
-    private void setDestinationPlace(IMapPlace place) {
+    private void setDestinationPlace(@Nullable IMapPlace place) {
         if (place != null) {
             setDestinationTitle(place.getTitle());
             destinationPlace = place;
@@ -190,7 +193,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         cache.setLastDestination(destinationPlace);
     }
 
-    private void setDestinationTitle(String title) {
+    private void setDestinationTitle(@NonNull String title) {
         if (destinationTitle != null) {
             destinationTitle.setText(title);
         }
@@ -209,20 +212,21 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         decorController.setShowMeOnMapFabVisibility(false);
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return BuildRouteFragment.class.getName();
     }
 
     @Override
-    public void setHistoryPlaces(List<IMapPlace> placeList) {
+    public void setHistoryPlaces(@NonNull List<IMapPlace> placeList) {
         if (adapter != null) {
             adapter.setInitialPlacesList(placeList);
         }
     }
 
     @Override
-    public void setNewPickedPlace(IMapPlace mapPlace) {
+    public void setNewPickedPlace(@NonNull IMapPlace mapPlace) {
         if (originPlace == null) {
             setOriginPlace(mapPlace);
         } else if (destinationPlace == null) {
@@ -234,38 +238,40 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     }
 
     @Override
-    public void deleteHistoryPlace(int position, IMapPlace mapPlace) {
+    public void deleteHistoryPlace(int position, @NonNull IMapPlace mapPlace) {
         cache.removeHistoryPlace(mapPlace);
         adapter.removePlace(position, mapPlace);
     }
 
     @Override
-    public void markAsFavouritePlace(IMapPlace mapPlace) {
+    public void markAsFavouritePlace(@NonNull IMapPlace mapPlace) {
         setFavouriteState(mapPlace, true);
     }
 
-    private void setFavouriteState(IMapPlace mapPlace, boolean favourite) {
+    private void setFavouriteState(@NonNull IMapPlace mapPlace, boolean favourite) {
         List<IMapPlace> places = cache.getHistoryPlaces();
-        int position = getPosition(places, mapPlace);
+        if (places != null) {
+            int position = getPosition(places, mapPlace);
 
-        mapPlace.setFavourite(favourite);
-        places.set(position, mapPlace);
+            mapPlace.setFavourite(favourite);
+            places.set(position, mapPlace);
 
-        cache.setHistoryPlaces(places);
-        adapter.updatePlace(mapPlace);
+            cache.setHistoryPlaces(places);
+            adapter.updatePlace(mapPlace);
+        }
     }
 
     @Override
-    public void setNewFoundPlace(IMapPlace mapPlace) {
+    public void setNewFoundPlace(@NonNull IMapPlace mapPlace) {
         cache.addNewHistoryPlace(mapPlace);
     }
 
     @Override
-    public void markAdNotFavouritePlace(IMapPlace mapPlace) {
+    public void markAdNotFavouritePlace(@NonNull IMapPlace mapPlace) {
         setFavouriteState(mapPlace, false);
     }
 
-    private int getPosition(List<IMapPlace> places, IMapPlace item) {
+    private int getPosition(@NonNull List<IMapPlace> places, @NonNull IMapPlace item) {
         for (int i = 0; i < places.size(); i++) {
             if (item.getId().equals(places.get(i).getId())) {
                 return i;
@@ -285,6 +291,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         }
     }
 
+    @NonNull
     private IRoute buildNewRoute() {
         IMapPlace origin = cache.getLastOrigin();
         IMapPlace destination = cache.getLastDestination();

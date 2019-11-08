@@ -1,5 +1,7 @@
 package gps.map.navigator.common.utils;
 
+import androidx.annotation.Nullable;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -15,7 +17,8 @@ public class SerializationUtils<T> {
      * @param serializable - serializable object.
      * @return byte array or null if issue happened.
      */
-    public byte[] serialize(T serializable) {
+    @Nullable
+    public byte[] serialize(@Nullable T serializable) {
         if (serializable == null) {
             return null;
         }
@@ -46,7 +49,8 @@ public class SerializationUtils<T> {
      * @param bytes - byte array.
      * @return serializable object or null if issue happened.
      */
-    public T deserialize(byte[] bytes) {
+    @Nullable
+    public T deserialize(@Nullable byte[] bytes) {
         if (bytes == null || bytes.length == 0) {
             return null;
         }

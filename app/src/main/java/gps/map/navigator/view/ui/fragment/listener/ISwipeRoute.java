@@ -1,5 +1,7 @@
 package gps.map.navigator.view.ui.fragment.listener;
 
+import androidx.annotation.NonNull;
+
 import gps.map.navigator.model.interfaces.IMapPlace;
 
 public interface ISwipeRoute {
@@ -13,12 +15,12 @@ public interface ISwipeRoute {
      *
      * @param origin - place to be set as origin.
      */
-    void setOnlyOrigin(IMapPlace origin);
+    void setOnlyOrigin(@NonNull IMapPlace origin);
 
     /**
      * Clean origin & set new place as destination.
      *
      * @param destination - place to be set as destination.
      */
-    void setOnlyDestination(IMapPlace destination);
+    void setOnlyDestination(@NonNull IMapPlace destination);
 }

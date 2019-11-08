@@ -3,6 +3,7 @@ package gps.map.navigator.view.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -13,6 +14,7 @@ import javax.inject.Inject;
 import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentMap;
 import gps.map.navigator.model.interfaces.Cache;
+import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.viewmodel.DecorController;
@@ -30,11 +32,15 @@ public class ShowPlaceFragment extends FragmentMap implements IFragment<Fragment
     @Override
     public void onStart() {
         super.onStart();
-        cache.setLastOrigin(cache.getLastPlace());
+        IMapPlace lastPlace = cache.getLastPlace();
+        cache.setLastOrigin(lastPlace);
         cache.setLastDestination(null);
-        presenter.showPlace(cache.getLastPlace(), new FindAndShowCallback());
+        if (lastPlace != null) {
+            presenter.showPlace(lastPlace, new FindAndShowCallback());
+        }
     }
 
+    @NonNull
     @Override
     public Fragment getInstance() {
         return this;
@@ -46,6 +52,7 @@ public class ShowPlaceFragment extends FragmentMap implements IFragment<Fragment
         super.onAttach(context);
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return ShowPlaceFragment.class.getName();

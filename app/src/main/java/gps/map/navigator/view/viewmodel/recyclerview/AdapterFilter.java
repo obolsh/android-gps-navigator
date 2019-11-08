@@ -2,6 +2,9 @@ package gps.map.navigator.view.viewmodel.recyclerview;
 
 import android.widget.Filter;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +40,8 @@ public class AdapterFilter extends Filter {
         return results;
     }
 
-    private List<IMapPlace> getFilteredResults(List<IMapPlace> originalPlacesList, String constraint) {
+    @NonNull
+    private List<IMapPlace> getFilteredResults(@Nullable List<IMapPlace> originalPlacesList, @NonNull String constraint) {
         List<IMapPlace> results = new ArrayList<>();
         if (originalPlacesList != null) {
             String title;

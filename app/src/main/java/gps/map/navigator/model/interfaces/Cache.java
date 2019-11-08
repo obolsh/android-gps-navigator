@@ -1,5 +1,8 @@
 package gps.map.navigator.model.interfaces;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.List;
 
 public interface Cache {
@@ -8,6 +11,7 @@ public interface Cache {
      *
      * @return - array of history places, or null.
      */
+    @Nullable
     List<IMapPlace> getHistoryPlaces();
 
     /**
@@ -15,13 +19,14 @@ public interface Cache {
      *
      * @param historyPlaces - list to be saved.
      */
-    void setHistoryPlaces(List<IMapPlace> historyPlaces);
+    void setHistoryPlaces(@Nullable List<IMapPlace> historyPlaces);
 
     /**
      * Get own location.
      *
      * @return - own location or null.
      */
+    @Nullable
     IMapPlace getMyLocation();
 
     /**
@@ -29,13 +34,14 @@ public interface Cache {
      *
      * @param myLocation - own location.
      */
-    void setMyLocation(IMapPlace myLocation);
+    void setMyLocation(@Nullable IMapPlace myLocation);
 
     /**
      * Get last origin place.
      *
      * @return - last origin or null.
      */
+    @Nullable
     IMapPlace getLastOrigin();
 
     /**
@@ -43,13 +49,14 @@ public interface Cache {
      *
      * @param lastOrigin - last origin.
      */
-    void setLastOrigin(IMapPlace lastOrigin);
+    void setLastOrigin(@Nullable IMapPlace lastOrigin);
 
     /**
      * Get last destination place.
      *
      * @return - last destination or null.
      */
+    @Nullable
     IMapPlace getLastDestination();
 
     /**
@@ -57,13 +64,14 @@ public interface Cache {
      *
      * @param lastDestination - last destination.
      */
-    void setLastDestination(IMapPlace lastDestination);
+    void setLastDestination(@Nullable IMapPlace lastDestination);
 
     /**
      * Get last route.
      *
      * @return - last route or null.
      */
+    @Nullable
     IRoute getLastRoute();
 
     /**
@@ -71,13 +79,14 @@ public interface Cache {
      *
      * @param lastRoute - last route.
      */
-    void setLastRoute(IRoute lastRoute);
+    void setLastRoute(@Nullable IRoute lastRoute);
 
     /**
      * Get last place.
      *
      * @return - last place or null.
      */
+    @Nullable
     IMapPlace getLastPlace();
 
     /**
@@ -85,13 +94,14 @@ public interface Cache {
      *
      * @param lastPlace - last place.
      */
-    void setLastPlace(IMapPlace lastPlace);
+    void setLastPlace(@Nullable IMapPlace lastPlace);
 
     /**
      * Get map settings.
      *
      * @return - map settings or null.
      */
+    @Nullable
     MapSetting getMapSettings();
 
     /**
@@ -99,7 +109,7 @@ public interface Cache {
      *
      * @param mapSettings - map settings.
      */
-    void setMapSettings(MapSetting mapSettings);
+    void setMapSettings(@Nullable MapSetting mapSettings);
 
     /**
      * Get byte array from cache by key.
@@ -107,7 +117,8 @@ public interface Cache {
      * @param key - key
      * @return - byte array or null.
      */
-    byte[] getRawData(String key);
+    @Nullable
+    byte[] getRawData(@NonNull String key);
 
     /**
      * Save byte array to cache.
@@ -115,19 +126,19 @@ public interface Cache {
      * @param key     - key.
      * @param rawData - data to be saved.
      */
-    void setRawData(String key, byte[] rawData);
+    void setRawData(@Nullable String key, @Nullable byte[] rawData);
 
     /**
      * Remove history place from cache.
      *
      * @param placeToRemove - place to be removed.
      */
-    void removeHistoryPlace(IMapPlace placeToRemove);
+    void removeHistoryPlace(@Nullable IMapPlace placeToRemove);
 
     /**
      * add new place to history.
      *
      * @param newPlace - place to add.
      */
-    void addNewHistoryPlace(IMapPlace newPlace);
+    void addNewHistoryPlace(@Nullable IMapPlace newPlace);
 }
