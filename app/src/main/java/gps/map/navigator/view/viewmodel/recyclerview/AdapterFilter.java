@@ -11,31 +11,35 @@ import java.util.List;
 import gps.map.navigator.model.interfaces.IMapPlace;
 
 public class AdapterFilter extends Filter {
-
+    @Nullable
     private AbstractAdapter adapter;
 
-    AdapterFilter(AbstractAdapter adapter) {
+    AdapterFilter(@Nullable AbstractAdapter adapter) {
         this.adapter = adapter;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        adapter.changePlacesList((List<IMapPlace>) results.values);
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.changePlacesList((List<IMapPlace>) results.values);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
-        List<IMapPlace> filteredResults;
-        if (constraint.length() == 0) {
-            filteredResults = adapter.getOriginalPlacesList();
-        } else {
-            filteredResults = getFilteredResults(adapter.getOriginalPlacesList(), constraint.toString().toLowerCase());
-        }
-
         FilterResults results = new FilterResults();
-        results.values = filteredResults;
+        if (adapter != null) {
+            List<IMapPlace> filteredResults;
+            if (constraint.length() == 0) {
+                filteredResults = adapter.getOriginalPlacesList();
+            } else {
+                filteredResults = getFilteredResults(adapter.getOriginalPlacesList(), constraint.toString().toLowerCase());
+            }
+
+            results.values = filteredResults;
+        }
 
         return results;
     }

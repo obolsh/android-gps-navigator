@@ -56,7 +56,9 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     View.OnClickListener backPressListener;
     @Inject
     Activity activity;
+    @Nullable
     private PlaceProxyListener listener;
+    @Nullable
     private SearchView searchView;
 
     @Nullable
@@ -112,8 +114,10 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     }
 
     private void openKeyboard() {
-        searchView.requestFocus();
-        searchView.setIconified(false);
+        if (searchView != null) {
+            searchView.requestFocus();
+            searchView.setIconified(false);
+        }
     }
 
     @NonNull

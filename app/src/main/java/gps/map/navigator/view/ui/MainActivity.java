@@ -1,5 +1,6 @@
 package gps.map.navigator.view.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -45,9 +46,11 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Inject
     @Named(Constants.FindMyPlaceCallback)
     View.OnClickListener findMyPlaceCallback;
-
+    @Nullable
     private FloatingActionButton floatingActionButton;
+    @Nullable
     private BottomAppBar bottomAppBar;
+    @Nullable
     private FloatingActionButton showMeOnMap;
 
     @Override
@@ -74,8 +77,12 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void addCallbackListeners() {
-        floatingActionButton.setOnClickListener(nextCallbackListener);
-        showMeOnMap.setOnClickListener(findMyPlaceCallback);
+        if (floatingActionButton != null) {
+            floatingActionButton.setOnClickListener(nextCallbackListener);
+        }
+        if (showMeOnMap != null) {
+            showMeOnMap.setOnClickListener(findMyPlaceCallback);
+        }
     }
 
     private void openMapFragment() {
@@ -123,29 +130,37 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public void setBottomBarVisibility(boolean visible) {
-        bottomAppBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if (bottomAppBar != null) {
+            bottomAppBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     @Override
     public void setFabAlignmentMode(int mode) {
-        bottomAppBar.setFabAlignmentMode(mode);
+        if (bottomAppBar != null) {
+            bottomAppBar.setFabAlignmentMode(mode);
+        }
     }
 
     @Override
     public void setFabVisibility(boolean visible) {
-        if (visible) {
-            floatingActionButton.show();
-        } else {
-            floatingActionButton.hide();
+        if (floatingActionButton != null) {
+            if (visible) {
+                floatingActionButton.show();
+            } else {
+                floatingActionButton.hide();
+            }
         }
     }
 
     @Override
     public void setShowMeOnMapFabVisibility(boolean visible) {
-        if (visible) {
-            showMeOnMap.show();
-        } else {
-            showMeOnMap.hide();
+        if (showMeOnMap != null) {
+            if (visible) {
+                showMeOnMap.show();
+            } else {
+                showMeOnMap.hide();
+            }
         }
     }
 
@@ -158,10 +173,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Override
     public void invalidate() {
         if (nextCallbackListener != null) {
-            ((Invalidator)nextCallbackListener).invalidate();
+            ((Invalidator) nextCallbackListener).invalidate();
         }
         if (findMyPlaceCallback != null) {
-            ((Invalidator)findMyPlaceCallback).invalidate();
+            ((Invalidator) findMyPlaceCallback).invalidate();
         }
         nextCallbackListener = null;
         findMyPlaceCallback = null;

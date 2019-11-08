@@ -26,7 +26,7 @@ import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.presenter.interfaces.Presenter;
 
 public class BottomMenuFragment extends BottomSheetDialogFragment {
-
+    @Nullable
     private NavigationView navigationView;
 
     @Inject
@@ -67,17 +67,21 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        navigationView.setNavigationItemSelectedListener(listener);
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(listener);
+        }
         addCheckboxListeners();
     }
 
     private void addCheckboxListeners() {
         try {
-            Menu menu = navigationView.getMenu();
+            if (navigationView != null) {
+                Menu menu = navigationView.getMenu();
 
-            addNightModeListener(menu.findItem(R.id.enable_night_mode));
-            addSatelliteModeListener(menu.findItem(R.id.enable_satelite));
-            addTrafficModeListener(menu.findItem(R.id.enable_traffic));
+                addNightModeListener(menu.findItem(R.id.enable_night_mode));
+                addSatelliteModeListener(menu.findItem(R.id.enable_satelite));
+                addTrafficModeListener(menu.findItem(R.id.enable_traffic));
+            }
         } catch (Throwable t) {
             logger.error(t);
         }

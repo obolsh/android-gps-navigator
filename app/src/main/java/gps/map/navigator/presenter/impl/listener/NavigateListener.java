@@ -1,15 +1,16 @@
 package gps.map.navigator.presenter.impl.listener;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.view.interfaces.IRouteListener;
 
 public class NavigateListener implements IRouteListener {
-
+    @Nullable
     private IRouteListener listener;
 
-    public NavigateListener(IRouteListener listener) {
+    public NavigateListener(@Nullable IRouteListener listener) {
         this.listener = listener;
     }
 

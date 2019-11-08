@@ -5,6 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import gps.map.navigator.R;
@@ -15,12 +16,17 @@ import gps.map.navigator.view.viewmodel.recyclerview.listener.FavouriteListener;
 import gps.map.navigator.view.viewmodel.recyclerview.listener.PickedListener;
 
 class MapPlaceViewHolder extends RecyclerView.ViewHolder {
-
+    @Nullable
     private ImageView favouriteImage;
+    @Nullable
     private TextView titleView;
+    @Nullable
     private TextView addressView;
+    @Nullable
     private IMapPlace mapPlace;
+    @Nullable
     private IPlacePickerCallback fragment;
+    @Nullable
     private ImageView deleteButton;
 
     MapPlaceViewHolder(@NonNull View itemView, @NonNull IPlacePickerCallback fragment) {
@@ -41,24 +47,34 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void addListeners() {
-        favouriteImage.setOnClickListener(new FavouriteListener(mapPlace, fragment));
-        deleteButton.setOnClickListener(new DeleteListener(this, mapPlace, fragment));
+        if (favouriteImage != null) {
+            favouriteImage.setOnClickListener(new FavouriteListener(mapPlace, fragment));
+        }
+        if (deleteButton != null) {
+            deleteButton.setOnClickListener(new DeleteListener(this, mapPlace, fragment));
+        }
         itemView.setOnClickListener(new PickedListener(mapPlace, fragment));
     }
 
     private void setPlaceFavourite(boolean favourite) {
-        if (favourite) {
-            favouriteImage.setImageResource(android.R.drawable.star_big_on);
-        } else {
-            favouriteImage.setImageResource(android.R.drawable.star_big_off);
+        if (favouriteImage != null) {
+            if (favourite) {
+                favouriteImage.setImageResource(android.R.drawable.star_big_on);
+            } else {
+                favouriteImage.setImageResource(android.R.drawable.star_big_off);
+            }
         }
     }
 
-    private void setTitle(String placeTitle) {
-        titleView.setText(placeTitle);
+    private void setTitle(@Nullable String placeTitle) {
+        if (titleView != null && placeTitle != null) {
+            titleView.setText(placeTitle);
+        }
     }
 
-    private void setAddress(String address) {
-        addressView.setText(address);
+    private void setAddress(@Nullable String address) {
+        if (addressView != null && address != null) {
+            addressView.setText(address);
+        }
     }
 }

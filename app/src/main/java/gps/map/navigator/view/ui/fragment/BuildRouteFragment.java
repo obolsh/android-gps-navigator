@@ -64,9 +64,13 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     @Inject
     @Named(Constants.DestinationClickListener)
     View.OnClickListener destinationClickListener;
+    @Nullable
     private IMapPlace originPlace;
+    @Nullable
     private IMapPlace destinationPlace;
+    @Nullable
     private TextView originTitle;
+    @Nullable
     private TextView destinationTitle;
 
     @Inject

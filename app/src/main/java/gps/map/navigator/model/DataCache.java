@@ -21,9 +21,11 @@ public class DataCache implements Cache {
 
     @Inject
     Storage storage;
-
+    @NonNull
     private SerializationUtils<IMapPlace> placeSerializationUtils;
+    @NonNull
     private SerializationUtils<IRoute> routeSerializationUtils;
+    @NonNull
     private SerializationUtils<MapSetting> mapSettingSerializationUtils;
 
     static final String KEY_MY_LOCATION = "key_my_location";

@@ -52,7 +52,9 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     @Inject
     @Named(Constants.DestinationClickListener)
     View.OnClickListener destinationClickListener;
+    @Nullable
     private TextView originTitle;
+    @Nullable
     private TextView destinationTitle;
 
     @Inject
@@ -106,7 +108,9 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     }
 
     private void setOriginTitle() {
-        originTitle.setText(getOriginTitle());
+        if (originTitle != null) {
+            originTitle.setText(getOriginTitle());
+        }
     }
 
     @Nullable
@@ -122,7 +126,9 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     }
 
     private void setDestinationTitle() {
-        destinationTitle.setText(getDestinationTitle());
+        if (destinationTitle != null) {
+            destinationTitle.setText(getDestinationTitle());
+        }
     }
 
     @Nullable

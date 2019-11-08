@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,8 +26,9 @@ public class MapPlaceAdapter extends AbstractAdapter {
     IPlacePickerCallback fragment;
     @Inject
     Logger logger;
-
+    @Nullable
     private List<IMapPlace> places;
+    @Nullable
     private List<IMapPlace> originalPlacesList;
 
     @Inject
@@ -56,6 +58,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
         return places != null ? places.size() : 0;
     }
 
+    @Nullable
     @Override
     public List<IMapPlace> getOriginalPlacesList() {
         return originalPlacesList;
@@ -90,19 +93,25 @@ public class MapPlaceAdapter extends AbstractAdapter {
 
     @Override
     public void removePlace(int position, @NonNull IMapPlace place) {
-        places.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, places.size());
-        originalPlacesList.remove(place);
+        if (places != null) {
+            places.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, places.size());
+        }
+        if (originalPlacesList != null) {
+            originalPlacesList.remove(place);
+        }
     }
 
     @Override
     public void updatePlace(@NonNull IMapPlace update) {
-        int position = getPosition(places, update);
-        places.set(position, update);
-        int originalPosition = getPosition(originalPlacesList, update);
-        originalPlacesList.set(originalPosition, update);
-        notifyItemChanged(position);
+        if (places != null && originalPlacesList != null) {
+            int position = getPosition(places, update);
+            places.set(position, update);
+            int originalPosition = getPosition(originalPlacesList, update);
+            originalPlacesList.set(originalPosition, update);
+            notifyItemChanged(position);
+        }
     }
 
     @Override

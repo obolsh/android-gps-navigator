@@ -22,6 +22,7 @@ import gps.map.navigator.common.debug.Logger;
 public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
     @Inject
     Logger logger;
+    @NonNull
     private Integer databaseVersion;
 
     private static final String TABLE_CHUNKED = "table_chunked";
@@ -33,7 +34,7 @@ public class DatabaseStorage extends SQLiteOpenHelper implements Storage {
     @Inject
     DatabaseStorage(@Named(Constants.ApplicationContext) Context context,
                     @Named(Constants.DatabaseInfo) String databaseName,
-                    @Named(Constants.DatabaseInfo) Integer databaseVersion) {
+                    @NonNull @Named(Constants.DatabaseInfo) Integer databaseVersion) {
         super(context, databaseName, null, databaseVersion);
         this.databaseVersion = databaseVersion;
     }
