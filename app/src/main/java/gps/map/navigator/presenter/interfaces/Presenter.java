@@ -82,9 +82,10 @@ public interface Presenter {
     /**
      * Find place on map.
      *
+     * @param query         - query to search.
      * @param placeListener - listener to get callback.
      */
-    void findPlace(IPlaceListener placeListener);
+    void findPlace(String query, IPlaceListener placeListener);
 
     /**
      * Navigate route.

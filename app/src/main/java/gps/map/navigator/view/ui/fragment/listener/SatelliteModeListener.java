@@ -9,7 +9,7 @@ import gps.map.navigator.presenter.interfaces.Presenter;
 public class SatelliteModeListener implements CompoundButton.OnCheckedChangeListener {
 
     @Inject
-    Presenter presenterStrategy;
+    Presenter presenter;
 
     @Inject
     SatelliteModeListener() {
@@ -17,6 +17,6 @@ public class SatelliteModeListener implements CompoundButton.OnCheckedChangeList
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        presenterStrategy.enableSatelliteMode(isChecked);
+        presenter.enableSatelliteMode(isChecked);
     }
 }

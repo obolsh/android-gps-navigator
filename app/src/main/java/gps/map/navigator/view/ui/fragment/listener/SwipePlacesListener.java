@@ -14,8 +14,6 @@ public class SwipePlacesListener implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (fragment != null) {
-            fragment.swipeOriginAndDestination();
-        }
+        fragment.swipeOriginAndDestination();
     }
 }

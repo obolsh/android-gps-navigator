@@ -61,9 +61,9 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void findPlace(IPlaceListener placeListener) {
+    public void findPlace(String query, IPlaceListener placeListener) {
         if (mapSdk != null && placeListener != null) {
-            mapSdk.findPlace(new FindPlaceListener(cache, placeListener));
+            mapSdk.findPlace(query, new FindPlaceListener(cache, placeListener));
         }
     }
 

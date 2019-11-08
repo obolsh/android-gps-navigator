@@ -41,7 +41,7 @@ public class MapBoxSdkImpl implements MapSdk {
     }
 
     @Override
-    public void findPlace(IPlaceListener placeListener) {
+    public void findPlace(String query, IPlaceListener placeListener) {
         placeListener.onPlaceLocated(new FoundedPlace());
     }
 

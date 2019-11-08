@@ -180,9 +180,9 @@ public class PresenterImplTest {
         PresenterImpl presenter = new PresenterImpl();
         initReferences(presenter);
 
-        presenter.findPlace(placeListener);
+        presenter.findPlace("foo", placeListener);
 
-        verify(mapSdk).findPlace(eq(findPlaceListener));
+        verify(mapSdk).findPlace(eq("foo"), eq(findPlaceListener));
     }
 
     @Test

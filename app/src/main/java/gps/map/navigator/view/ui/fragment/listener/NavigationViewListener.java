@@ -60,11 +60,23 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
     }
 
     private Intent getLaunchIntent() {
+        Intent intent = createIntentWithAction(Intent.ACTION_VIEW);
+        intent.setData(getRateUsUri());
+        return intent;
+    }
+
+    private Intent createIntentWithAction(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        return intent;
+    }
+
+    private Uri getRateUsUri() {
         String appPackageName = context.getApplicationContext().getPackageName();
         try {
-            return new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName));
+            return Uri.parse("market://details?id=" + appPackageName);
         } catch (Throwable e) {
-            return new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName));
+            return Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName);
         }
     }
 
@@ -77,10 +89,9 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
     }
 
     private Intent getShareIntent() {
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_my_app));
-        sendIntent.setType("text/plain");
-        return Intent.createChooser(sendIntent, "");
+        Intent intent = createIntentWithAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_my_app));
+        intent.setType("text/plain");
+        return Intent.createChooser(intent, "");
     }
 }

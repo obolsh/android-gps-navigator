@@ -9,7 +9,7 @@ import gps.map.navigator.presenter.interfaces.Presenter;
 public class NightModeListener implements CompoundButton.OnCheckedChangeListener {
 
     @Inject
-    Presenter presenterStrategy;
+    Presenter presenter;
 
     @Inject
     NightModeListener() {
@@ -17,8 +17,6 @@ public class NightModeListener implements CompoundButton.OnCheckedChangeListener
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (presenterStrategy != null) {
-            presenterStrategy.enableNightMode(isChecked);
-        }
+        presenter.enableNightMode(isChecked);
     }
 }

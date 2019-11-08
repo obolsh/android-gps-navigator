@@ -76,4 +76,16 @@ public class NaviFragmentControllerTest {
 
         assertTrue(is_active);
     }
+
+    @Test
+    public void make_removeFromBackStack_verify() {
+        NaviFragmentController controller = new NaviFragmentController();
+        setReferences(controller);
+
+        controller.removeFromBackStack(fragment);
+
+        verify(transaction).remove(eq(instance));
+        verify(transaction).commit();
+        verify(fragmentManager).popBackStack();
+    }
 }
