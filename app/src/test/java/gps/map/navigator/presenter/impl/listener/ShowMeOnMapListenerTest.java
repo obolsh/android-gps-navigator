@@ -36,7 +36,7 @@ public class ShowMeOnMapListenerTest {
         verify(cache).setMyLocation(eq(place));
         verify(placeListener).onPlaceLocated(eq(place));
 
-        boolean placeListener_cleaned = getInternalState(listener, "placeListener") == null;
+        boolean placeListener_cleaned = getInternalState(listener, "listener") == null;
         boolean cache_cleaned = getInternalState(listener, "cache") == null;
 
         assertTrue(placeListener_cleaned && cache_cleaned);
@@ -50,7 +50,7 @@ public class ShowMeOnMapListenerTest {
 
         verify(placeListener).onPlaceLocationFailed(any(Exception.class));
 
-        boolean placeListener_cleaned = getInternalState(listener, "placeListener") == null;
+        boolean placeListener_cleaned = getInternalState(listener, "listener") == null;
         boolean cache_cleaned = getInternalState(listener, "cache") == null;
 
         assertTrue(placeListener_cleaned && cache_cleaned);

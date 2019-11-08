@@ -35,9 +35,7 @@ public class NextCallbackListener implements View.OnClickListener, Invalidator {
     }
 
     private void moveToNextFragment() {
-        if (mapFragmentIsActive()) {
-            openBuildRouteFragment();
-        } else if (showPlaceFragmentIsActive()) {
+        if (mapFragmentIsActive() || showPlaceFragmentIsActive()) {
             openBuildRouteFragment();
         } else if (showRouteFragmentIsActive()) {
             openNavigateFragment();

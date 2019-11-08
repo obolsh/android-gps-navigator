@@ -36,7 +36,7 @@ public class ShowRouteListenerTest {
         verify(cache).setLastRoute(eq(route));
         verify(routeReadyListener).onRouteReady(eq(route));
 
-        boolean routeReadyListener_cleaned = getInternalState(listener, "routeReadyListener") == null;
+        boolean routeReadyListener_cleaned = getInternalState(listener, "listener") == null;
         boolean cache_cleaned = getInternalState(listener, "cache") == null;
 
         assertTrue(routeReadyListener_cleaned && cache_cleaned);
@@ -50,7 +50,7 @@ public class ShowRouteListenerTest {
 
         verify(routeReadyListener).onRouteFailed(any(Exception.class));
 
-        boolean routeReadyListener_cleaned = getInternalState(listener, "routeReadyListener") == null;
+        boolean routeReadyListener_cleaned = getInternalState(listener, "listener") == null;
         boolean cache_cleaned = getInternalState(listener, "cache") == null;
 
         assertTrue(routeReadyListener_cleaned && cache_cleaned);

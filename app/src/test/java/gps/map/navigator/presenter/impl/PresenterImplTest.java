@@ -24,6 +24,7 @@ import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -54,6 +55,8 @@ public class PresenterImplTest {
     private IRouteReadyListener routeReadyListener;
     private IRouteListener routeListener;
 
+    private IMapPlace place;
+
 
     @Before
     public void setUp() throws Exception {
@@ -61,7 +64,7 @@ public class PresenterImplTest {
         cache = mock(Cache.class);
         mapTypeController = mock(IMapTypeController.class);
         route = mock(IRoute.class);
-
+        place = mock(IMapPlace.class);
 
         showMeOnMapListener = mock(ShowMeOnMapListener.class);
         showRouteListener = mock(ShowRouteListener.class);
@@ -104,6 +107,26 @@ public class PresenterImplTest {
         presenter.showMeOnMap(placeListener);
 
         verify(mapSdk).showMeOnMap(eq(showMeOnMapListener));
+    }
+
+    @Test
+    public void receive_showMap_verify() {
+        PresenterImpl presenter = new PresenterImpl();
+        initReferences(presenter);
+
+        presenter.showMap();
+
+        verify(mapSdk).showMap();
+    }
+
+    @Test
+    public void receive_showPlace_verify() {
+        PresenterImpl presenter = new PresenterImpl();
+        initReferences(presenter);
+
+        presenter.showPlace(place, placeShowListener);
+
+        verify(mapSdk).showPlace(eq(place), eq(placeShowListener));
     }
 
     @Test
@@ -194,5 +217,38 @@ public class PresenterImplTest {
         presenter.buildRoute(placeHistoryListener);
 
         verify(placeHistoryListener).onHistoryPlacesFound(eq(mapPlaces));
+    }
+
+    @Test
+    public void receive_hasTrafficMode_verify() {
+        PresenterImpl presenter = new PresenterImpl();
+        initReferences(presenter);
+        when(mapTypeController.hasTrafficMode()).thenReturn(true);
+
+        boolean traffic_enabled = presenter.hasTrafficMode();
+
+        assertTrue(traffic_enabled);
+    }
+
+    @Test
+    public void receive_hasSatelliteMode_verify() {
+        PresenterImpl presenter = new PresenterImpl();
+        initReferences(presenter);
+        when(mapTypeController.hasSatelliteMode()).thenReturn(true);
+
+        boolean satelliteMode_enabled = presenter.hasSatelliteMode();
+
+        assertTrue(satelliteMode_enabled);
+    }
+
+    @Test
+    public void receive_hasNightMode_verify() {
+        PresenterImpl presenter = new PresenterImpl();
+        initReferences(presenter);
+        when(mapTypeController.hasNightMode()).thenReturn(true);
+
+        boolean nightMode_enabled = presenter.hasNightMode();
+
+        assertTrue(nightMode_enabled);
     }
 }

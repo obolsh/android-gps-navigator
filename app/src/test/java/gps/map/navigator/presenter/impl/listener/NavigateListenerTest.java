@@ -41,7 +41,7 @@ public class NavigateListenerTest {
 
         verify(routeListener).onRouteStopped(eq(route));
 
-        assertNull(getInternalState(listener, "routeListener"));
+        assertNull(getInternalState(listener, "listener"));
     }
 
     @Test
@@ -52,6 +52,6 @@ public class NavigateListenerTest {
 
         verify(routeListener).onRouteError(eq(route), any(Exception.class));
 
-        assertNull(getInternalState(listener, "routeListener"));
+        assertNull(getInternalState(listener, "listener"));
     }
 }
