@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -29,11 +28,11 @@ import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
-import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
+import static org.junit.Assert.assertSame;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
@@ -137,7 +136,6 @@ public class BuildRouteFragmentTest {
         when(view.findViewById(eq(R.id.destination_title))).thenReturn(destinationTitle);
         when(view.findViewById(eq(R.id.swipe_origin_and_destination_button))).thenReturn(button);
         when(view.findViewById(eq(R.id.toolbar))).thenReturn(toolbar);
-
     }
 
     private void setOriginAndDestinationTitle() {
@@ -168,9 +166,12 @@ public class BuildRouteFragmentTest {
     public void make_onCreateView_no_history_places_verify() {
         BuildRouteFragment fragment = createFragment();
 
-        fragment.onCreateView(inflater, null, null);
+        View created = fragment.onCreateView(inflater, null, null);
+
+        assertSame(created, view);
 
         verify(recyclerView).setAdapter(eq(adapter));
+        verify(toolbar).setNavigationOnClickListener(eq(backPressListener));
 
         verify(originTitle).setOnClickListener(eq(originClickListener));
         verify(destinationTitle).setOnClickListener(eq(destinationClickListener));
@@ -189,9 +190,12 @@ public class BuildRouteFragmentTest {
         BuildRouteFragment fragment = createFragment();
         setOriginAndDestinationTitle();
 
-        fragment.onCreateView(inflater, null, null);
+        View created = fragment.onCreateView(inflater, null, null);
+
+        assertSame(created, view);
 
         verify(recyclerView).setAdapter(eq(adapter));
+        verify(toolbar).setNavigationOnClickListener(eq(backPressListener));
 
         verify(originTitle).setOnClickListener(eq(originClickListener));
         verify(destinationTitle).setOnClickListener(eq(destinationClickListener));

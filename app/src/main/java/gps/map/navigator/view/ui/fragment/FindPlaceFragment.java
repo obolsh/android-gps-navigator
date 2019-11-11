@@ -78,7 +78,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
 
     @NonNull
     private LinearLayoutManager getLayoutManager() {
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(activity);
         manager.setOrientation(RecyclerView.VERTICAL);
         return manager;
     }
@@ -99,9 +99,6 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         super.onActivityCreated(savedInstanceState);
         hideBottomBarAndFab();
         openKeyboard();
-//        if (listener != null) {
-//            presenter.findPlace(new FindPlaceCallback(listener));
-//        }
     }
 
     private void hideBottomBarAndFab() {
