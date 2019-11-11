@@ -1,5 +1,6 @@
 package gps.map.navigator.view.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,6 +70,9 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     private TextView originTitle;
     @Nullable
     private TextView destinationTitle;
+    @Inject
+    @Named(Constants.ApplicationContext)
+    Context context;
 
     @Inject
     public BuildRouteFragment() {
@@ -97,7 +101,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     @NonNull
     private LinearLayoutManager getLayoutManager() {
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(context);
         manager.setOrientation(RecyclerView.VERTICAL);
         return manager;
     }
@@ -124,7 +128,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
             originPlace = place;
             logger.debug("Set origin as: " + place);
         } else {
-            setOriginTitle(getResources().getString(R.string.choose_origin_default));
+            setOriginTitle(context.getResources().getString(R.string.choose_origin_default));
             originPlace = null;
             logger.debug("Clean last origin");
         }
@@ -187,7 +191,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
             destinationPlace = place;
             logger.debug("Set destination as: " + place);
         } else {
-            setDestinationTitle(getResources().getString(R.string.choose_destination_default));
+            setDestinationTitle(context.getResources().getString(R.string.choose_destination_default));
             destinationPlace = null;
             logger.debug("Clean last destination");
         }

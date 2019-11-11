@@ -1,6 +1,7 @@
 package androidx.fragment.app;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,5 +23,9 @@ public class Fragment {
 
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
+    }
+
+    public Resources getResources() {
+        return null;
     }
 }
