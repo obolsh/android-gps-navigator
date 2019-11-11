@@ -43,6 +43,12 @@ public class RecyclerView extends View {
 
     public static class ViewHolder {
 
+        public View itemView;
+
+        public ViewHolder(View itemView) {
+            this.itemView = itemView;
+        }
+
         public int getAdapterPosition() {
             return 0;
         }
