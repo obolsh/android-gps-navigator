@@ -15,7 +15,7 @@ public interface MapSdk {
 
     void showRoute(IRoute route, IRouteReadyListener routeListener);
 
-    void findPlace(IPlaceListener placeListener);
+    void findPlace(String query, IPlaceListener placeListener);
 
     IMapPlace getMyLocation();
 

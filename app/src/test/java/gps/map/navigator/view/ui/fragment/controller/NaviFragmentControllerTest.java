@@ -28,7 +28,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.reflect.Whitebox.setInternalState;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Log.class, NaviFragmentController.class, Fragment.class})
+@PrepareForTest({Log.class, NaviFragmentController.class})
 public class NaviFragmentControllerTest {
 
     private FragmentManager fragmentManager;
@@ -75,5 +75,17 @@ public class NaviFragmentControllerTest {
         boolean is_active = controller.thisFragmentIsActive(MapFragment.class);
 
         assertTrue(is_active);
+    }
+
+    @Test
+    public void make_removeFromBackStack_verify() {
+        NaviFragmentController controller = new NaviFragmentController();
+        setReferences(controller);
+
+        controller.removeFromBackStack(fragment);
+
+        verify(transaction).remove(eq(instance));
+        verify(transaction).commit();
+        verify(fragmentManager).popBackStack();
     }
 }

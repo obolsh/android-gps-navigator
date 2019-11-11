@@ -3,8 +3,8 @@ package gps.map.navigator.presenter.impl.listener;
 import org.junit.Before;
 import org.junit.Test;
 
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IRoute;
+import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
 import static org.junit.Assert.*;
@@ -16,13 +16,13 @@ import static org.powermock.reflect.Whitebox.getInternalState;
 
 public class ShowRouteListenerTest {
 
-    private Cache cache;
+    private Presenter cache;
     private IRouteReadyListener routeReadyListener;
     private IRoute route;
 
     @Before
     public void setUp() throws Exception {
-        cache = mock(Cache.class);
+        cache = mock(Presenter.class);
         routeReadyListener = mock(IRouteReadyListener.class);
         route = mock(IRoute.class);
     }
@@ -36,7 +36,7 @@ public class ShowRouteListenerTest {
         verify(cache).setLastRoute(eq(route));
         verify(routeReadyListener).onRouteReady(eq(route));
 
-        boolean routeReadyListener_cleaned = getInternalState(listener, "routeReadyListener") == null;
+        boolean routeReadyListener_cleaned = getInternalState(listener, "listener") == null;
         boolean cache_cleaned = getInternalState(listener, "cache") == null;
 
         assertTrue(routeReadyListener_cleaned && cache_cleaned);
@@ -50,7 +50,7 @@ public class ShowRouteListenerTest {
 
         verify(routeReadyListener).onRouteFailed(any(Exception.class));
 
-        boolean routeReadyListener_cleaned = getInternalState(listener, "routeReadyListener") == null;
+        boolean routeReadyListener_cleaned = getInternalState(listener, "listener") == null;
         boolean cache_cleaned = getInternalState(listener, "cache") == null;
 
         assertTrue(routeReadyListener_cleaned && cache_cleaned);

@@ -1,5 +1,8 @@
 package gps.map.navigator.presenter.impl;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import javax.inject.Inject;
 
 import gps.map.navigator.model.MapType;
@@ -23,11 +26,14 @@ public class MapTypeController implements IMapTypeController {
 
     @Override
     public void enableTraffic(boolean enable) {
-        MapSetting mapSetting = getMapSettings();
-        mapSetting.setMapType(getMapTypeForTraffic(mapSetting, enable));
-        saveNewMapSettings(mapSetting);
+        MapSetting setting = getMapSettings();
+        if (setting != null) {
+            setting.setMapType(getMapTypeForTraffic(setting, enable));
+            saveNewMapSettings(setting);
+        }
     }
 
+    @Nullable
     private MapSetting getMapSettings() {
         if (hasCachedMapSettings()) {
             return cache.getMapSettings();
@@ -40,7 +46,7 @@ public class MapTypeController implements IMapTypeController {
         return cache.getMapSettings() != null;
     }
 
-    private int getMapTypeForTraffic(MapSetting mapSetting, boolean enable) {
+    private int getMapTypeForTraffic(@NonNull MapSetting mapSetting, boolean enable) {
         boolean isDay = isDay(mapSetting);
         boolean isSateliteMap = isSateliteMap(mapSetting);
         if (enable) {
@@ -58,8 +64,8 @@ public class MapTypeController implements IMapTypeController {
         }
     }
 
-    private boolean isDay(MapSetting mapSetting) {
-        return hasDayStamp(mapSetting.getMapType());
+    private boolean isDay(@NonNull MapSetting setting) {
+        return hasDayStamp(setting.getMapType());
     }
 
     private boolean hasDayStamp(int mapType) {
@@ -69,7 +75,7 @@ public class MapTypeController implements IMapTypeController {
                 || mapType == MapType.SATELLITE_TRAFFIC_DAY;
     }
 
-    private boolean isSateliteMap(MapSetting mapSetting) {
+    private boolean isSateliteMap(@NonNull MapSetting mapSetting) {
         return hasSateliteStamp(mapSetting.getMapType());
     }
 
@@ -80,23 +86,23 @@ public class MapTypeController implements IMapTypeController {
                 || mapType == MapType.SATELLITE_TRAFFIC_NIGHT;
     }
 
-    private void saveNewMapSettings(MapSetting mapSetting) {
-        if (mapSetting != null) {
-            mapSdk.setMapSettings(mapSetting);
-            cache.setMapSettings(mapSetting);
-        }
+    private void saveNewMapSettings(@NonNull MapSetting setting) {
+        mapSdk.setMapSettings(setting);
+        cache.setMapSettings(setting);
     }
 
     @Override
     public void enableSatellite(boolean enable) {
-        MapSetting mapSetting = getMapSettings();
-        mapSetting.setMapType(getMapTypeForSatelite(mapSetting, enable));
-        saveNewMapSettings(mapSetting);
+        MapSetting setting = getMapSettings();
+        if (setting != null) {
+            setting.setMapType(getMapTypeForSatelite(setting, enable));
+            saveNewMapSettings(setting);
+        }
     }
 
-    private int getMapTypeForSatelite(MapSetting mapSetting, boolean enable) {
-        boolean isDay = isDay(mapSetting);
-        boolean isTrafficMap = isTrafficMap(mapSetting);
+    private int getMapTypeForSatelite(@NonNull MapSetting setting, boolean enable) {
+        boolean isDay = isDay(setting);
+        boolean isTrafficMap = isTrafficMap(setting);
         if (enable) {
             if (isTrafficMap) {
                 return isDay ? MapType.SATELLITE_TRAFFIC_DAY : MapType.SATELLITE_TRAFFIC_NIGHT;
@@ -112,8 +118,8 @@ public class MapTypeController implements IMapTypeController {
         }
     }
 
-    private boolean isTrafficMap(MapSetting mapSetting) {
-        return hasTrafficStamp(mapSetting.getMapType());
+    private boolean isTrafficMap(@NonNull MapSetting setting) {
+        return hasTrafficStamp(setting.getMapType());
     }
 
     private boolean hasTrafficStamp(int mapType) {
@@ -125,32 +131,34 @@ public class MapTypeController implements IMapTypeController {
 
     @Override
     public void enableNightMode(boolean enable) {
-        MapSetting mapSetting = getMapSettings();
-        mapSetting.setMapType(getMapTypeForNightMode(mapSetting, enable));
-        saveNewMapSettings(mapSetting);
+        MapSetting setting = getMapSettings();
+        if (setting != null) {
+            setting.setMapType(getMapTypeForNightMode(setting, enable));
+            saveNewMapSettings(setting);
+        }
     }
 
     @Override
     public boolean hasTrafficMode() {
-        MapSetting mapSetting = getMapSettings();
-        return isTrafficMap(mapSetting);
+        MapSetting setting = getMapSettings();
+        return setting != null && isTrafficMap(setting);
     }
 
     @Override
     public boolean hasSatelliteMode() {
-        MapSetting mapSetting = getMapSettings();
-        return isSateliteMap(mapSetting);
+        MapSetting setting = getMapSettings();
+        return setting != null && isSateliteMap(setting);
     }
 
     @Override
     public boolean hasNightMode() {
-        MapSetting mapSetting = getMapSettings();
-        return !isDay(mapSetting);
+        MapSetting setting = getMapSettings();
+        return setting != null && !isDay(setting);
     }
 
-    private int getMapTypeForNightMode(MapSetting mapSetting, boolean enable) {
-        boolean isSateliteMap = isSateliteMap(mapSetting);
-        boolean isTrafficMap = isTrafficMap(mapSetting);
+    private int getMapTypeForNightMode(@NonNull MapSetting setting, boolean enable) {
+        boolean isSateliteMap = isSateliteMap(setting);
+        boolean isTrafficMap = isTrafficMap(setting);
         if (enable) {
             if (isTrafficMap) {
                 return isSateliteMap ? MapType.SATELLITE_TRAFFIC_NIGHT : MapType.NORMAL_TRAFFIC_NIGHT;

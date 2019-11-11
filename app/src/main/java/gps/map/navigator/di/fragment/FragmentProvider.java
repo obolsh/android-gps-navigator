@@ -14,14 +14,17 @@ import gps.map.navigator.view.ui.fragment.ShowRouteFragment;
 @Module(includes = {DecorModule.class})
 public abstract class FragmentProvider {
 
+    @FragmentScope
     @ContributesAndroidInjector(modules = BottomDrawerFragmentModule.class)
-    abstract BottomMenuFragment provideBottomDrawerFragmentFactory();
+    public abstract BottomMenuFragment provideBottomDrawerFragmentFactory();
 
+    @FragmentScope
     @ContributesAndroidInjector(modules = BuildRouteFragmentModule.class)
-    abstract BuildRouteFragment provideBuildRouteFragmentFactory();
+    public abstract BuildRouteFragment provideBuildRouteFragmentFactory();
 
+    @FragmentScope
     @ContributesAndroidInjector(modules = ShowRouteFragmentModule.class)
-    abstract ShowRouteFragment provideShowRouteFragmentFactory();
+    public abstract ShowRouteFragment provideShowRouteFragmentFactory();
 
     @ContributesAndroidInjector(modules = NavigateFragmentModule.class)
     abstract NavigatorFragment provideNavigatorFragmentFactory();
@@ -29,8 +32,9 @@ public abstract class FragmentProvider {
     @ContributesAndroidInjector(modules = MapFragmentModule.class)
     abstract MapFragment provideMapFragmentFactory();
 
+    @FragmentScope
     @ContributesAndroidInjector(modules = FindPlaceFragmentModule.class)
-    abstract FindPlaceFragment provideFindPlaceFragmentFactory();
+    public abstract FindPlaceFragment provideFindPlaceFragmentFactory();
 
     @ContributesAndroidInjector(modules = ShowPlaceFragmentModule.class)
     abstract ShowPlaceFragment provideShowPlaceFragmentFactory();

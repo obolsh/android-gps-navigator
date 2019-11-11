@@ -1,5 +1,6 @@
 package gps.map.navigator.view.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,40 +18,61 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import gps.map.navigator.R;
+import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.impl.data.Route;
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
-import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
-import gps.map.navigator.view.ui.fragment.listener.ChoosePlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.ICachedPlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
 import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
-import gps.map.navigator.view.ui.fragment.listener.SwipePlacesListener;
 import gps.map.navigator.view.viewmodel.DecorController;
-import gps.map.navigator.view.viewmodel.callback.BuildRouteCallback;
-import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
+import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
+@Singleton
 public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRoute, IPlacePickerCallback, ICachedPlaceCallback {
     @Inject
     Presenter presenter;
     @Inject
-    Cache cache;
-    @Inject
     DecorController decorController;
     @Inject
     IFragmentController<Fragment> fragmentController;
-
-    private MapPlaceAdapter adapter;
+    @Inject
+    IPlaceHistoryListener buildRouteCallback;
+    @Inject
+    AbstractAdapter adapter;
+    @Inject
+    Logger logger;
+    @Inject
+    @Named(Constants.BackPressListener)
+    View.OnClickListener backPressListener;
+    @Inject
+    @Named(Constants.SwipePlacesListener)
+    View.OnClickListener swipeListener;
+    @Inject
+    @Named(Constants.OriginClickListener)
+    View.OnClickListener originClickListener;
+    @Inject
+    @Named(Constants.DestinationClickListener)
+    View.OnClickListener destinationClickListener;
+    @Nullable
     private IMapPlace originPlace;
+    @Nullable
     private IMapPlace destinationPlace;
+    @Nullable
     private TextView originTitle;
+    @Nullable
     private TextView destinationTitle;
+    @Inject
+    @Named(Constants.ApplicationContext)
+    Context context;
 
     @Inject
     public BuildRouteFragment() {
@@ -62,7 +84,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_build_route, container, false);
         addHistoryPlacesToRecyclerView(view);
-        presenter.buildRoute(new BuildRouteCallback(this));
+        presenter.buildRoute(buildRouteCallback);
         setupOrigin(view);
         setupDestination(view);
         setupSwipeOriginAndDestination(view);
@@ -70,71 +92,64 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         return view;
     }
 
-    private void addHistoryPlacesToRecyclerView(View view) {
+    private void addHistoryPlacesToRecyclerView(@NonNull View view) {
         RecyclerView recyclerView = view.findViewById(R.id.history_places_container);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        manager.setOrientation(RecyclerView.VERTICAL);
-        recyclerView.setLayoutManager(manager);
-        adapter = new MapPlaceAdapter(this);
+        recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setAdapter(adapter);
     }
 
-    private void setupOrigin(View view) {
-        originTitle = view.findViewById(R.id.origin_title);
-        originTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
-                new PlaceProxyListener() {
+    @NonNull
+    private LinearLayoutManager getLayoutManager() {
+        LinearLayoutManager manager = new LinearLayoutManager(context);
+        manager.setOrientation(RecyclerView.VERTICAL);
+        return manager;
+    }
 
-                    @Override
-                    public void onPlaceLocated(IMapPlace mapPlace) {
-                        cache.setLastOrigin(mapPlace);
-                    }
-                }));
+    private void setupOrigin(@NonNull View view) {
+        originTitle = view.findViewById(R.id.origin_title);
+        originTitle.setOnClickListener(originClickListener);
         setOriginPlace(getBestOrigin());
     }
 
+    @Nullable
     private IMapPlace getBestOrigin() {
-        IMapPlace lastOrigin = cache.getLastOrigin();
+        IMapPlace lastOrigin = presenter.getLastOrigin();
         if (lastOrigin != null) {
             return lastOrigin;
         } else {
-            return cache.getMyLocation();
+            return presenter.getMyLocation();
         }
     }
 
-    private void setOriginPlace(IMapPlace place) {
+    private void setOriginPlace(@Nullable IMapPlace place) {
         if (place != null) {
             setOriginTitle(place.getTitle());
             originPlace = place;
-            Logger.debug("Set origin as: " + place);
+            logger.debug("Set origin as: " + place);
         } else {
-            setOriginTitle(getResources().getString(R.string.choose_origin_default));
+            setOriginTitle(context.getResources().getString(R.string.choose_origin_default));
             originPlace = null;
-            Logger.debug("Clean last origin");
+            logger.debug("Clean last origin");
         }
-        cache.setLastOrigin(originPlace);
+        presenter.setLastOrigin(originPlace);
     }
 
-    private void setOriginTitle(String title) {
+    private void setOriginTitle(@NonNull String title) {
         if (originTitle != null) {
             originTitle.setText(title);
         }
     }
 
-    private void setupDestination(View view) {
+    private void setupDestination(@NonNull View view) {
         destinationTitle = view.findViewById(R.id.destination_title);
-        destinationTitle.setOnClickListener(new ChoosePlaceCallback(fragmentController,
-                new PlaceProxyListener() {
-                    @Override
-                    public void onPlaceLocated(IMapPlace mapPlace) {
-                        cache.setLastDestination(mapPlace);
-                    }
-                }));
+        destinationTitle.setOnClickListener(destinationClickListener);
         setDestinationPlace(getBestDestination());
     }
 
+    @Nullable
     private IMapPlace getBestDestination() {
-        IMapPlace lastDestination = cache.getLastDestination();
+        IMapPlace lastDestination = presenter.getLastDestination();
         if (lastDestination != null) {
             return lastDestination;
         } else {
@@ -142,19 +157,14 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         }
     }
 
-    private void setupSwipeOriginAndDestination(View view) {
+    private void setupSwipeOriginAndDestination(@NonNull View view) {
         ImageView button = view.findViewById(R.id.swipe_origin_and_destination_button);
-        button.setOnClickListener(new SwipePlacesListener(this));
+        button.setOnClickListener(swipeListener);
     }
 
-    private void setupToolbarNavigation(View view) {
+    private void setupToolbarNavigation(@NonNull View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(backPressListener);
     }
 
     @Override
@@ -165,20 +175,30 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         setDestinationPlace(lastOrigin);
     }
 
-    private void setDestinationPlace(IMapPlace place) {
+    @Override
+    public void setOnlyOrigin(@NonNull IMapPlace origin) {
+        presenter.setLastOrigin(origin);
+    }
+
+    @Override
+    public void setOnlyDestination(@NonNull IMapPlace destination) {
+        presenter.setLastDestination(destination);
+    }
+
+    private void setDestinationPlace(@Nullable IMapPlace place) {
         if (place != null) {
             setDestinationTitle(place.getTitle());
             destinationPlace = place;
-            Logger.debug("Set destination as: " + place);
+            logger.debug("Set destination as: " + place);
         } else {
-            setDestinationTitle(getResources().getString(R.string.choose_destination_default));
+            setDestinationTitle(context.getResources().getString(R.string.choose_destination_default));
             destinationPlace = null;
-            Logger.debug("Clean last destination");
+            logger.debug("Clean last destination");
         }
-        cache.setLastDestination(destinationPlace);
+        presenter.setLastDestination(destinationPlace);
     }
 
-    private void setDestinationTitle(String title) {
+    private void setDestinationTitle(@NonNull String title) {
         if (destinationTitle != null) {
             destinationTitle.setText(title);
         }
@@ -197,44 +217,89 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         decorController.setShowMeOnMapFabVisibility(false);
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return BuildRouteFragment.class.getName();
     }
 
     @Override
-    public void setHistoryPlaces(List<IMapPlace> placeList) {
+    public void setHistoryPlaces(@NonNull List<IMapPlace> placeList) {
         if (adapter != null) {
-            adapter.setPlaces(placeList);
+            adapter.setInitialPlacesList(placeList);
         }
     }
 
     @Override
-    public void setNewPickedPlace(IMapPlace mapPlace) {
+    public void setNewPickedPlace(@NonNull IMapPlace mapPlace) {
         if (originPlace == null) {
             setOriginPlace(mapPlace);
         } else if (destinationPlace == null) {
             setDestinationPlace(mapPlace);
         } else {
-            Logger.error("Can't use picked new place");
+            logger.error("Can't use picked new place");
         }
         openShowRouteFragmentIfRequied();
+    }
+
+    @Override
+    public void deleteHistoryPlace(int position, @NonNull IMapPlace mapPlace) {
+        presenter.removeHistoryPlace(mapPlace);
+        adapter.removePlace(position, mapPlace);
+    }
+
+    @Override
+    public void markAsFavouritePlace(@NonNull IMapPlace mapPlace) {
+        setFavouriteState(mapPlace, true);
+    }
+
+    private void setFavouriteState(@NonNull IMapPlace mapPlace, boolean favourite) {
+        List<IMapPlace> places = presenter.getHistoryPlaces();
+        if (places != null) {
+            int position = getPosition(places, mapPlace);
+
+            mapPlace.setFavourite(favourite);
+            places.set(position, mapPlace);
+
+            presenter.setHistoryPlaces(places);
+            adapter.updatePlace(mapPlace);
+        }
+    }
+
+    @Override
+    public void setNewFoundPlace(@NonNull IMapPlace mapPlace) {
+        presenter.addNewHistoryPlace(mapPlace);
+    }
+
+    @Override
+    public void markAdNotFavouritePlace(@NonNull IMapPlace mapPlace) {
+        setFavouriteState(mapPlace, false);
+    }
+
+    private int getPosition(@NonNull List<IMapPlace> places, @NonNull IMapPlace item) {
+        for (int i = 0; i < places.size(); i++) {
+            if (item.getId().equals(places.get(i).getId())) {
+                return i;
+            }
+        }
+        return 0;
     }
 
     private void openShowRouteFragmentIfRequied() {
         if (originPlace != null && destinationPlace != null) {
             fragmentController.removeFromBackStack(this);
             IRoute route = buildNewRoute();
-            cache.setLastRoute(route);
-            cache.setLastOrigin(null);
-            cache.setLastDestination(null);
+            presenter.setLastRoute(route);
+            presenter.setLastOrigin(null);
+            presenter.setLastDestination(null);
             fragmentController.openFragment(new ShowRouteFragment());
         }
     }
 
+    @NonNull
     private IRoute buildNewRoute() {
-        IMapPlace origin = cache.getLastOrigin();
-        IMapPlace destination = cache.getLastDestination();
+        IMapPlace origin = presenter.getLastOrigin();
+        IMapPlace destination = presenter.getLastDestination();
         return new Route("route_id", origin, destination, "Route", System.currentTimeMillis());
     }
 }

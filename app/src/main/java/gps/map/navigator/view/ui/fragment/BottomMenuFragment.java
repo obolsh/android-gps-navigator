@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,20 +24,30 @@ import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.presenter.interfaces.Presenter;
-import gps.map.navigator.view.ui.fragment.listener.NavigationViewListener;
-import gps.map.navigator.view.ui.fragment.listener.NightModeListener;
-import gps.map.navigator.view.ui.fragment.listener.SatelliteModeListener;
-import gps.map.navigator.view.ui.fragment.listener.TrafficModeListener;
 
 public class BottomMenuFragment extends BottomSheetDialogFragment {
-
+    @Nullable
     private NavigationView navigationView;
 
     @Inject
-    @Named(Constants.ApplicationContext)
-    Context context;
+    Presenter presenter;
     @Inject
-    Presenter presenterStrategy;
+    NavigationView.OnNavigationItemSelectedListener listener;
+    @Inject
+    @Named(Constants.NightModeListener)
+    CompoundButton.OnCheckedChangeListener nightModeListener;
+    @Inject
+    @Named(Constants.SatelliteModeListener)
+    CompoundButton.OnCheckedChangeListener satelliteModeListener;
+    @Inject
+    @Named(Constants.TrafficModeListener)
+    CompoundButton.OnCheckedChangeListener trafficModeListener;
+    @Inject
+    Logger logger;
+
+    @Inject
+    public BottomMenuFragment() {
+    }
 
     @Nullable
     @Override
@@ -56,41 +67,46 @@ public class BottomMenuFragment extends BottomSheetDialogFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        navigationView.setNavigationItemSelectedListener(new NavigationViewListener(context));
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(listener);
+        }
         addCheckboxListeners();
     }
 
     private void addCheckboxListeners() {
         try {
-            Menu menu = navigationView.getMenu();
+            if (navigationView != null) {
+                Menu menu = navigationView.getMenu();
 
-            addNightModeListener(menu.findItem(R.id.enable_night_mode));
-            addSatelliteModeListener(menu.findItem(R.id.enable_satelite));
-            addTrafficModeListener(menu.findItem(R.id.enable_traffic));
+                addNightModeListener(menu.findItem(R.id.enable_night_mode));
+                addSatelliteModeListener(menu.findItem(R.id.enable_satelite));
+                addTrafficModeListener(menu.findItem(R.id.enable_traffic));
+            }
         } catch (Throwable t) {
-            Logger.error(t);
+            logger.error(t);
         }
     }
 
-    private void addNightModeListener(MenuItem menuItem) {
-        SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(presenterStrategy.hasNightMode());
-        actionView.setOnCheckedChangeListener(new NightModeListener(presenterStrategy));
+    private void addNightModeListener(@NonNull MenuItem menuItem) {
+        SwitchCompat view = getView(menuItem);
+        view.setChecked(presenter.hasNightMode());
+        view.setOnCheckedChangeListener(nightModeListener);
     }
 
-    private SwitchCompat getView(MenuItem menuItem) {
+    @NonNull
+    private SwitchCompat getView(@NonNull MenuItem menuItem) {
         return (SwitchCompat) menuItem.getActionView();
     }
 
-    private void addSatelliteModeListener(MenuItem menuItem) {
-        SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(presenterStrategy.hasSatelliteMode());
-        actionView.setOnCheckedChangeListener(new SatelliteModeListener(presenterStrategy));
+    private void addSatelliteModeListener(@NonNull MenuItem menuItem) {
+        SwitchCompat view = getView(menuItem);
+        view.setChecked(presenter.hasSatelliteMode());
+        view.setOnCheckedChangeListener(satelliteModeListener);
     }
 
-    private void addTrafficModeListener(MenuItem menuItem) {
-        SwitchCompat actionView = getView(menuItem);
-        actionView.setChecked(presenterStrategy.hasTrafficMode());
-        actionView.setOnCheckedChangeListener(new TrafficModeListener(presenterStrategy));
+    private void addTrafficModeListener(@NonNull MenuItem menuItem) {
+        SwitchCompat view = getView(menuItem);
+        view.setChecked(presenter.hasTrafficMode());
+        view.setOnCheckedChangeListener(trafficModeListener);
     }
 }

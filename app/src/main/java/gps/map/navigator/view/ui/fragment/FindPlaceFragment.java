@@ -1,6 +1,7 @@
 package gps.map.navigator.view.ui.fragment;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,20 +18,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 
 import gps.map.navigator.R;
-import gps.map.navigator.model.interfaces.Cache;
+import gps.map.navigator.common.Constants;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.listener.ICachedPlaceCallback;
 import gps.map.navigator.view.ui.fragment.listener.IPlacePickerCallback;
-import gps.map.navigator.view.ui.fragment.listener.SearchTextListener;
 import gps.map.navigator.view.viewmodel.DecorController;
-import gps.map.navigator.view.viewmodel.callback.BuildRouteCallback;
-import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
+import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
+@Singleton
 public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePickerCallback, ICachedPlaceCallback {
 
     @Inject
@@ -38,11 +41,21 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     @Inject
     Presenter presenter;
     @Inject
-    Cache cache;
-    @Inject
     IFragmentController<Fragment> fragmentController;
+    @Inject
+    IPlaceHistoryListener buildRouteCallback;
+    @Inject
+    AbstractAdapter adapter;
+    @Inject
+    SearchView.OnQueryTextListener searchListener;
+    @Inject
+    @Named(Constants.BackPressListener)
+    View.OnClickListener backPressListener;
+    @Inject
+    Activity activity;
+    @Nullable
     private PlaceProxyListener listener;
-    private MapPlaceAdapter adapter;
+    @Nullable
     private SearchView searchView;
 
     @Nullable
@@ -52,34 +65,33 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         addPlacesToRecyclerView(root);
         setupSearchView(root);
         setupToolbarNavigation(root);
-        presenter.buildRoute(new BuildRouteCallback(this));
+        presenter.buildRoute(buildRouteCallback);
         return root;
     }
 
-    private void addPlacesToRecyclerView(View root) {
+    private void addPlacesToRecyclerView(@NonNull View root) {
         RecyclerView recyclerView = root.findViewById(R.id.history_places_container);
         recyclerView.setHasFixedSize(true);
-        LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        manager.setOrientation(RecyclerView.VERTICAL);
-        recyclerView.setLayoutManager(manager);
-        adapter = new MapPlaceAdapter(this);
+        recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setAdapter(adapter);
     }
 
-    private void setupSearchView(View root) {
-        searchView = root.findViewById(R.id.search_view_box);
-        searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchTextListener(adapter, presenter));
+    @NonNull
+    private LinearLayoutManager getLayoutManager() {
+        LinearLayoutManager manager = new LinearLayoutManager(activity);
+        manager.setOrientation(RecyclerView.VERTICAL);
+        return manager;
     }
 
-    private void setupToolbarNavigation(View view) {
+    private void setupSearchView(@NonNull View root) {
+        searchView = root.findViewById(R.id.search_view_box);
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(searchListener);
+    }
+
+    private void setupToolbarNavigation(@NonNull View view) {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(backPressListener);
     }
 
     @Override
@@ -87,9 +99,6 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
         super.onActivityCreated(savedInstanceState);
         hideBottomBarAndFab();
         openKeyboard();
-//        if (listener != null) {
-//            presenter.findPlace(new FindPlaceCallback(listener));
-//        }
     }
 
     private void hideBottomBarAndFab() {
@@ -99,35 +108,79 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     }
 
     private void openKeyboard() {
-        searchView.requestFocus();
-        searchView.setIconified(false);
+        if (searchView != null) {
+            searchView.requestFocus();
+            searchView.setIconified(false);
+        }
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return FindPlaceFragment.class.getName();
     }
 
-    public void setTask(PlaceProxyListener listener) {
+    public void setTask(@Nullable PlaceProxyListener listener) {
         this.listener = listener;
     }
 
     @Override
-    public void setNewPickedPlace(IMapPlace mapPlace) {
+    public void setNewPickedPlace(@NonNull IMapPlace mapPlace) {
         if (listener != null) {
             listener.onPlaceLocated(mapPlace);
-            getActivity().onBackPressed();
+            activity.onBackPressed();
         } else {
-            cache.setLastPlace(mapPlace);
+            presenter.setLastPlace(mapPlace);
             fragmentController.removeFromBackStack(this);
             fragmentController.openFragment(new ShowPlaceFragment());
         }
     }
 
     @Override
-    public void setHistoryPlaces(List<IMapPlace> placeList) {
-        if (adapter != null) {
-            adapter.setPlaces(placeList);
+    public void deleteHistoryPlace(int position, @NonNull IMapPlace mapPlace) {
+        presenter.removeHistoryPlace(mapPlace);
+        adapter.removePlace(position, mapPlace);
+    }
+
+    @Override
+    public void markAsFavouritePlace(@NonNull IMapPlace mapPlace) {
+        setFavouriteState(mapPlace, true);
+    }
+
+    private void setFavouriteState(@NonNull IMapPlace mapPlace, boolean favourite) {
+        List<IMapPlace> places = presenter.getHistoryPlaces();
+        if (places != null) {
+            int position = getPosition(places, mapPlace);
+
+            mapPlace.setFavourite(favourite);
+            places.set(position, mapPlace);
+
+            presenter.setHistoryPlaces(places);
+            adapter.updatePlace(mapPlace);
         }
+    }
+
+    @Override
+    public void markAdNotFavouritePlace(@NonNull IMapPlace mapPlace) {
+        setFavouriteState(mapPlace, false);
+    }
+
+    @Override
+    public void setNewFoundPlace(@NonNull IMapPlace mapPlace) {
+        presenter.addNewHistoryPlace(mapPlace);
+    }
+
+    @Override
+    public void setHistoryPlaces(@NonNull List<IMapPlace> placeList) {
+        adapter.setInitialPlacesList(placeList);
+    }
+
+    private int getPosition(@NonNull List<IMapPlace> places, @NonNull IMapPlace item) {
+        for (int i = 0; i < places.size(); i++) {
+            if (item.getId().equals(places.get(i).getId())) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

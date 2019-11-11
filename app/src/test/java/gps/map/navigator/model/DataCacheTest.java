@@ -8,7 +8,6 @@ import java.util.List;
 
 import gps.map.navigator.common.cache.Storage;
 import gps.map.navigator.common.utils.SerializationUtils;
-import gps.map.navigator.model.DataCache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.model.interfaces.MapSetting;
@@ -334,5 +333,68 @@ public class DataCacheTest {
         cache.setRawData(DataCache.KEY_MAP_SETTINGS, settingData);
 
         verify(storage).saveData(eq(DataCache.KEY_MAP_SETTINGS), eq(settingData));
+    }
+
+    @Test
+    public void make_removeHistoryPlace_verify() {
+        IMapPlace first = mock(IMapPlace.class);
+        when(first.getId()).thenReturn("foo");
+        when(first.getLastUsedTime()).thenReturn(123L);
+
+        IMapPlace second = mock(IMapPlace.class);
+        when(second.getId()).thenReturn("baa");
+        when(second.getLastUsedTime()).thenReturn(124L);
+
+        byte [] first_bytes = "foo".getBytes();
+        byte [] second_bytes = "baa".getBytes();
+
+        List<byte[]> data = new ArrayList<>();
+        data.add(first_bytes);
+        data.add(second_bytes);
+
+        when(storage.getChunkedData()).thenReturn(data);
+        when(placeSerializationUtils.deserialize(eq(first_bytes))).thenReturn(first);
+        when(placeSerializationUtils.deserialize(eq(second_bytes))).thenReturn(second);
+        when(placeSerializationUtils.serialize(eq(first))).thenReturn(first_bytes);
+
+        DataCache cache = getCache();
+
+        cache.removeHistoryPlace(second);
+
+        verify(placeSerializationUtils).serialize(eq(first));
+        verify(placeSerializationUtils, times(0)).serialize(eq(second));
+        verify(storage).saveChunkedData(any(List.class));
+    }
+
+
+    @Test
+    public void make_addNewHistoryPlace_verify() {
+        IMapPlace first = mock(IMapPlace.class);
+        when(first.getId()).thenReturn("foo");
+        when(first.getLastUsedTime()).thenReturn(123L);
+
+        IMapPlace second = mock(IMapPlace.class);
+        when(second.getId()).thenReturn("baa");
+        when(second.getLastUsedTime()).thenReturn(124L);
+
+        byte [] first_bytes = "foo".getBytes();
+        byte [] second_bytes = "baa".getBytes();
+
+        List<byte[]> data = new ArrayList<>();
+        data.add(first_bytes);
+
+        when(storage.getChunkedData()).thenReturn(data);
+        when(placeSerializationUtils.deserialize(eq(first_bytes))).thenReturn(first);
+        when(placeSerializationUtils.serialize(eq(first))).thenReturn(first_bytes);
+        when(placeSerializationUtils.serialize(eq(second))).thenReturn(second_bytes);
+
+        DataCache cache = getCache();
+
+        cache.addNewHistoryPlace(second);
+
+        verify(placeSerializationUtils).serialize(eq(first));
+        verify(placeSerializationUtils).serialize(eq(second));
+        verify(storage).saveChunkedData(any(List.class));
+
     }
 }

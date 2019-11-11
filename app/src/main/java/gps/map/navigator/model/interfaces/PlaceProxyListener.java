@@ -1,6 +1,12 @@
 package gps.map.navigator.model.interfaces;
 
-public interface PlaceProxyListener {
+import androidx.annotation.NonNull;
 
-    void onPlaceLocated(IMapPlace mapPlace);
+public interface PlaceProxyListener {
+    /**
+     * place that was located.
+     *
+     * @param mapPlace - place.
+     */
+    void onPlaceLocated(@NonNull IMapPlace mapPlace);
 }

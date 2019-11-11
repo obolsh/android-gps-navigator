@@ -1,5 +1,8 @@
 package gps.map.navigator.presenter.impl;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,7 +11,7 @@ import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.MapSdk;
 import gps.map.navigator.model.interfaces.IRoute;
-import gps.map.navigator.presenter.impl.listener.FindAndShowListener;
+import gps.map.navigator.model.interfaces.MapSetting;
 import gps.map.navigator.presenter.impl.listener.FindPlaceListener;
 import gps.map.navigator.presenter.impl.listener.NavigateListener;
 import gps.map.navigator.presenter.impl.listener.ShowMeOnMapListener;
@@ -34,9 +37,9 @@ public class PresenterImpl implements Presenter {
     }
 
     @Override
-    public void showMeOnMap(IPlaceListener placeListener) {
+    public void showMeOnMap(@Nullable IPlaceListener placeListener) {
         if (mapSdk != null && placeListener != null) {
-            mapSdk.showMeOnMap(new ShowMeOnMapListener(cache, placeListener));
+            mapSdk.showMeOnMap(new ShowMeOnMapListener(this, placeListener));
         }
     }
 
@@ -47,44 +50,36 @@ public class PresenterImpl implements Presenter {
         }
     }
 
-    @Deprecated
     @Override
-    public void findAndShowPlace(IPlaceShowListener placeShowListener) {
-        if (mapSdk != null && placeShowListener != null) {
-            mapSdk.findPlace(new FindAndShowListener(mapSdk, cache, placeShowListener));
-        }
-    }
-
-    @Override
-    public void showPlace(IMapPlace place, IPlaceShowListener placeShowListener) {
+    public void showPlace(@NonNull IMapPlace place, @Nullable IPlaceShowListener placeShowListener) {
         if (mapSdk != null && placeShowListener != null) {
             mapSdk.showPlace(place, placeShowListener);
         }
     }
 
     @Override
-    public void showRoute(IRoute route, IRouteReadyListener routeReadyListener) {
+    public void showRoute(@NonNull IRoute route, @Nullable IRouteReadyListener routeReadyListener) {
         if (mapSdk != null && routeReadyListener != null) {
-            mapSdk.showRoute(route, new ShowRouteListener(cache, routeReadyListener));
+            mapSdk.showRoute(route, new ShowRouteListener(this, routeReadyListener));
         }
     }
 
     @Override
-    public void findPlace(IPlaceListener placeListener) {
+    public void findPlace(@NonNull String query, @Nullable IPlaceListener placeListener) {
         if (mapSdk != null && placeListener != null) {
-            mapSdk.findPlace(new FindPlaceListener(cache, placeListener));
+            mapSdk.findPlace(query, new FindPlaceListener(this, placeListener));
         }
     }
 
     @Override
-    public void navigate(IRoute route, IRouteListener routeListener) {
+    public void navigate(@NonNull IRoute route, @Nullable IRouteListener routeListener) {
         if (mapSdk != null && routeListener != null) {
             mapSdk.navigate(route, new NavigateListener(routeListener));
         }
     }
 
     @Override
-    public void buildRoute(IPlaceHistoryListener placeHistoryListener) {
+    public void buildRoute(@Nullable IPlaceHistoryListener placeHistoryListener) {
         if (placeHistoryListener != null) {
             List<IMapPlace> places = cache.getHistoryPlaces();
             if (places != null && !places.isEmpty()) {
@@ -93,6 +88,93 @@ public class PresenterImpl implements Presenter {
                 placeHistoryListener.onHistoryPlacesError(new Exception("Cache invalid"));
             }
         }
+    }
+
+    @Nullable
+    @Override
+    public List<IMapPlace> getHistoryPlaces() {
+        return cache.getHistoryPlaces();
+    }
+
+    @Override
+    public void setHistoryPlaces(@Nullable List<IMapPlace> historyPlaces) {
+        cache.setHistoryPlaces(historyPlaces);
+    }
+
+    @Nullable
+    @Override
+    public IMapPlace getMyLocation() {
+        return cache.getMyLocation();
+    }
+
+    @Override
+    public void setMyLocation(@Nullable IMapPlace myLocation) {
+        cache.setMyLocation(myLocation);
+    }
+
+    @Nullable
+    @Override
+    public IMapPlace getLastOrigin() {
+        return cache.getLastOrigin();
+    }
+
+    @Override
+    public void setLastOrigin(@Nullable IMapPlace lastOrigin) {
+        cache.setLastOrigin(lastOrigin);
+    }
+
+    @Nullable
+    @Override
+    public IMapPlace getLastDestination() {
+        return cache.getLastDestination();
+    }
+
+    @Override
+    public void setLastDestination(@Nullable IMapPlace lastDestination) {
+        cache.setLastDestination(lastDestination);
+    }
+
+    @Nullable
+    @Override
+    public IRoute getLastRoute() {
+        return cache.getLastRoute();
+    }
+
+    @Override
+    public void setLastRoute(@Nullable IRoute lastRoute) {
+        cache.setLastRoute(lastRoute);
+    }
+
+    @Nullable
+    @Override
+    public IMapPlace getLastPlace() {
+        return cache.getLastPlace();
+    }
+
+    @Override
+    public void setLastPlace(@Nullable IMapPlace lastPlace) {
+        cache.setLastPlace(lastPlace);
+    }
+
+    @Nullable
+    @Override
+    public byte[] getRawData(@NonNull String key) {
+        return cache.getRawData(key);
+    }
+
+    @Override
+    public void setRawData(@Nullable String key, @Nullable byte[] rawData) {
+        cache.setRawData(key, rawData);
+    }
+
+    @Override
+    public void removeHistoryPlace(@Nullable IMapPlace placeToRemove) {
+        cache.removeHistoryPlace(placeToRemove);
+    }
+
+    @Override
+    public void addNewHistoryPlace(@Nullable IMapPlace newPlace) {
+        cache.addNewHistoryPlace(newPlace);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package gps.map.navigator.view.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -13,16 +14,16 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import dagger.android.AndroidInjection;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import gps.map.navigator.R;
+import gps.map.navigator.common.Constants;
 import gps.map.navigator.model.interfaces.Invalidator;
 import gps.map.navigator.presenter.interfaces.Presenter;
-import gps.map.navigator.view.ui.callback.FindMyPlaceCallback;
-import gps.map.navigator.view.ui.callback.NextCallbackListener;
 import gps.map.navigator.view.ui.fragment.BottomMenuFragment;
 import gps.map.navigator.view.ui.fragment.FindPlaceFragment;
 import gps.map.navigator.view.ui.fragment.MapFragment;
@@ -39,12 +40,18 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     IFragmentController<Fragment> fragmentController;
     @Inject
     Presenter presenter;
-
+    @Inject
+    @Named(Constants.NextCallbackListener)
+    View.OnClickListener nextCallbackListener;
+    @Inject
+    @Named(Constants.FindMyPlaceCallback)
+    View.OnClickListener findMyPlaceCallback;
+    @Nullable
     private FloatingActionButton floatingActionButton;
+    @Nullable
     private BottomAppBar bottomAppBar;
+    @Nullable
     private FloatingActionButton showMeOnMap;
-    private NextCallbackListener nextCallbackListener;
-    private FindMyPlaceCallback findMyPlaceCallback;
 
     @Override
     public AndroidInjector<Fragment> supportFragmentInjector() {
@@ -70,10 +77,12 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     }
 
     private void addCallbackListeners() {
-        nextCallbackListener = new NextCallbackListener(fragmentController);
-        floatingActionButton.setOnClickListener(nextCallbackListener);
-        findMyPlaceCallback = new FindMyPlaceCallback(presenter);
-        showMeOnMap.setOnClickListener(findMyPlaceCallback);
+        if (floatingActionButton != null) {
+            floatingActionButton.setOnClickListener(nextCallbackListener);
+        }
+        if (showMeOnMap != null) {
+            showMeOnMap.setOnClickListener(findMyPlaceCallback);
+        }
     }
 
     private void openMapFragment() {
@@ -121,29 +130,37 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public void setBottomBarVisibility(boolean visible) {
-        bottomAppBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        if (bottomAppBar != null) {
+            bottomAppBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+        }
     }
 
     @Override
     public void setFabAlignmentMode(int mode) {
-        bottomAppBar.setFabAlignmentMode(mode);
+        if (bottomAppBar != null) {
+            bottomAppBar.setFabAlignmentMode(mode);
+        }
     }
 
     @Override
     public void setFabVisibility(boolean visible) {
-        if (visible) {
-            floatingActionButton.show();
-        } else {
-            floatingActionButton.hide();
+        if (floatingActionButton != null) {
+            if (visible) {
+                floatingActionButton.show();
+            } else {
+                floatingActionButton.hide();
+            }
         }
     }
 
     @Override
     public void setShowMeOnMapFabVisibility(boolean visible) {
-        if (visible) {
-            showMeOnMap.show();
-        } else {
-            showMeOnMap.hide();
+        if (showMeOnMap != null) {
+            if (visible) {
+                showMeOnMap.show();
+            } else {
+                showMeOnMap.hide();
+            }
         }
     }
 
@@ -155,11 +172,11 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public void invalidate() {
-        if (nextCallbackListener != null) {
-            nextCallbackListener.invalidate();
+        if (nextCallbackListener != null && nextCallbackListener instanceof Invalidator) {
+            ((Invalidator) nextCallbackListener).invalidate();
         }
-        if (findMyPlaceCallback != null) {
-            findMyPlaceCallback.invalidate();
+        if (findMyPlaceCallback != null && findMyPlaceCallback instanceof Invalidator) {
+            ((Invalidator) findMyPlaceCallback).invalidate();
         }
         nextCallbackListener = null;
         findMyPlaceCallback = null;

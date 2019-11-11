@@ -1,32 +1,28 @@
 package gps.map.navigator.view.ui.fragment.listener;
 
-
 import android.widget.SearchView;
 
-import gps.map.navigator.model.interfaces.IMapPlace;
-import gps.map.navigator.model.interfaces.PlaceProxyListener;
+import javax.inject.Inject;
 import gps.map.navigator.presenter.interfaces.Presenter;
-import gps.map.navigator.view.viewmodel.callback.FindPlaceCallback;
-import gps.map.navigator.view.viewmodel.recyclerview.MapPlaceAdapter;
+import gps.map.navigator.view.interfaces.IPlaceListener;
+import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
 public class SearchTextListener implements SearchView.OnQueryTextListener {
 
-    private MapPlaceAdapter adapter;
-    private Presenter presenter;
+    @Inject
+    AbstractAdapter adapter;
+    @Inject
+    Presenter presenter;
+    @Inject
+    IPlaceListener placeListener;
 
-    public SearchTextListener(MapPlaceAdapter adapter, Presenter presenter) {
-        this.adapter = adapter;
-        this.presenter = presenter;
+    @Inject
+    SearchTextListener() {
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        presenter.findPlace(new FindPlaceCallback(new PlaceProxyListener() {
-            @Override
-            public void onPlaceLocated(IMapPlace mapPlace) {
-                adapter.showSinglePlace(mapPlace);
-            }
-        }));
+        presenter.findPlace(query, placeListener);
         return false;
     }
 

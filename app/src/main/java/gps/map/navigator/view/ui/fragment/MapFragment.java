@@ -3,6 +3,7 @@ package gps.map.navigator.view.ui.fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -12,7 +13,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentMap;
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.viewmodel.DecorController;
@@ -22,13 +22,12 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     DecorController decorController;
     @Inject
     Presenter presenter;
-    @Inject
-    Cache cache;
 
     @Inject
     public MapFragment() {
     }
 
+    @NonNull
     @Override
     public Fragment getInstance() {
         return this;
@@ -40,6 +39,7 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
         super.onAttach(context);
     }
 
+    @NonNull
     @Override
     public String getFragmentTag() {
         return MapFragment.class.getName();
@@ -49,8 +49,8 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     public void onStart() {
         super.onStart();
         presenter.showMap();
-        cache.setLastOrigin(null);
-        cache.setLastDestination(null);
+        presenter.setLastOrigin(null);
+        presenter.setLastDestination(null);
     }
 
     @Override
