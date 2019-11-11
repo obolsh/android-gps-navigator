@@ -1,8 +1,9 @@
 package gps.map.navigator.view.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,71 +13,89 @@ import android.view.View;
 import com.google.android.material.bottomappbar.BottomAppBar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.util.List;
-
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import gps.map.navigator.R;
-import gps.map.navigator.model.interfaces.IMapPlace;
-import gps.map.navigator.model.interfaces.IRoute;
+import gps.map.navigator.common.Constants;
+import gps.map.navigator.model.interfaces.Invalidator;
 import gps.map.navigator.presenter.interfaces.Presenter;
-import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
-import gps.map.navigator.view.interfaces.IPlaceListener;
-import gps.map.navigator.view.interfaces.IPlaceShowListener;
-import gps.map.navigator.view.interfaces.IRouteListener;
-import gps.map.navigator.view.interfaces.IViewInteraction;
-import gps.map.navigator.view.ui.fragment.BottomNavigationDrawerFragment;
-import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
+import gps.map.navigator.view.ui.fragment.BottomMenuFragment;
+import gps.map.navigator.view.ui.fragment.FindPlaceFragment;
+import gps.map.navigator.view.ui.fragment.MapFragment;
+import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
+import gps.map.navigator.view.viewmodel.DecorController;
 
-public class MainActivity extends AppCompatActivity implements IViewInteraction {
+public class MainActivity extends AppCompatActivity implements HasSupportFragmentInjector, DecorController, Invalidator {
 
-    FloatingActionButton floatingActionButton;
-    BottomAppBar bottomAppBar;
+    @Inject
+    DispatchingAndroidInjector<Fragment> fragmentDispatchingAndroidInjector;
+    @Inject
     FragmentManager fragmentManager;
     @Inject
-    Presenter presenterStrategy;
-    IRoute activeRoute;
+    IFragmentController<Fragment> fragmentController;
+    @Inject
+    Presenter presenter;
+    @Inject
+    @Named(Constants.NextCallbackListener)
+    View.OnClickListener nextCallbackListener;
+    @Inject
+    @Named(Constants.FindMyPlaceCallback)
+    View.OnClickListener findMyPlaceCallback;
+    @Nullable
+    private FloatingActionButton floatingActionButton;
+    @Nullable
+    private BottomAppBar bottomAppBar;
+    @Nullable
+    private FloatingActionButton showMeOnMap;
 
-    private final int DEFAULT_SCREEN = 1;
-    private final int BUILD_ROUTE_SCREEN = 2;
-    private final int FIND_PLACE_SCREEN = 3;
-    private final int NAVIGATION_SCREEN = 4;
-
-    private int activeScreenType = DEFAULT_SCREEN;
-
-    BuildRouteFragment buildRouteFragment;
-
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return fragmentDispatchingAndroidInjector;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupUiElements();
+        openMapFragment();
+    }
 
+    private void setupUiElements() {
         bottomAppBar = findViewById(R.id.bottom_app_bar);
-        bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_CENTER);
         floatingActionButton = findViewById(R.id.fab);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (activeRoute != null) {
-                    MainActivity.this.startNavigate(activeRoute);
-                } else {
-                    MainActivity.this.buildRoute();
-                }
-            }
-        });
-        floatingActionButton.show();
+        showMeOnMap = findViewById(R.id.show_me_on_map_fab);
+
+        addCallbackListeners();
         setSupportActionBar(bottomAppBar);
-        fragmentManager = getSupportFragmentManager();
-        bottomAppBar.setVisibility(View.VISIBLE);
+    }
+
+    private void addCallbackListeners() {
+        if (floatingActionButton != null) {
+            floatingActionButton.setOnClickListener(nextCallbackListener);
+        }
+        if (showMeOnMap != null) {
+            showMeOnMap.setOnClickListener(findMyPlaceCallback);
+        }
+    }
+
+    private void openMapFragment() {
+        fragmentController.openFragment(new MapFragment());
     }
 
     @Override
     public void onBackPressed() {
-        backToMainScreen();
-//        super.onBackPressed();
+        if (fragmentManager.getBackStackEntryCount() > 0) {
+            fragmentManager.popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -89,12 +108,10 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                BottomNavigationDrawerFragment bottomNavDrawerFragment =
-                        new BottomNavigationDrawerFragment(this);
-                bottomNavDrawerFragment.show(fragmentManager, bottomNavDrawerFragment.getTag());
+                openBottomMenuFragment();
                 break;
             case R.id.app_bar_search:
-                findPlaceAndShow();
+                openFindPlaceFragment();
                 break;
             default:
                 break;
@@ -102,132 +119,69 @@ public class MainActivity extends AppCompatActivity implements IViewInteraction 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void showMeOnMap(View view) {
-        presenterStrategy.showMeOnMap(new IPlaceListener() {
-            @Override
-            public void onPlaceLocated(IMapPlace place) {
+    private void openBottomMenuFragment() {
+        BottomMenuFragment drawerFragment = new BottomMenuFragment();
+        drawerFragment.show(fragmentManager, drawerFragment.getTag());
+    }
 
-            }
-
-            @Override
-            public void onPlaceLocationFailed(Exception reason) {
-
-            }
-        });
+    private void openFindPlaceFragment() {
+        fragmentController.openFragment(new FindPlaceFragment());
     }
 
     @Override
-    public void buildRoute() {
-        bottomAppBar.setVisibility(View.INVISIBLE);
-        bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_END);
-        presenterStrategy.buildRoute(new IPlaceHistoryListener() {
-            @Override
-            public void onHistoryPlacesFound(List<IMapPlace> placeList) {
-
-            }
-
-            @Override
-            public void onHistoryPlacesError(Exception reason) {
-
-            }
-        });
-        buildRouteFragment = new BuildRouteFragment();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.container, buildRouteFragment, buildRouteFragment.getTag());
-        transaction.commit();
-        activeScreenType = BUILD_ROUTE_SCREEN;
-    }
-
-    @Override
-    public void startNavigate(IRoute route) {
-        presenterStrategy.navigate(route, new IRouteListener() {
-            @Override
-            public void onRouteStarted(IRoute route) {
-
-            }
-
-            @Override
-            public void onRouteStopped(IRoute route) {
-
-            }
-
-            @Override
-            public void onRouteError(IRoute route, Exception reason) {
-
-            }
-        });
-    }
-
-    @Override
-    public void findPlaceAndShow() {
-        bottomAppBar.setVisibility(View.INVISIBLE);
-        floatingActionButton.hide();
-        presenterStrategy.findAndShowPlace(new IPlaceShowListener() {
-            @Override
-            public void onPlaceShown(IMapPlace place) {
-
-            }
-
-            @Override
-            public void onPlaceShowFailed(Exception reason) {
-
-            }
-        });
-        activeScreenType = FIND_PLACE_SCREEN;
-    }
-
-    @Override
-    public void findPlace() {
-        bottomAppBar.setVisibility(View.INVISIBLE);
-        floatingActionButton.hide();
-        presenterStrategy.findPlace(new IPlaceListener() {
-            @Override
-            public void onPlaceLocated(IMapPlace place) {
-
-            }
-
-            @Override
-            public void onPlaceLocationFailed(Exception reason) {
-
-            }
-        });
-        activeScreenType = FIND_PLACE_SCREEN;
-    }
-
-    @Override
-    public void enableTrafficMode(boolean enable) {
-        presenterStrategy.enableTraffic(enable);
-    }
-
-    @Override
-    public void enableNightMode(boolean enable) {
-        presenterStrategy.enableNightMode(enable);
-    }
-
-    @Override
-    public void backToMainScreen() {
-        floatingActionButton.show();
-        bottomAppBar.setVisibility(View.VISIBLE);
-        bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_CENTER);
-        if (BUILD_ROUTE_SCREEN == activeScreenType) {
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.remove(buildRouteFragment);
-            transaction.commit();
-            activeScreenType = DEFAULT_SCREEN;
+    public void setBottomBarVisibility(boolean visible) {
+        if (bottomAppBar != null) {
+            bottomAppBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
         }
     }
 
     @Override
-    public void backToBuildRouteScreen() {
-        bottomAppBar.setVisibility(View.INVISIBLE);
-        bottomAppBar.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_END);
-        if (FIND_PLACE_SCREEN == activeScreenType) {
-            buildRouteFragment = new BuildRouteFragment();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            transaction.add(R.id.container, buildRouteFragment, buildRouteFragment.getTag());
-            transaction.commit();
-            activeScreenType = BUILD_ROUTE_SCREEN;
+    public void setFabAlignmentMode(int mode) {
+        if (bottomAppBar != null) {
+            bottomAppBar.setFabAlignmentMode(mode);
         }
+    }
+
+    @Override
+    public void setFabVisibility(boolean visible) {
+        if (floatingActionButton != null) {
+            if (visible) {
+                floatingActionButton.show();
+            } else {
+                floatingActionButton.hide();
+            }
+        }
+    }
+
+    @Override
+    public void setShowMeOnMapFabVisibility(boolean visible) {
+        if (showMeOnMap != null) {
+            if (visible) {
+                showMeOnMap.show();
+            } else {
+                showMeOnMap.hide();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        invalidate();
+        super.onDestroy();
+    }
+
+    @Override
+    public void invalidate() {
+        if (nextCallbackListener != null && nextCallbackListener instanceof Invalidator) {
+            ((Invalidator) nextCallbackListener).invalidate();
+        }
+        if (findMyPlaceCallback != null && findMyPlaceCallback instanceof Invalidator) {
+            ((Invalidator) findMyPlaceCallback).invalidate();
+        }
+        nextCallbackListener = null;
+        findMyPlaceCallback = null;
+        floatingActionButton = null;
+        bottomAppBar = null;
+        showMeOnMap = null;
     }
 }

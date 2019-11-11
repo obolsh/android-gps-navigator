@@ -38,13 +38,13 @@ ext {
     activateProguard = false
 
     // Sdk and tools
-    minSdkVersion = 19
+    minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
 
     // App dependencies
     appcompatLibraryVersion = '1.0.0'
-    daggerVersion = '2.13'
+    daggerVersion = '2.21'
     constraintlayoutLibraryVersion = '1.1.3'
     materialLibraryVersion = '1.0.0-alpha1'
 
@@ -53,4 +53,8 @@ ext {
     junitLibraryVersion = '4.12'
     espressoLibraryVersion = '3.1.0'
     runnerVersion = '1.1.0'
+    robolectricLibraryVersion = '4.3'
+    mockitoVersion = '1.10.19'
+    androidTestVersion = '1.2.0'
+    powerMockitoVersion = '2.0.4'
 }
