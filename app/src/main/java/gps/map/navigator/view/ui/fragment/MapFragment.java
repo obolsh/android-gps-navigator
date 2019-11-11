@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentMap;
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.viewmodel.DecorController;
@@ -23,8 +22,6 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     DecorController decorController;
     @Inject
     Presenter presenter;
-    @Inject
-    Cache cache;
 
     @Inject
     public MapFragment() {
@@ -52,8 +49,8 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     public void onStart() {
         super.onStart();
         presenter.showMap();
-        cache.setLastOrigin(null);
-        cache.setLastDestination(null);
+        presenter.setLastOrigin(null);
+        presenter.setLastDestination(null);
     }
 
     @Override

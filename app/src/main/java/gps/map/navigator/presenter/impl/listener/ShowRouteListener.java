@@ -3,17 +3,17 @@ package gps.map.navigator.presenter.impl.listener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IRoute;
+import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 
 public class ShowRouteListener implements IRouteReadyListener {
     @Nullable
-    private Cache cache;
+    private Presenter cache;
     @Nullable
     private IRouteReadyListener listener;
 
-    public ShowRouteListener(@Nullable Cache cache, @Nullable IRouteReadyListener listener) {
+    public ShowRouteListener(@Nullable Presenter cache, @Nullable IRouteReadyListener listener) {
         this.cache = cache;
         this.listener = listener;
     }

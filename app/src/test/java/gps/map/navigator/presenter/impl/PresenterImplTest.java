@@ -18,6 +18,7 @@ import gps.map.navigator.presenter.impl.listener.NavigateListener;
 import gps.map.navigator.presenter.impl.listener.ShowMeOnMapListener;
 import gps.map.navigator.presenter.impl.listener.ShowRouteListener;
 import gps.map.navigator.presenter.interfaces.IMapTypeController;
+import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceHistoryListener;
 import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
@@ -79,13 +80,13 @@ public class PresenterImplTest {
         routeListener = mock(IRouteListener.class);
 
         whenNew(ShowMeOnMapListener.class)
-                .withArguments(eq(cache), eq(placeListener))
+                .withArguments(any(Presenter.class), eq(placeListener))
                 .thenReturn(showMeOnMapListener);
         whenNew(ShowRouteListener.class)
-                .withArguments(eq(cache), eq(routeReadyListener))
+                .withArguments(any(Presenter.class), eq(routeReadyListener))
                 .thenReturn(showRouteListener);
         whenNew(FindPlaceListener.class)
-                .withArguments(eq(cache), eq(placeListener))
+                .withArguments(any(Presenter.class), eq(placeListener))
                 .thenReturn(findPlaceListener);
         whenNew(NavigateListener.class)
                 .withArguments(eq(routeListener))

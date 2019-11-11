@@ -24,7 +24,6 @@ import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.impl.data.Route;
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
@@ -40,8 +39,6 @@ import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRoute, IPlacePickerCallback, ICachedPlaceCallback {
     @Inject
     Presenter presenter;
-    @Inject
-    Cache cache;
     @Inject
     DecorController decorController;
     @Inject
@@ -113,11 +110,11 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     @Nullable
     private IMapPlace getBestOrigin() {
-        IMapPlace lastOrigin = cache.getLastOrigin();
+        IMapPlace lastOrigin = presenter.getLastOrigin();
         if (lastOrigin != null) {
             return lastOrigin;
         } else {
-            return cache.getMyLocation();
+            return presenter.getMyLocation();
         }
     }
 
@@ -131,7 +128,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
             originPlace = null;
             logger.debug("Clean last origin");
         }
-        cache.setLastOrigin(originPlace);
+        presenter.setLastOrigin(originPlace);
     }
 
     private void setOriginTitle(@NonNull String title) {
@@ -148,7 +145,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     @Nullable
     private IMapPlace getBestDestination() {
-        IMapPlace lastDestination = cache.getLastDestination();
+        IMapPlace lastDestination = presenter.getLastDestination();
         if (lastDestination != null) {
             return lastDestination;
         } else {
@@ -176,12 +173,12 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     @Override
     public void setOnlyOrigin(@NonNull IMapPlace origin) {
-        cache.setLastOrigin(origin);
+        presenter.setLastOrigin(origin);
     }
 
     @Override
     public void setOnlyDestination(@NonNull IMapPlace destination) {
-        cache.setLastDestination(destination);
+        presenter.setLastDestination(destination);
     }
 
     private void setDestinationPlace(@Nullable IMapPlace place) {
@@ -194,7 +191,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
             destinationPlace = null;
             logger.debug("Clean last destination");
         }
-        cache.setLastDestination(destinationPlace);
+        presenter.setLastDestination(destinationPlace);
     }
 
     private void setDestinationTitle(@NonNull String title) {
@@ -243,7 +240,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     @Override
     public void deleteHistoryPlace(int position, @NonNull IMapPlace mapPlace) {
-        cache.removeHistoryPlace(mapPlace);
+        presenter.removeHistoryPlace(mapPlace);
         adapter.removePlace(position, mapPlace);
     }
 
@@ -253,21 +250,21 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     }
 
     private void setFavouriteState(@NonNull IMapPlace mapPlace, boolean favourite) {
-        List<IMapPlace> places = cache.getHistoryPlaces();
+        List<IMapPlace> places = presenter.getHistoryPlaces();
         if (places != null) {
             int position = getPosition(places, mapPlace);
 
             mapPlace.setFavourite(favourite);
             places.set(position, mapPlace);
 
-            cache.setHistoryPlaces(places);
+            presenter.setHistoryPlaces(places);
             adapter.updatePlace(mapPlace);
         }
     }
 
     @Override
     public void setNewFoundPlace(@NonNull IMapPlace mapPlace) {
-        cache.addNewHistoryPlace(mapPlace);
+        presenter.addNewHistoryPlace(mapPlace);
     }
 
     @Override
@@ -288,17 +285,17 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         if (originPlace != null && destinationPlace != null) {
             fragmentController.removeFromBackStack(this);
             IRoute route = buildNewRoute();
-            cache.setLastRoute(route);
-            cache.setLastOrigin(null);
-            cache.setLastDestination(null);
+            presenter.setLastRoute(route);
+            presenter.setLastOrigin(null);
+            presenter.setLastDestination(null);
             fragmentController.openFragment(new ShowRouteFragment());
         }
     }
 
     @NonNull
     private IRoute buildNewRoute() {
-        IMapPlace origin = cache.getLastOrigin();
-        IMapPlace destination = cache.getLastDestination();
+        IMapPlace origin = presenter.getLastOrigin();
+        IMapPlace destination = presenter.getLastDestination();
         return new Route("route_id", origin, destination, "Route", System.currentTimeMillis());
     }
 }

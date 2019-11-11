@@ -3,8 +3,8 @@ package gps.map.navigator.presenter.impl.listener;
 import org.junit.Before;
 import org.junit.Test;
 
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
+import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceListener;
 
 import static org.junit.Assert.assertTrue;
@@ -16,13 +16,13 @@ import static org.powermock.reflect.Whitebox.getInternalState;
 
 public class FindPlaceListenerTest {
 
-    private Cache cache;
+    private Presenter cache;
     private IPlaceListener placeListener;
     private IMapPlace place;
 
     @Before
     public void setUp() throws Exception {
-        cache = mock(Cache.class);
+        cache = mock(Presenter.class);
         placeListener = mock(IPlaceListener.class);
         place = mock(IMapPlace.class);
     }

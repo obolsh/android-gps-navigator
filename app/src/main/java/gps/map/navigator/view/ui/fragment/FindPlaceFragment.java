@@ -23,7 +23,6 @@ import javax.inject.Singleton;
 
 import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.PlaceProxyListener;
 import gps.map.navigator.presenter.interfaces.Presenter;
@@ -41,8 +40,6 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     DecorController decorController;
     @Inject
     Presenter presenter;
-    @Inject
-    Cache cache;
     @Inject
     IFragmentController<Fragment> fragmentController;
     @Inject
@@ -136,7 +133,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
             listener.onPlaceLocated(mapPlace);
             activity.onBackPressed();
         } else {
-            cache.setLastPlace(mapPlace);
+            presenter.setLastPlace(mapPlace);
             fragmentController.removeFromBackStack(this);
             fragmentController.openFragment(new ShowPlaceFragment());
         }
@@ -144,7 +141,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
 
     @Override
     public void deleteHistoryPlace(int position, @NonNull IMapPlace mapPlace) {
-        cache.removeHistoryPlace(mapPlace);
+        presenter.removeHistoryPlace(mapPlace);
         adapter.removePlace(position, mapPlace);
     }
 
@@ -154,14 +151,14 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     }
 
     private void setFavouriteState(@NonNull IMapPlace mapPlace, boolean favourite) {
-        List<IMapPlace> places = cache.getHistoryPlaces();
+        List<IMapPlace> places = presenter.getHistoryPlaces();
         if (places != null) {
             int position = getPosition(places, mapPlace);
 
             mapPlace.setFavourite(favourite);
             places.set(position, mapPlace);
 
-            cache.setHistoryPlaces(places);
+            presenter.setHistoryPlaces(places);
             adapter.updatePlace(mapPlace);
         }
     }
@@ -173,7 +170,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
 
     @Override
     public void setNewFoundPlace(@NonNull IMapPlace mapPlace) {
-        cache.addNewHistoryPlace(mapPlace);
+        presenter.addNewHistoryPlace(mapPlace);
     }
 
     @Override

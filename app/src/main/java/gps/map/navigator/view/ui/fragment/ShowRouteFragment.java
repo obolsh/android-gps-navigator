@@ -23,7 +23,6 @@ import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentRoute;
 import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
@@ -38,8 +37,6 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     DecorController decorController;
     @Inject
     Presenter presenter;
-    @Inject
-    Cache cache;
     @Inject
     @Named(Constants.BackPressListener)
     View.OnClickListener backPressListener;
@@ -76,7 +73,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     @Override
     public void onStart() {
         super.onStart();
-        IRoute route = cache.getLastRoute();
+        IRoute route = presenter.getLastRoute();
         if (route != null) {
             showRouteOnMap(route);
         }
@@ -115,7 +112,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     @Nullable
     private String getOriginTitle() {
-        IRoute route = cache.getLastRoute();
+        IRoute route = presenter.getLastRoute();
         return route != null ? route.getOrigin().getTitle() : null;
     }
 
@@ -133,7 +130,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     @Nullable
     private String getDestinationTitle() {
-        IRoute route = cache.getLastRoute();
+        IRoute route = presenter.getLastRoute();
         return route != null ? route.getDestination().getTitle() : null;
     }
 
@@ -168,7 +165,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
 
     @Override
     public void swipeOriginAndDestination() {
-        IRoute route = cache.getLastRoute();
+        IRoute route = presenter.getLastRoute();
         if (route != null) {
             IMapPlace newOrigin = route.getDestination();
             IMapPlace newDestination = route.getOrigin();
@@ -188,7 +185,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     }
 
     private void changeActiveRoute(@Nullable IMapPlace newOrigin, @Nullable IMapPlace newDestination) {
-        IRoute route = cache.getLastRoute();
+        IRoute route = presenter.getLastRoute();
         if (route == null) {
             return;
         }
@@ -199,7 +196,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
             route.setDestination(newDestination);
         }
 
-        cache.setLastRoute(route);
+        presenter.setLastRoute(route);
 
         if (newOrigin != null) {
             setOriginTitle();

@@ -11,7 +11,6 @@ import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
 import demo.fragment.FragmentNavigation;
-import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
@@ -24,8 +23,6 @@ public class NavigatorFragment extends FragmentNavigation implements IFragment<F
     DecorController decorController;
     @Inject
     Presenter presenter;
-    @Inject
-    Cache cache;
 
     @NonNull
     @Override
@@ -42,7 +39,7 @@ public class NavigatorFragment extends FragmentNavigation implements IFragment<F
     @Override
     public void onStart() {
         super.onStart();
-        IRoute route = cache.getLastRoute();
+        IRoute route = presenter.getLastRoute();
         if (route != null) {
             presenter.navigate(route, new NavigateCallback());
         }
