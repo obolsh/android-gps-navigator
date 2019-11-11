@@ -29,18 +29,16 @@ public class AdapterFilter extends Filter {
 
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
-        FilterResults results = new FilterResults();
+        Result results = new Result();
+        List<IMapPlace> originals;
         if (adapter != null) {
-            List<IMapPlace> filteredResults;
-            if (constraint.length() == 0) {
-                filteredResults = adapter.getOriginalPlacesList();
+            originals = adapter.getOriginalPlacesList();
+            if (constraint.length() != 0) {
+                results.values = getFilteredResults(originals, constraint.toString().toLowerCase());
             } else {
-                filteredResults = getFilteredResults(adapter.getOriginalPlacesList(), constraint.toString().toLowerCase());
+                results.values = originals;
             }
-
-            results.values = filteredResults;
         }
-
         return results;
     }
 
@@ -48,16 +46,22 @@ public class AdapterFilter extends Filter {
     private List<IMapPlace> getFilteredResults(@Nullable List<IMapPlace> originalPlacesList, @NonNull String constraint) {
         List<IMapPlace> results = new ArrayList<>();
         if (originalPlacesList != null) {
-            String title;
-            String adress;
             for (IMapPlace item : originalPlacesList) {
-                title = item.getTitle().toLowerCase();
-                adress = item.getAddress().toLowerCase();
-                if (title.contains(constraint) || adress.contains(constraint)) {
+                if (itemMatch(item, constraint)) {
                     results.add(item);
                 }
             }
         }
         return results;
+    }
+
+    private boolean itemMatch(IMapPlace item, String constraint) {
+        return item != null && constraint != null
+                && (item.getTitle().toLowerCase().contains(constraint)
+                || item.getAddress().toLowerCase().contains(constraint));
+    }
+
+    static class Result extends FilterResults {
+
     }
 }

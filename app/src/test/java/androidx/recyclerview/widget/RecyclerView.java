@@ -20,11 +20,20 @@ public class RecyclerView extends View {
 
     public static class Adapter<ViewHolder> {
 
+        public void notifyDataSetChanged() {
+
+        }
+
     }
 
     public static class ViewHolder {
 
+        public int getAdapterPosition() {
+            return 0;
+        }
+
     }
+
     public void setAdapter(Adapter adapter) {
 
     }
