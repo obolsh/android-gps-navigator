@@ -24,6 +24,21 @@ public class RecyclerView extends View {
 
         }
 
+        public void notifyItemInserted(int position) {
+
+        }
+
+        public void notifyItemRangeChanged(int positionStart, int itemCount) {
+
+        }
+
+        public void notifyItemChanged(int position) {
+
+        }
+
+        public final void notifyItemRemoved(int position) {
+
+        }
     }
 
     public static class ViewHolder {
