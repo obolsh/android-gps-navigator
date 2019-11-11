@@ -21,6 +21,10 @@ public class Fragment {
 
     }
 
+    public void onStart() {
+
+    }
+
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
     }
