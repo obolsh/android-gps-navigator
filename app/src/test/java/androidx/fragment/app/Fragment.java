@@ -32,4 +32,8 @@ public class Fragment {
     public Resources getResources() {
         return null;
     }
+
+    public String getTag() {
+        return null;
+    }
 }

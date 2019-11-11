@@ -13,4 +13,8 @@ public class FragmentManager {
     public void popBackStack(){
 
     }
+
+    public int getBackStackEntryCount() {
+        return 0;
+    }
 }

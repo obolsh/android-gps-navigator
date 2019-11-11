@@ -172,10 +172,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
 
     @Override
     public void invalidate() {
-        if (nextCallbackListener != null) {
+        if (nextCallbackListener != null && nextCallbackListener instanceof Invalidator) {
             ((Invalidator) nextCallbackListener).invalidate();
         }
-        if (findMyPlaceCallback != null) {
+        if (findMyPlaceCallback != null && findMyPlaceCallback instanceof Invalidator) {
             ((Invalidator) findMyPlaceCallback).invalidate();
         }
         nextCallbackListener = null;
