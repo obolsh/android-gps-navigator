@@ -1,1 +1,1 @@
-include ':app', ':demosdk', ':interfaces'
+include ':app', ':demosdk', ':interfaces', ':mapboxsdk'

@@ -20,7 +20,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import dagger.android.support.AndroidSupportInjection;
-import demo.fragment.FragmentRoute;
 import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
 import gps.map.navigator.model.interfaces.IMapPlace;

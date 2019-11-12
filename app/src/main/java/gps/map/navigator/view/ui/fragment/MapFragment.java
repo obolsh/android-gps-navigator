@@ -12,7 +12,6 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-import demo.fragment.FragmentMap;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.viewmodel.DecorController;
