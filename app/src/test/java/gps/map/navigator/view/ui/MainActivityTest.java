@@ -1,5 +1,6 @@
 package gps.map.navigator.view.ui;
 
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,14 +20,18 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import dagger.android.AndroidInjection;
 import gps.map.navigator.R;
+import gps.map.navigator.model.interfaces.ICacheBundle;
+import gps.map.navigator.model.interfaces.IDecorCache;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.BottomMenuFragment;
 import gps.map.navigator.view.ui.fragment.FindPlaceFragment;
+import gps.map.navigator.view.ui.fragment.MapFragment;
 import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.CALLS_REAL_METHODS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -53,6 +58,8 @@ public class MainActivityTest {
     private MenuInflater menuInflater;
     private MenuItem menuItem;
     private BottomMenuFragment bottomMenuFragment;
+    private ICacheBundle cacheBundle;
+    private IDecorCache decorCache;
 
     @Before
     public void setUp() throws Exception {
@@ -69,9 +76,12 @@ public class MainActivityTest {
         menuInflater = mock(MenuInflater.class);
         menuItem = mock(MenuItem.class);
         bottomMenuFragment = mock(BottomMenuFragment.class);
+        cacheBundle = mock(ICacheBundle.class);
+        decorCache = mock(IDecorCache.class);
 
         whenNew(BottomMenuFragment.class).withAnyArguments().thenReturn(bottomMenuFragment);
         when(bottomMenuFragment.getTag()).thenReturn("foo");
+        when(cacheBundle.getDecorCache()).thenReturn(decorCache);
     }
 
     private MainActivity createActivity() {
@@ -82,6 +92,7 @@ public class MainActivityTest {
 
         setInternalState(activity, "nextCallbackListener", nextCallbackListener);
         setInternalState(activity, "findMyPlaceCallback", findMyPlaceCallback);
+        setInternalState(activity, "cacheBundle", cacheBundle);
 
         when(activity.getMenuInflater()).thenReturn(menuInflater);
         makeViewActive(activity);
@@ -95,15 +106,32 @@ public class MainActivityTest {
     }
 
     @Test
-    public void make_onCreate_verify() {
+    public void make_onCreate_initial_start_verify() {
         MainActivity activity = createActivity();
 
-        activity.onCreate(null);
+        activity.onCreate(mock(Bundle.class));
 
         verify(activity).setContentView(eq(R.layout.activity_main));
         verify(floatingActionButton).setOnClickListener(eq(nextCallbackListener));
         verify(showMeOnMap).setOnClickListener(eq(findMyPlaceCallback));
         verify(activity).setSupportActionBar(eq(bottomAppBar));
+        verify(cacheBundle, times(2)).readBundle(nullable(Bundle.class));
+        verify(fragmentController).openFragment(any(MapFragment.class));
+    }
+
+    @Test
+    public void make_onCreate_restored_verify() {
+        MainActivity activity = createActivity();
+        when(cacheBundle.getActiveFragmentTag()).thenReturn("foo");
+
+        activity.onCreate(mock(Bundle.class));
+
+        verify(activity).setContentView(eq(R.layout.activity_main));
+        verify(floatingActionButton).setOnClickListener(eq(nextCallbackListener));
+        verify(showMeOnMap).setOnClickListener(eq(findMyPlaceCallback));
+        verify(activity).setSupportActionBar(eq(bottomAppBar));
+        verify(cacheBundle, times(2)).readBundle(nullable(Bundle.class));
+        verify(fragmentManager).findFragmentByTag(eq("foo"));
     }
 
     @Test
@@ -162,10 +190,12 @@ public class MainActivityTest {
 
         activity.setBottomBarVisibility(true);
         verify(bottomAppBar).setVisibility(View.VISIBLE);
+        verify(decorCache).setButtomAppBarActive(eq(true));
 
         activity.setBottomBarVisibility(false);
 
         verify(bottomAppBar).setVisibility(View.INVISIBLE);
+        verify(decorCache).setButtomAppBarActive(eq(false));
     }
 
     @Test
@@ -175,6 +205,7 @@ public class MainActivityTest {
 
         activity.setFabAlignmentMode(123);
         verify(bottomAppBar).setFabAlignmentMode(eq(123));
+        verify(decorCache).setFloatingActionButtonAlignent(eq(123));
     }
 
     @Test
@@ -184,10 +215,12 @@ public class MainActivityTest {
 
         activity.setFabVisibility(true);
         verify(floatingActionButton).show();
+        verify(decorCache).setFloatingActionButtonActive(eq(true));
 
         activity.setFabVisibility(false);
 
         verify(floatingActionButton).hide();
+        verify(decorCache).setFloatingActionButtonActive(eq(false));
     }
 
     @Test
@@ -197,10 +230,12 @@ public class MainActivityTest {
 
         activity.setShowMeOnMapFabVisibility(true);
         verify(showMeOnMap).show();
+        verify(decorCache).setShowMeOnMapActive(eq(true));
 
         activity.setShowMeOnMapFabVisibility(false);
 
         verify(showMeOnMap).hide();
+        verify(decorCache).setShowMeOnMapActive(eq(false));
     }
 
     @Test

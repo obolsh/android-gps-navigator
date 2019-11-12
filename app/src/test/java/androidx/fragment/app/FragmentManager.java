@@ -10,11 +10,15 @@ public class FragmentManager {
         return null;
     }
 
-    public void popBackStack(){
+    public void popBackStack() {
 
     }
 
     public int getBackStackEntryCount() {
         return 0;
+    }
+
+    public Fragment findFragmentByTag(String tag) {
+        return null;
     }
 }

@@ -38,11 +38,11 @@ public class CacheBundleImpl implements ICacheBundle {
         try {
             IDecorCache cache = (IDecorCache) bundle.getSerializable(Constants.DecorCache);
             if (cache != null) {
-                decorCache =
-                        new DecorCacheImpl(cache.isShowMeOnMapActive(),
-                                cache.isFloatingActionButtonActive(),
-                                cache.isButtomAppBarActive(),
-                                cache.getFloatingActionButtonAlignent());
+                decorCache = new DecorCacheImpl();
+                decorCache.setShowMeOnMapActive(cache.isShowMeOnMapActive());
+                decorCache.setFloatingActionButtonActive(cache.isFloatingActionButtonActive());
+                decorCache.setButtomAppBarActive(cache.isButtomAppBarActive());
+                decorCache.setFloatingActionButtonAlignent(cache.getFloatingActionButtonAlignent());
             }
         } catch (Throwable t) {
             logger.error(t);
