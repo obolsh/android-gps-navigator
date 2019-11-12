@@ -11,12 +11,17 @@ import androidx.fragment.app.Fragment;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 
+import javax.inject.Inject;
+
+import gps.map.navigator.model.interfaces.Cache;
 import gps.navigator.mapboxsdk.R;
 import gps.navigator.mapboxsdk.callback.MapReadyCallback;
 
 public class FragmentMap extends Fragment {
     @Nullable
     private MapView mapView;
+    @Inject
+    Cache cache;
 
     @Nullable
     @Override
@@ -24,7 +29,7 @@ public class FragmentMap extends Fragment {
         View root = inflater.inflate(R.layout.my_location_fragment, container, false);
         mapView = root.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new MapReadyCallback());
+        mapView.getMapAsync(new MapReadyCallback(cache.getMapSettings()));
         return root;
     }
 
