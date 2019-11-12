@@ -9,7 +9,9 @@ import androidx.fragment.app.FragmentTransaction;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
+import gps.map.navigator.view.ui.fragment.MapFragment;
 
 public class NaviFragmentController implements IFragmentController<Fragment> {
 
@@ -26,10 +28,17 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
     @Override
     public void openFragment(@NonNull IFragment<Fragment> fragment) {
         String tag = fragment.getFragmentTag();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(container, fragment.getInstance(), tag);
-        transaction.addToBackStack(tag);
-        transaction.commit();
+        if (tag != null && !tag.isEmpty()) {
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.setCustomAnimations(getEnterAnimation(tag), R.anim.exit_to_left, R.anim.enter_from_left, R.anim.exit_to_right);
+            transaction.replace(container, fragment.getInstance(), tag);
+            transaction.addToBackStack(tag);
+            transaction.commit();
+        }
+    }
+
+    private int getEnterAnimation(String tag) {
+        return tag.equals(MapFragment.class.getName()) ? 0 : R.anim.enter_from_right;
     }
 
     @Override
