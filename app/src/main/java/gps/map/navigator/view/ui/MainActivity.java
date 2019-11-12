@@ -22,6 +22,8 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.support.HasSupportFragmentInjector;
 import gps.map.navigator.R;
 import gps.map.navigator.common.Constants;
+import gps.map.navigator.model.interfaces.ICacheBundle;
+import gps.map.navigator.model.interfaces.IDecorCache;
 import gps.map.navigator.model.interfaces.Invalidator;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.BottomMenuFragment;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     @Inject
     @Named(Constants.FindMyPlaceCallback)
     View.OnClickListener findMyPlaceCallback;
+    @Inject
+    ICacheBundle cacheBundle;
     @Nullable
     private FloatingActionButton floatingActionButton;
     @Nullable
@@ -64,7 +68,10 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setupUiElements();
-        openMapFragment();
+        restoreUiElementsFromBundle(savedInstanceState);
+        if (!restoreFragmentFromBundle(savedInstanceState)) {
+            openMapFragment();
+        }
     }
 
     private void setupUiElements() {
@@ -85,8 +92,33 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         }
     }
 
+    private void restoreUiElementsFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            cacheBundle.readBundle(savedInstanceState);
+            IDecorCache decorCache = cacheBundle.getDecorCache();
+            if (decorCache != null) {
+                setFabVisibility(decorCache.isFloatingActionButtonActive());
+                setBottomBarVisibility(decorCache.isButtomAppBarActive());
+                setShowMeOnMapFabVisibility(decorCache.isShowMeOnMapActive());
+                setFabAlignmentMode(decorCache.getFloatingActionButtonAlignent());
+            }
+        }
+    }
+
     private void openMapFragment() {
         fragmentController.openFragment(new MapFragment());
+    }
+
+    private boolean restoreFragmentFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            cacheBundle.readBundle(savedInstanceState);
+            String activeFragmentTag = cacheBundle.getActiveFragmentTag();
+            if (activeFragmentTag != null && !activeFragmentTag.isEmpty()) {
+                fragmentManager.findFragmentByTag(activeFragmentTag);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -132,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     public void setBottomBarVisibility(boolean visible) {
         if (bottomAppBar != null) {
             bottomAppBar.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
+            cacheBundle.getDecorCache().setButtomAppBarActive(visible);
         }
     }
 
@@ -139,6 +172,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
     public void setFabAlignmentMode(int mode) {
         if (bottomAppBar != null) {
             bottomAppBar.setFabAlignmentMode(mode);
+            cacheBundle.getDecorCache().setFloatingActionButtonAlignent(mode);
         }
     }
 
@@ -150,6 +184,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             } else {
                 floatingActionButton.hide();
             }
+            cacheBundle.getDecorCache().setFloatingActionButtonActive(visible);
         }
     }
 
@@ -161,6 +196,7 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
             } else {
                 showMeOnMap.hide();
             }
+            cacheBundle.getDecorCache().setShowMeOnMapActive(visible);
         }
     }
 
@@ -183,5 +219,12 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         floatingActionButton = null;
         bottomAppBar = null;
         showMeOnMap = null;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putSerializable(Constants.DecorCache, cacheBundle.getDecorCache());
+        bundle.putString(Constants.FragmentTagCache, fragmentController.getActiveFragmentTag());
     }
 }

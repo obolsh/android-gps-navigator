@@ -11,7 +11,9 @@ import gps.map.navigator.common.cache.Storage;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.common.debug.LoggerImpl;
 import gps.map.navigator.model.DataCache;
+import gps.map.navigator.model.bundle.CacheBundleImpl;
 import gps.map.navigator.model.interfaces.Cache;
+import gps.map.navigator.model.interfaces.ICacheBundle;
 
 @Module
 public class CacheModule {
@@ -43,6 +45,11 @@ public class CacheModule {
     @Singleton
     @Provides
     Cache provideCache(DataCache cache) {
+        return cache;
+    }
+
+    @Provides
+    ICacheBundle provideCacheBundle(CacheBundleImpl cache) {
         return cache;
     }
 }

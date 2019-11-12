@@ -24,4 +24,11 @@ public interface IFragmentController<T> {
      * @param fragment - fragment to be removed.
      */
     void removeFromBackStack(@NonNull IFragment<T> fragment);
+
+    /**
+     * Get active fragment tag.
+     *
+     * @return - tag or null.
+     */
+    String getActiveFragmentTag();
 }

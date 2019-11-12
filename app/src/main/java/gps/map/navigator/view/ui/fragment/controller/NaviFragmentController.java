@@ -49,6 +49,12 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
         fragmentManager.popBackStack();
     }
 
+    @Override
+    public String getActiveFragmentTag() {
+        Fragment fragment = getVisibleFragment();
+        return fragment != null ? fragment.getClass().getName() : "";
+    }
+
     @Nullable
     private Fragment getVisibleFragment() {
         return fragmentManager.findFragmentById(container);
