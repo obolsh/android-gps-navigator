@@ -14,8 +14,12 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import javax.inject.Inject;
 
 import gps.map.navigator.model.interfaces.Cache;
+import gps.navigator.mapboxsdk.MapSdkProvider;
+import gps.navigator.mapboxsdk.MapViewInstance;
+import gps.navigator.mapboxsdk.MapViewProvider;
 import gps.navigator.mapboxsdk.R;
 import gps.navigator.mapboxsdk.callback.MapReadyCallback;
+import gps.navigator.mapboxsdk.callback.MapSdkProviderListenerImpl;
 
 public class FragmentMap extends Fragment {
     @Nullable
@@ -29,8 +33,18 @@ public class FragmentMap extends Fragment {
         View root = inflater.inflate(R.layout.my_location_fragment, container, false);
         mapView = root.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(new MapReadyCallback(cache.getMapSettings()));
+        setMapViewInstance();
+        mapView.getMapAsync(new MapReadyCallback(new MapSdkProviderListenerImpl(cache)));
         return root;
+    }
+
+    private void setMapViewInstance() {
+        MapViewProvider provider = MapViewProvider.getInstance();
+        MapViewInstance instance = provider.getMapViewInstance();
+        if (instance == null) {
+            instance = new MapViewInstance(mapView);
+            provider.setMapViewInstance(instance);
+        }
     }
 
     @Override
@@ -79,6 +93,13 @@ public class FragmentMap extends Fragment {
         if (mapView != null) {
             mapView.onDestroy();
         }
+        cleanReferences();
+    }
+
+    private void cleanReferences() {
+        MapSdkProvider.getInstance().setMapSdkInstance(null);
+        MapViewProvider.getInstance().setMapViewInstance(null);
+        mapView = null;
     }
 
     @Override

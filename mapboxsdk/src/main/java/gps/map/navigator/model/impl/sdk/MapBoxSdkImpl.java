@@ -15,6 +15,8 @@ import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
+import gps.navigator.mapboxsdk.MapSdkInstance;
+import gps.navigator.mapboxsdk.MapSdkProvider;
 import gps.navigator.mapboxsdk.R;
 
 public class MapBoxSdkImpl implements MapSdk {
@@ -35,7 +37,10 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void setMapSettings(MapSetting mapSettings) {
-
+        MapSdkInstance map = MapSdkProvider.getInstance().getMapSdkInstance();
+        if (map != null) {
+            map.setStyle(mapSettings);
+        }
     }
 
     @Override
