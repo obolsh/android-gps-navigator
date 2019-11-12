@@ -3,6 +3,8 @@ package gps.map.navigator.model.impl.sdk;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.mapbox.mapboxsdk.Mapbox;
+
 import javax.inject.Inject;
 
 import gps.map.navigator.model.interfaces.IMapPlace;
@@ -13,6 +15,7 @@ import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
+import gps.navigator.mapboxsdk.R;
 
 public class MapBoxSdkImpl implements MapSdk {
 
@@ -22,7 +25,7 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void initialize(Context context, Bundle bundle) {
-
+        Mapbox.getInstance(context.getApplicationContext(), context.getString(R.string.mapbox_access_token));
     }
 
     @Override

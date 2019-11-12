@@ -30,4 +30,6 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
     testImplementation "junit:junit:$rootProject.junitLibraryVersion"
+
+    implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:$rootProject.mapboxSdkLibraryVersion"
 }
