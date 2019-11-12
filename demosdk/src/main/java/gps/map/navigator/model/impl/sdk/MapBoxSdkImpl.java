@@ -1,6 +1,9 @@
 package gps.map.navigator.model.impl.sdk;
 
 
+import android.content.Context;
+import android.os.Bundle;
+
 import javax.inject.Inject;
 
 import demo.place.FoundedPlace;
@@ -18,6 +21,11 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Inject
     public MapBoxSdkImpl() {
+    }
+
+    @Override
+    public void initialize(Context context, Bundle bundle) {
+
     }
 
     @Override

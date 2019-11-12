@@ -8,12 +8,15 @@ import javax.inject.Inject;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import gps.map.navigator.di.DaggerAppComponent;
+import gps.map.navigator.model.interfaces.MapSdk;
 
 
 public class NavigatorApp extends Application implements HasActivityInjector {
 
     @Inject
     DispatchingAndroidInjector<Activity> activityDispatchingAndroidInjector;
+    @Inject
+    MapSdk mapSdk;
 
     @Override
     public void onCreate() {
@@ -23,7 +26,7 @@ public class NavigatorApp extends Application implements HasActivityInjector {
                 .application(this)
                 .build()
                 .inject(this);
-
+        mapSdk.initialize(this, null);
     }
 
     @Override
