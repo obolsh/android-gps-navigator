@@ -12,10 +12,6 @@ public class MapSdkProvider {
         return instance;
     }
 
-    public static void setInstance(MapSdkProvider instance) {
-        MapSdkProvider.instance = instance;
-    }
-
     public MapSdkInstance getMapSdkInstance() {
         return mapSdkInstance;
     }

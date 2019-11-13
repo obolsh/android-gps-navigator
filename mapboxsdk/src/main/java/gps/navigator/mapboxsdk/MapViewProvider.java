@@ -12,10 +12,6 @@ public class MapViewProvider {
         return instance;
     }
 
-    public static void setInstance(MapViewProvider instance) {
-        MapViewProvider.instance = instance;
-    }
-
     public MapViewInstance getMapViewInstance() {
         return mapViewInstance;
     }

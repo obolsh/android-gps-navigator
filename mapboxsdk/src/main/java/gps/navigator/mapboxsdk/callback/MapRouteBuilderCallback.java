@@ -32,6 +32,8 @@ import java.util.List;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
+import gps.navigator.mapboxsdk.MapRouteInstance;
+import gps.navigator.mapboxsdk.MapRouteProvider;
 import gps.navigator.mapboxsdk.R;
 import gps.navigator.mapboxsdk.RouteBuilderProvider;
 import gps.navigator.mapboxsdk.StyleProvider;
@@ -67,6 +69,7 @@ public class MapRouteBuilderCallback implements OnMapReadyCallback {
                 RouteBuilderProvider provider = new RouteBuilderProvider(context, new RouteReadyListener() {
                     @Override
                     public void onRouteReady(DirectionsRoute route) {
+                        MapRouteProvider.getInstance().setMapRouteInstance(new MapRouteInstance(route));
                         logger.debug("onRouteReady, drawing it");
                         drawRoute(mapboxMap, route);
                     }
@@ -149,7 +152,7 @@ public class MapRouteBuilderCallback implements OnMapReadyCallback {
                 mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(
                         new LatLngBounds.Builder()
                                 .include(getOrigin())
-                                    .include(getDestination())
+                                .include(getDestination())
                                 .build(), 150), 5000);
             }
 

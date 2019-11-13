@@ -19,6 +19,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://mapbox.bintray.com/mapbox' }
     }
 }
 
@@ -51,6 +52,7 @@ ext {
     //map dependencies
     mapboxSdkLibraryVersion = '8.4.0'
     mapboxServicesLibraryVersion = '4.9.0'
+    navigationLibraryVersion = '0.42.3'
 
     //tests
     junitLibraryVersion = '4.12'
