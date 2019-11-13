@@ -14,6 +14,7 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import javax.inject.Inject;
 
 import gps.map.navigator.model.interfaces.Cache;
+import gps.map.navigator.model.interfaces.MapSdk;
 import gps.navigator.mapboxsdk.MapSdkProvider;
 import gps.navigator.mapboxsdk.MapViewInstance;
 import gps.navigator.mapboxsdk.MapViewProvider;
@@ -26,6 +27,8 @@ public class FragmentMap extends Fragment {
     private MapView mapView;
     @Inject
     Cache cache;
+    @Inject
+    MapSdk mapSdk;
 
     @Nullable
     @Override
@@ -34,7 +37,7 @@ public class FragmentMap extends Fragment {
         mapView = root.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         setMapViewInstance();
-        mapView.getMapAsync(new MapReadyCallback(new MapSdkProviderListenerImpl(cache)));
+        mapView.getMapAsync(new MapReadyCallback(new MapSdkProviderListenerImpl(cache,mapSdk)));
         return root;
     }
 

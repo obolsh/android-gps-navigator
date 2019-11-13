@@ -3,15 +3,18 @@ package gps.navigator.mapboxsdk.callback;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 
 import gps.map.navigator.model.interfaces.Cache;
+import gps.map.navigator.model.interfaces.MapSdk;
 import gps.navigator.mapboxsdk.MapSdkInstance;
 import gps.navigator.mapboxsdk.MapSdkProvider;
 import gps.navigator.mapboxsdk.interfaces.MapSdkProviderListener;
 
 public class MapSdkProviderListenerImpl implements MapSdkProviderListener {
     private Cache cache;
+    private MapSdk mapSdk;
 
-    public MapSdkProviderListenerImpl(Cache cache) {
+    public MapSdkProviderListenerImpl(Cache cache, MapSdk mapSdk) {
         this.cache = cache;
+        this.mapSdk = mapSdk;
     }
 
     @Override
@@ -25,5 +28,6 @@ public class MapSdkProviderListenerImpl implements MapSdkProviderListener {
         if (cache != null) {
             instance.setStyle(cache.getMapSettings());
         }
+        mapSdk.showMap();
     }
 }

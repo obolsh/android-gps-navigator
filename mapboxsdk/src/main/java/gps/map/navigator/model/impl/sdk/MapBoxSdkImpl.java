@@ -1,12 +1,24 @@
 package gps.map.navigator.model.impl.sdk;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
+import com.mapbox.mapboxsdk.location.modes.CameraMode;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
+import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.model.interfaces.MapSdk;
@@ -18,8 +30,14 @@ import gps.map.navigator.view.interfaces.IRouteReadyListener;
 import gps.navigator.mapboxsdk.MapSdkInstance;
 import gps.navigator.mapboxsdk.MapSdkProvider;
 import gps.navigator.mapboxsdk.R;
+import gps.navigator.mapboxsdk.callback.StyleLoadedCallback;
 
 public class MapBoxSdkImpl implements MapSdk {
+    @Inject
+    @Named("application_context")
+    Context context;
+    @Inject
+    Cache cache;
 
     @Inject
     public MapBoxSdkImpl() {
@@ -32,6 +50,18 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void showMeOnMap(IPlaceListener placeListener) {
+        MapSdkProvider provider = MapSdkProvider.getInstance();
+        MapSdkInstance mapboxMap = provider.getMapSdkInstance();
+        if (mapboxMap != null) {
+            MapboxMap map = mapboxMap.getInstance();
+            if (map != null) {
+                map.getStyle(new StyleLoadedCallback(context, map, placeListener));
+            } else {
+                placeListener.onPlaceLocationFailed(new Exception("No map"));
+            }
+        } else {
+            placeListener.onPlaceLocationFailed(new Exception("No map cache"));
+        }
 
     }
 
@@ -75,6 +105,49 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void showMap() {
+        MapSdkProvider provider = MapSdkProvider.getInstance();
+        MapSdkInstance mapboxMap = provider.getMapSdkInstance();
+        if (mapboxMap != null) {
+            final MapboxMap map = mapboxMap.getInstance();
+            final Location location = buildLastLocation();
+            if (map != null && location != null) {
+                map.setMinZoomPreference(15d);
+                map.getStyle(new Style.OnStyleLoaded() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onStyleLoaded(@NonNull Style style) {
 
+                        LocationComponent component = map.getLocationComponent();
+                        component.activateLocationComponent(
+                                LocationComponentActivationOptions.builder(context, style)
+                                        .useDefaultLocationEngine(false)
+                                        .build());
+
+                        component.setLocationComponentEnabled(true);
+                        component.setCameraMode(CameraMode.TRACKING);
+                        component.setRenderMode(RenderMode.COMPASS);
+                        component.cancelZoomWhileTrackingAnimation();
+
+                        component.forceLocationUpdate(location);
+
+                    }
+                });
+            }
+        }
+    }
+
+    private Location buildLastLocation() {
+        Location location = new Location("");
+        IMapPlace place = cache.getLastPlace();
+        if (place == null) {
+            place = cache.getMyLocation();
+        }
+        if (place != null) {
+            location.setLatitude(place.getLatitude());
+            location.setLongitude(place.getLongitude());
+        } else {
+            return null;
+        }
+        return location;
     }
 }
