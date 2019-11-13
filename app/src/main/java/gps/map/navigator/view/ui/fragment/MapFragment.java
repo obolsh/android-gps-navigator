@@ -47,7 +47,6 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     @Override
     public void onStart() {
         super.onStart();
-        presenter.showMap();
         presenter.setLastOrigin(null);
         presenter.setLastDestination(null);
     }
@@ -56,6 +55,7 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         prepareUiElements();
+        presenter.showMap();
     }
 
     private void prepareUiElements() {

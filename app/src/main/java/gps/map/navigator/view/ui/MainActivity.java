@@ -1,10 +1,12 @@
 package gps.map.navigator.view.ui;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -226,5 +228,19 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         super.onSaveInstanceState(bundle);
         bundle.putSerializable(Constants.DecorCache, cacheBundle.getDecorCache());
         bundle.putString(Constants.FragmentTagCache, fragmentController.getActiveFragmentTag());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (canFindMyPlaceNow(requestCode, grantResults)) {
+            findMyPlaceCallback.onClick(null);
+        }
+    }
+
+    private boolean canFindMyPlaceNow(int requestCode, int[] grantResults) {
+        return requestCode == Constants.REQUEST_ACCESS_FINE_LOCATION
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 }
