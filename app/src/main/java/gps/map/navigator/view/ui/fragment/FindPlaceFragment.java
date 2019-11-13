@@ -98,7 +98,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         hideBottomBarAndFab();
-        openKeyboard();
+//        openKeyboard();
     }
 
     private void hideBottomBarAndFab() {

@@ -41,21 +41,26 @@ public class DescendingTimeComparatorTest {
 
         }
 
-        public long getLongitude() {
+        @Override
+        public double getLongitude() {
             return 0;
         }
 
-        public void setLongitude(long longitude) {
+        @Override
+        public void setLongitude(double longitude) {
 
         }
 
-        public long getLatitude() {
+        @Override
+        public double getLatitude() {
             return 0;
         }
 
-        public void setLatitude(long y) {
+        @Override
+        public void setLatitude(double latitude) {
 
         }
+
 
         @Override
         public String getTitle() {
@@ -120,21 +125,26 @@ public class DescendingTimeComparatorTest {
 
         }
 
-        public long getLongitude() {
+        @Override
+        public double getLongitude() {
             return 0;
         }
 
-        public void setLongitude(long longitude) {
+        @Override
+        public void setLongitude(double longitude) {
 
         }
 
-        public long getLatitude() {
+        @Override
+        public double getLatitude() {
             return 0;
         }
 
-        public void setLatitude(long y) {
+        @Override
+        public void setLatitude(double latitude) {
 
         }
+
 
         @Override
         public String getTitle() {

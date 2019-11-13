@@ -22,4 +22,10 @@ public class FragmentTransaction {
     public FragmentTransaction remove(@NonNull Fragment fragment) {
         return this;
     }
+
+    public FragmentTransaction setCustomAnimations(int enter,
+                                                            int exit, int popEnter,
+                                                            int popExit) {
+        return this;
+    }
 }

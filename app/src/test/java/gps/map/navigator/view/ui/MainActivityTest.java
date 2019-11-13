@@ -137,7 +137,7 @@ public class MainActivityTest {
     @Test
     public void make_onBackPressed_has_backstack_verify() {
         MainActivity activity = createActivity();
-        when(fragmentManager.getBackStackEntryCount()).thenReturn(1);
+        when(fragmentManager.getBackStackEntryCount()).thenReturn(2);
 
         activity.onBackPressed();
 

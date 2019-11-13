@@ -41,4 +41,14 @@ public class FindPlaceCallbackTest {
 
         verify(listener).onPlaceLocated(eq(mapPlace));
     }
+
+    @Test
+    public void make_onPlacesLocated_verify() {
+        FindPlaceCallback callback = createCallback();
+
+        List<IMapPlace> places = new ArrayList<>();
+        callback.onPlacesLocated(places);
+
+        verify(listener).onPlacesLocated(eq(places));
+    }
 }

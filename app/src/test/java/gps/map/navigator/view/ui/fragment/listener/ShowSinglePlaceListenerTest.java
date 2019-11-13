@@ -3,6 +3,9 @@ package gps.map.navigator.view.ui.fragment.listener;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.viewmodel.recyclerview.AbstractAdapter;
 
@@ -30,5 +33,16 @@ public class ShowSinglePlaceListenerTest {
         listener.onPlaceLocated(mapPlace);
 
         verify(adapter).showSinglePlace(eq(mapPlace));
+    }
+
+    @Test
+    public void receive_onPlacesLocated_verify() {
+        ShowSinglePlaceListener listener = new ShowSinglePlaceListener();
+        setInternalState(listener, "adapter", adapter);
+        List<IMapPlace> places = new ArrayList<>();
+
+        listener.onPlacesLocated(places);
+
+        verify(adapter).showFoundedPlacesList(eq(places));
     }
 }

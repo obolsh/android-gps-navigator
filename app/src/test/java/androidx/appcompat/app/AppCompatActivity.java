@@ -54,4 +54,8 @@ public class AppCompatActivity extends Activity {
     public MenuInflater getMenuInflater() {
         return null;
     }
+
+    @Override
+    public void finish() {
+    }
 }
