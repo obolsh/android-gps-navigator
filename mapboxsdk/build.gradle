@@ -32,4 +32,6 @@ dependencies {
     testImplementation "junit:junit:$rootProject.junitLibraryVersion"
 
     implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:$rootProject.mapboxSdkLibraryVersion"
+
+    implementation "com.mapbox.mapboxsdk:mapbox-sdk-services:$rootProject.mapboxServicesLibraryVersion"
 }

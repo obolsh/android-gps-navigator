@@ -47,7 +47,10 @@ ext {
     daggerVersion = '2.21'
     constraintlayoutLibraryVersion = '1.1.3'
     materialLibraryVersion = '1.0.0-alpha1'
+
+    //map dependencies
     mapboxSdkLibraryVersion = '8.4.0'
+    mapboxServicesLibraryVersion = '4.9.0'
 
     //tests
     junitLibraryVersion = '4.12'
