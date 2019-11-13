@@ -7,8 +7,8 @@ public class FoundedRoute_OriginPlace extends MapPlace {
     public FoundedRoute_OriginPlace() {
         setId("founded_place_origin");
         setLastUsedTime(System.currentTimeMillis());
-        setX(100);
-        setY(100);
+        setLongitude(100);
+        setLatitude(100);
         setAddress("Kiev");
         setFavourite(false);
         setTitle("founded_place_origin_title");

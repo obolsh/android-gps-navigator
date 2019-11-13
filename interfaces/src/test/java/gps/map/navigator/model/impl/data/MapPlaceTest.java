@@ -17,17 +17,17 @@ public class MapPlaceTest {
     @Test
     public void make_getX_verify() {
         MapPlace mapPlace = new MapPlace();
-        mapPlace.setX(123L);
+        mapPlace.setLongitude(123L);
 
-        assertEquals(123L, mapPlace.getX());
+        assertEquals(123L, mapPlace.getLongitude());
     }
 
     @Test
     public void make_getY_verify() {
         MapPlace mapPlace = new MapPlace();
-        mapPlace.setY(1234L);
+        mapPlace.setLatitude(1234L);
 
-        assertEquals(1234L, mapPlace.getY());
+        assertEquals(1234L, mapPlace.getLatitude());
     }
 
     @Test
@@ -81,14 +81,14 @@ public class MapPlaceTest {
     public void make_getX_verify_constructor() {
         MapPlace mapPlace = new MapPlace("", 12L,0,"","","",false,0);
 
-        assertEquals(12L, mapPlace.getX());
+        assertEquals(12L, mapPlace.getLongitude());
     }
 
     @Test
     public void make_getY_verify_constructor() {
         MapPlace mapPlace = new MapPlace("", 0,123L,"","","",false,0);
 
-        assertEquals(123L, mapPlace.getY());
+        assertEquals(123L, mapPlace.getLatitude());
     }
 
     @Test
