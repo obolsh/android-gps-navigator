@@ -102,8 +102,9 @@ public class MapBoxSdkImpl implements MapSdk {
     public void findPlace(String query, final IPlaceListener placeListener) {
         MapboxGeocoding geocoding = MapboxGeocoding.builder()
                 .accessToken(context.getString(R.string.mapbox_access_token))
-//                .mode(GeocodingCriteria.MODE_PLACES_PERMANENT)
                 .query(query)
+//                .geocodingTypes(GeocodingCriteria.TYPE_ADDRESS, GeocodingCriteria.TYPE_COUNTRY, GeocodingCriteria.TYPE_PLACE)
+//                .reverseMode(GeocodingCriteria.REVERSE_MODE_DISTANCE)
                 .limit(3)
                 .build();
         logger.debug("Searching for: " + query);
@@ -111,17 +112,26 @@ public class MapBoxSdkImpl implements MapSdk {
             @Override
             public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
                 logger.debug("Geocoding response");
-                List<CarmenFeature> results = response.body().features();
+                GeocodingResponse body = response.body();
+                if (body != null) {
+                    List<CarmenFeature> results = body.features();
 
-                if (results.size() > 0) {
-                    List<IMapPlace> places = new ArrayList<>();
-                    for (int i = 0; i < results.size(); i++) {
-                        places.add(new FoundedPlace(results.get(i)));
+                    if (results.size() > 0) {
+                        List<IMapPlace> places = new ArrayList<>();
+                        CarmenFeature carmenFeature;
+                        for (int i = 0; i < results.size(); i++) {
+                            carmenFeature = results.get(i);
+                            places.add(new FoundedPlace(carmenFeature));
+                            logger.debug("Founded place: " + carmenFeature.toString());
+                        }
+                        placeListener.onPlacesLocated(places);
+                    } else {
+                        placeListener.onPlaceLocationFailed(new Exception("Not found"));
                     }
-                    placeListener.onPlacesLocated(places);
                 } else {
                     placeListener.onPlaceLocationFailed(new Exception("Not found"));
                 }
+
             }
 
             @Override

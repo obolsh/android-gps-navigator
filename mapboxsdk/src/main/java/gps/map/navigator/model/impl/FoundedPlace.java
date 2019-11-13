@@ -11,8 +11,8 @@ public class FoundedPlace extends MapPlace {
         setId(item.id());
         setLastUsedTime(System.currentTimeMillis());
 
-        setAddress(item.text());
-        setTitle(item.placeName());
+        setAddress(item.placeName());
+        setTitle(item.text());
 
 
         Point point = item.center();

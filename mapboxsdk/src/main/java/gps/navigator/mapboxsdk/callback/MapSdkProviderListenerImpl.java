@@ -28,6 +28,8 @@ public class MapSdkProviderListenerImpl implements MapSdkProviderListener {
         if (cache != null) {
             instance.setStyle(cache.getMapSettings());
         }
-        mapSdk.showMap();
+        if (mapSdk != null) {
+            mapSdk.showMap();
+        }
     }
 }

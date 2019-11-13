@@ -19,5 +19,6 @@ public class MapReadyCallback implements OnMapReadyCallback {
         if (listener != null) {
             listener.onMapSdkProvided(mapboxMap);
         }
+        listener = null;
     }
 }
