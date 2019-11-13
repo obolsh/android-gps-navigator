@@ -7,7 +7,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import com.mapbox.api.geocoding.v5.MapboxGeocoding;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
@@ -15,9 +20,14 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import gps.map.navigator.common.debug.Logger;
+import gps.map.navigator.model.impl.FoundedPlace;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
@@ -31,6 +41,9 @@ import gps.navigator.mapboxsdk.MapSdkInstance;
 import gps.navigator.mapboxsdk.MapSdkProvider;
 import gps.navigator.mapboxsdk.R;
 import gps.navigator.mapboxsdk.callback.StyleLoadedCallback;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapBoxSdkImpl implements MapSdk {
     @Inject
@@ -38,6 +51,8 @@ public class MapBoxSdkImpl implements MapSdk {
     Context context;
     @Inject
     Cache cache;
+    @Inject
+    Logger logger;
 
     @Inject
     public MapBoxSdkImpl() {
@@ -84,8 +99,37 @@ public class MapBoxSdkImpl implements MapSdk {
     }
 
     @Override
-    public void findPlace(String query, IPlaceListener placeListener) {
+    public void findPlace(String query, final IPlaceListener placeListener) {
+        MapboxGeocoding geocoding = MapboxGeocoding.builder()
+                .accessToken(context.getString(R.string.mapbox_access_token))
+//                .mode(GeocodingCriteria.MODE_PLACES_PERMANENT)
+                .query(query)
+                .limit(3)
+                .build();
+        logger.debug("Searching for: " + query);
+        geocoding.enqueueCall(new Callback<GeocodingResponse>() {
+            @Override
+            public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                logger.debug("Geocoding response");
+                List<CarmenFeature> results = response.body().features();
 
+                if (results.size() > 0) {
+                    List<IMapPlace> places = new ArrayList<>();
+                    for (int i = 0; i < results.size(); i++) {
+                        places.add(new FoundedPlace(results.get(i)));
+                    }
+                    placeListener.onPlacesLocated(places);
+                } else {
+                    placeListener.onPlaceLocationFailed(new Exception("Not found"));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GeocodingResponse> call, Throwable throwable) {
+                logger.error(throwable);
+                placeListener.onPlaceLocationFailed(new Exception(throwable));
+            }
+        });
     }
 
     @Override
@@ -109,14 +153,13 @@ public class MapBoxSdkImpl implements MapSdk {
         MapSdkInstance mapboxMap = provider.getMapSdkInstance();
         if (mapboxMap != null) {
             final MapboxMap map = mapboxMap.getInstance();
-            final Location location = buildLastLocation();
+            final CameraPosition location = getPosition();
             if (map != null && location != null) {
-                map.setMinZoomPreference(15d);
+                map.setCameraPosition(location);
                 map.getStyle(new Style.OnStyleLoaded() {
                     @SuppressLint("MissingPermission")
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
-
                         LocationComponent component = map.getLocationComponent();
                         component.activateLocationComponent(
                                 LocationComponentActivationOptions.builder(context, style)
@@ -126,10 +169,7 @@ public class MapBoxSdkImpl implements MapSdk {
                         component.setLocationComponentEnabled(true);
                         component.setCameraMode(CameraMode.TRACKING);
                         component.setRenderMode(RenderMode.COMPASS);
-                        component.cancelZoomWhileTrackingAnimation();
-
-                        component.forceLocationUpdate(location);
-
+                        component.forceLocationUpdate(buildLastLocation());
                     }
                 });
             }
@@ -149,5 +189,18 @@ public class MapBoxSdkImpl implements MapSdk {
             return null;
         }
         return location;
+    }
+
+    private CameraPosition getPosition() {
+        IMapPlace place = cache.getLastPlace();
+        if (place == null) {
+            place = cache.getMyLocation();
+        }
+        if (place != null) {
+            LatLng latLng = new LatLng(place.getLatitude(), place.getLongitude());
+            return new CameraPosition.Builder().target(latLng).zoom(15d).build();
+        } else {
+            return null;
+        }
     }
 }
