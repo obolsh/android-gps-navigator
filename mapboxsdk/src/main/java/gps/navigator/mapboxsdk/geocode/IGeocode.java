@@ -9,6 +9,5 @@ public interface IGeocode {
 
     void searchForLocations(@Nullable String query, @Nullable IPlaceListener listener);
 
-    @Nullable
-    String getPlaceByLocation(@Nullable IMapPlace place);
+    void getPlaceByLocation(@Nullable IMapPlace place, @Nullable ReverseGeocodeListener listener);
 }

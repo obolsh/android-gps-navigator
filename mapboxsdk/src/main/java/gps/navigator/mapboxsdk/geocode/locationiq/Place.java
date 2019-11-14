@@ -21,6 +21,10 @@ public class Place {
     @Expose
     private String display_name;
 
+    @SerializedName("address")
+    @Expose
+    private Address address;
+
     public String getPlace_id() {
         return place_id;
     }
@@ -51,5 +55,13 @@ public class Place {
 
     public void setDisplay_name(String display_name) {
         this.display_name = display_name;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

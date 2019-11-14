@@ -22,6 +22,9 @@ import com.mapbox.mapboxsdk.maps.Style;
 import gps.map.navigator.model.impl.MyLocation;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.interfaces.IPlaceListener;
+import gps.navigator.mapboxsdk.geocode.GeocodeStrategy;
+import gps.navigator.mapboxsdk.geocode.ReverseGeocodeListener;
+import gps.navigator.mapboxsdk.geocode.impl.LocationIqGeocode;
 
 import static android.os.Looper.getMainLooper;
 
@@ -40,7 +43,7 @@ public class StyleLoadedCallback implements Style.OnStyleLoaded {
         this.map = map;
         this.placeListener = placeListener;
         this.context = context;
-        callback = new LocationCallback(map, placeListener);
+        callback = new LocationCallback(context, map, placeListener);
     }
 
     @Override
@@ -86,19 +89,32 @@ public class StyleLoadedCallback implements Style.OnStyleLoaded {
     private static class LocationCallback implements LocationEngineCallback<LocationEngineResult> {
         private MapboxMap map;
         private IPlaceListener placeListener;
+        private Context context;
 
-        private LocationCallback(MapboxMap map, IPlaceListener placeListener) {
+        private LocationCallback(Context context, MapboxMap map, IPlaceListener placeListener) {
             this.map = map;
             this.placeListener = placeListener;
+            this.context = context;
         }
 
         @Override
         public void onSuccess(LocationEngineResult result) {
-            Location location = result.getLastLocation();
-
+            final Location location = result.getLastLocation();
             if (map != null && location != null) {
                 map.getLocationComponent().forceLocationUpdate(location);
-                placeListener.onPlaceLocated(buildMyLocation(location));
+                GeocodeStrategy.getInstance()
+                        .setStategy(new LocationIqGeocode(context))
+                        .getPlaceByLocation(buildMyLocation(location), new ReverseGeocodeListener() {
+                            @Override
+                            public void onPlaceDetected(IMapPlace mapPlace) {
+                                placeListener.onPlaceLocated(mapPlace);
+                            }
+
+                            @Override
+                            public void onPlaceDetectFailed(Exception reason) {
+
+                            }
+                        });
             }
         }
 

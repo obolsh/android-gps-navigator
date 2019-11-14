@@ -21,7 +21,9 @@ public class GeocodeStrategy implements IGeocode {
     private IGeocode geocode;
 
     public GeocodeStrategy setStategy(@NonNull IGeocode geocode) {
-        this.geocode = geocode;
+        if (this.geocode == null) {
+            this.geocode = geocode;
+        }
         return this;
     }
 
@@ -32,9 +34,10 @@ public class GeocodeStrategy implements IGeocode {
         }
     }
 
-    @Nullable
     @Override
-    public String getPlaceByLocation(@Nullable IMapPlace place) {
-        return geocode != null && place != null ? geocode.getPlaceByLocation(place) : null;
+    public void getPlaceByLocation(@Nullable IMapPlace place, @Nullable ReverseGeocodeListener listener) {
+        if (geocode != null && place != null && listener != null) {
+            geocode.getPlaceByLocation(place, listener);
+        }
     }
 }

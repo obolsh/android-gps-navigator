@@ -12,6 +12,7 @@ import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.navigator.mapboxsdk.R;
 import gps.navigator.mapboxsdk.geocode.IGeocode;
+import gps.navigator.mapboxsdk.geocode.ReverseGeocodeListener;
 import gps.navigator.mapboxsdk.geocode.locationiq.GeocodeApi;
 import gps.navigator.mapboxsdk.geocode.locationiq.Place;
 import retrofit2.Call;
@@ -39,17 +40,10 @@ public class LocationIqGeocode implements IGeocode {
                         List<Place> body = response.body();
                         if (body != null) {
                             List<IMapPlace> tely = new ArrayList<>();
-                            IMapPlace gely;
                             Place vely;
                             for (int i = 0; i < body.size(); i++) {
                                 vely = body.get(i);
-                                gely = new MapPlace();
-                                gely.setId(vely.getPlace_id());
-                                gely.setAddress(vely.getDisplay_name());
-                                gely.setLatitude(vely.getLat());
-                                gely.setLongitude(vely.getLon());
-                                gely.setTitle(vely.getDisplay_name());
-                                tely.add(gely);
+                                tely.add(buildPlace(vely));
                             }
                             listener.onPlacesLocated(tely);
                         } else {
@@ -65,9 +59,39 @@ public class LocationIqGeocode implements IGeocode {
                 });
     }
 
-    @Nullable
+    private IMapPlace buildPlace(Place body) {
+        IMapPlace place = new MapPlace();
+        place.setId(body.getPlace_id());
+        place.setAddress(body.getDisplay_name());
+        place.setLatitude(body.getLat());
+        place.setLongitude(body.getLon());
+        place.setTitle(body.getDisplay_name());
+        return place;
+    }
+
     @Override
-    public String getPlaceByLocation(@Nullable IMapPlace place) {
-        return null;
+    public void getPlaceByLocation(@Nullable final IMapPlace place, @Nullable final ReverseGeocodeListener listener) {
+        if (place == null || listener == null) {
+            return;
+        }
+        new GeocodeApi()
+                .getApi()
+                .getPlaceForLocation(context.getString(R.string.location_token), place.getLatitude(), place.getLongitude())
+                .enqueue(new Callback<Place>() {
+                    @Override
+                    public void onResponse(Call<Place> call, Response<Place> response) {
+                        Place body = response.body();
+                        if (body != null) {
+                            listener.onPlaceDetected(buildPlace(body));
+                        } else {
+                            listener.onPlaceDetectFailed(new Exception("No response"));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Place> call, Throwable t) {
+                        listener.onPlaceDetectFailed(new Exception(t));
+                    }
+                });
     }
 }

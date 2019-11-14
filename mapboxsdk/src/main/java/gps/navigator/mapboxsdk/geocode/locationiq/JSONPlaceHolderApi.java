@@ -10,4 +10,7 @@ public interface JSONPlaceHolderApi {
 
     @GET("v1/search.php?&format=json")
     public Call<List<Place>> getPlaceForQuery(@Query("key") String token, @Query("q") String query);
+
+    @GET("v1/reverse.php?&format=json")
+    public Call<Place> getPlaceForLocation(@Query("key") String token, @Query("lat") double lat, @Query("lon") double lon);
 }
