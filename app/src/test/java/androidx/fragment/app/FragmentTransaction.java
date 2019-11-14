@@ -28,4 +28,13 @@ public class FragmentTransaction {
                                                             int popExit) {
         return this;
     }
+
+    public FragmentTransaction detach(@NonNull Fragment fragment) {
+        return this;
+    }
+
+
+    public FragmentTransaction attach(@NonNull Fragment fragment) {
+        return this;
+    }
 }

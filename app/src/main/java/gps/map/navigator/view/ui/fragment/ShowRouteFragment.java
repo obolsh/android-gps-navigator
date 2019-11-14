@@ -26,6 +26,7 @@ import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
+import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.ui.fragment.listener.ISwipeRoute;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.ShowRouteCallback;
@@ -48,6 +49,8 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     @Inject
     @Named(Constants.DestinationClickListener)
     View.OnClickListener destinationClickListener;
+    @Inject
+    IFragmentController<Fragment> fragmentController;
     @Nullable
     private TextView originTitle;
     @Nullable
@@ -147,7 +150,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
     private void hideBottomBarAndMoveFabToRight() {
         decorController.setBottomBarVisibility(false);
         decorController.setFabVisibility(true);
-        decorController.setShowMeOnMapFabVisibility(true);
+        decorController.setShowMeOnMapFabVisibility(false);
         decorController.setFabAlignmentMode(BottomAppBar.FAB_ALIGNMENT_MODE_END);
     }
 
@@ -170,6 +173,7 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
             IMapPlace newDestination = route.getOrigin();
 
             changeActiveRoute(newOrigin, newDestination);
+            fragmentController.reloadFragment(this);
         }
     }
 

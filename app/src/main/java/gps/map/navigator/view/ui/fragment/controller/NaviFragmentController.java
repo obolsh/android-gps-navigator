@@ -64,6 +64,14 @@ public class NaviFragmentController implements IFragmentController<Fragment> {
         return fragment != null ? fragment.getClass().getName() : "";
     }
 
+    @Override
+    public void reloadFragment(@NonNull IFragment<Fragment> fragment) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.detach(fragment.getInstance());
+        transaction.attach(fragment.getInstance());
+        transaction.commit();
+    }
+
     @Nullable
     private Fragment getVisibleFragment() {
         return fragmentManager.findFragmentById(container);

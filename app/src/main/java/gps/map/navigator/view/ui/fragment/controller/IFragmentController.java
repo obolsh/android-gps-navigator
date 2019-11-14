@@ -31,4 +31,11 @@ public interface IFragmentController<T> {
      * @return - tag or null.
      */
     String getActiveFragmentTag();
+
+    /**
+     * Reload fragment to recreate its views.
+     *
+     * @param fragment - fragment.
+     */
+    void reloadFragment(@NonNull IFragment<T> fragment);
 }

@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Point;
+import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -41,8 +42,11 @@ public class NavigationRouteProvider implements INavigationProvider {
 
     @Override
     public void buildRoute(@Nullable final Point origin, @Nullable final Point destination, @Nullable final RouteReadyListener listener) {
-        mapboxMap.addMarker(new MarkerOptions().position(new LatLng(destination.latitude(), destination.longitude())));
-
+        if (origin != null && destination != null) {
+            getMarker(new LatLng(destination.latitude(), destination.longitude()));
+        } else {
+            return;
+        }
         NavigationRoute.builder(context)
                 .accessToken(context.getString(R.string.mapbox_access_token))
                 .origin(origin)
@@ -54,9 +58,13 @@ public class NavigationRouteProvider implements INavigationProvider {
                     public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
                         DirectionsResponse directionsResponse = response.body();
                         if (directionsResponse == null) {
-                            listener.onBuildFailed(new Exception("No routes found, make sure you set the right user and access token."));
+                            if (listener != null) {
+                                listener.onBuildFailed(new Exception("No routes found, make sure you set the right user and access token."));
+                            }
                         } else if (directionsResponse.routes().size() < 1) {
-                            listener.onBuildFailed(new Exception("No routes found"));
+                            if (listener != null) {
+                                listener.onBuildFailed(new Exception("No routes found"));
+                            }
                         } else {
                             navigationMapRoute.addRoutes(directionsResponse.routes());
                             mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(
@@ -69,9 +77,15 @@ public class NavigationRouteProvider implements INavigationProvider {
 
                     @Override
                     public void onFailure(Call<DirectionsResponse> call, Throwable t) {
-                        listener.onBuildFailed(new Exception(t));
+                        if (listener != null) {
+                            listener.onBuildFailed(new Exception(t));
+                        }
                     }
                 });
+    }
+
+    private Marker getMarker(LatLng position) {
+        return mapboxMap.addMarker(new MarkerOptions().position(position));
     }
 
     @Override
