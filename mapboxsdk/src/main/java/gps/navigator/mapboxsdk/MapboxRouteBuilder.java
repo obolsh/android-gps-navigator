@@ -14,12 +14,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class RouteBuilderProvider {
+@Deprecated
+public class MapboxRouteBuilder {
 
     private Context context;
     private RouteReadyListener listener;
 
-    public RouteBuilderProvider(Context context, RouteReadyListener listener) {
+    public MapboxRouteBuilder(Context context, RouteReadyListener listener) {
         this.context = context;
         this.listener = listener;
     }

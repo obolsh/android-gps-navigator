@@ -1,5 +1,5 @@
 package gps.navigator.mapboxsdk;
-
+@Deprecated
 public class MapRouteProvider {
 
     private static MapRouteProvider instance;
