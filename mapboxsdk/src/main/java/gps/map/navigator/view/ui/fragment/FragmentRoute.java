@@ -35,7 +35,7 @@ public class FragmentRoute extends MapboxFragment {
         mapView = root.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         cacheMapViewInstance();
-        mapView.getMapAsync(new MapRouteBuilderCallback(getContext(), cache, logger));
+        mapView.getMapAsync(new MapRouteBuilderCallback(getContext(), cache, logger, mapView));
         return root;
     }
 
