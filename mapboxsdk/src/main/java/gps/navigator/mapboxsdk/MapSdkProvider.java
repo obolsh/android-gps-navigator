@@ -5,6 +5,9 @@ public class MapSdkProvider {
     private static MapSdkProvider instance;
     private MapSdkInstance mapSdkInstance;
 
+    private MapSdkProvider() {
+    }
+
     public static MapSdkProvider getInstance() {
         if (instance == null) {
             instance = new MapSdkProvider();

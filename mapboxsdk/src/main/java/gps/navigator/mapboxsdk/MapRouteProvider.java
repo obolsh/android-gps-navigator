@@ -5,6 +5,9 @@ public class MapRouteProvider {
     private static MapRouteProvider instance;
     private MapRouteInstance routeInstance;
 
+    private MapRouteProvider() {
+    }
+
     public static MapRouteProvider getInstance() {
         if (instance == null) {
             instance = new MapRouteProvider();

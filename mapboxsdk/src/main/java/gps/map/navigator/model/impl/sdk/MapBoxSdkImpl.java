@@ -6,10 +6,6 @@ import android.location.Location;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-
-import com.mapbox.api.geocoding.v5.MapboxGeocoding;
-import com.mapbox.api.geocoding.v5.models.CarmenFeature;
-import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -20,14 +16,10 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import gps.map.navigator.common.debug.Logger;
-import gps.map.navigator.model.impl.FoundedPlace;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
@@ -41,9 +33,8 @@ import gps.navigator.mapboxsdk.MapSdkInstance;
 import gps.navigator.mapboxsdk.MapSdkProvider;
 import gps.navigator.mapboxsdk.R;
 import gps.navigator.mapboxsdk.callback.StyleLoadedCallback;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import gps.navigator.mapboxsdk.geocode.GeocodeStrategy;
+import gps.navigator.mapboxsdk.geocode.impl.LocationIqGeocode;
 
 public class MapBoxSdkImpl implements MapSdk {
     @Inject
@@ -99,47 +90,10 @@ public class MapBoxSdkImpl implements MapSdk {
     }
 
     @Override
-    public void findPlace(String query, final IPlaceListener placeListener) {
-        MapboxGeocoding geocoding = MapboxGeocoding.builder()
-                .accessToken(context.getString(R.string.mapbox_access_token))
-                .query(query)
-//                .geocodingTypes(GeocodingCriteria.TYPE_ADDRESS, GeocodingCriteria.TYPE_COUNTRY, GeocodingCriteria.TYPE_PLACE)
-//                .reverseMode(GeocodingCriteria.REVERSE_MODE_DISTANCE)
-                .limit(3)
-                .build();
-        logger.debug("Searching for: " + query);
-        geocoding.enqueueCall(new Callback<GeocodingResponse>() {
-            @Override
-            public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
-                logger.debug("Geocoding response");
-                GeocodingResponse body = response.body();
-                if (body != null) {
-                    List<CarmenFeature> results = body.features();
-
-                    if (results.size() > 0) {
-                        List<IMapPlace> places = new ArrayList<>();
-                        CarmenFeature carmenFeature;
-                        for (int i = 0; i < results.size(); i++) {
-                            carmenFeature = results.get(i);
-                            places.add(new FoundedPlace(carmenFeature));
-                            logger.debug("Founded place: " + carmenFeature.toString());
-                        }
-                        placeListener.onPlacesLocated(places);
-                    } else {
-                        placeListener.onPlaceLocationFailed(new Exception("Not found"));
-                    }
-                } else {
-                    placeListener.onPlaceLocationFailed(new Exception("Not found"));
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<GeocodingResponse> call, Throwable throwable) {
-                logger.error(throwable);
-                placeListener.onPlaceLocationFailed(new Exception(throwable));
-            }
-        });
+    public void findPlace(String query, IPlaceListener placeListener) {
+        GeocodeStrategy.getInstance()
+                .setStategy(new LocationIqGeocode(context))
+                .searchForLocations(query, placeListener);
     }
 
     @Override

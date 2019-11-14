@@ -5,6 +5,9 @@ public class MapViewProvider {
     private static MapViewProvider instance;
     private MapViewInstance mapViewInstance;
 
+    private MapViewProvider() {
+    }
+
     public static MapViewProvider getInstance() {
         if (instance == null) {
             instance = new MapViewProvider();
