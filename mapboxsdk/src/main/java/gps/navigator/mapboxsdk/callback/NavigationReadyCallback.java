@@ -91,7 +91,7 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
         }
         NavigationViewOptions options = NavigationViewOptions.builder()
                 .directionsRoute(directionsRoute)
-                .shouldSimulateRoute(true)
+                .shouldSimulateRoute(shouldSimulateRoute())
                 .navigationListener(new NavigationListener() {
                     @Override
                     public void onCancelNavigation() {
@@ -129,6 +129,10 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
                 })
                 .build();
         navigationView.startNavigation(options);
+    }
+
+    private boolean shouldSimulateRoute () {
+        return BuildConfig.DEBUG;
     }
 
     private void stopNavigation() {
