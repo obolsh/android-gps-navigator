@@ -17,15 +17,15 @@ This is an open-source Android navigator app that provides an alternative to Goo
 
 ## Features
 - find your current position on map
-- search and show any place on map
+- search and show particular place on map
 - build route between two point on map
-- choose best route among offered
+- choose best route among offered options
 - navigate to destination with voice tips during the route
 - see traffic jams on the roads
 - see terrains of the map
 
 ## References
-- Maps, routes & navigation was build using https://www.mapbox.com
+- Maps, routes & navigation were build using https://www.mapbox.com
 - Place search on the map was build using https://locationiq.com
 - Images were build using http://www.freepik.com
 
