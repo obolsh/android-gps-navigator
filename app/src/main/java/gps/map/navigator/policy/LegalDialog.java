@@ -10,13 +10,13 @@ import android.webkit.WebView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-class LegalDialog {
+public class LegalDialog {
 
     private AlertDialog.Builder builder;
     private boolean disableButtons;
     private Legal legal;
 
-    LegalDialog(Activity activity, Legal legal) {
+    public LegalDialog(Activity activity, Legal legal) {
         builder = new AlertDialog.Builder(activity)
                 .setView(buildView(activity, legal))
                 .setTitle(legal.getTitle());
@@ -29,11 +29,11 @@ class LegalDialog {
         return webView;
     }
 
-    void disableButtons(boolean disableButtons) {
+    public void disableButtons(boolean disableButtons) {
         this.disableButtons = disableButtons;
     }
 
-    void show() {
+    public void show() {
         if (!disableButtons) {
             builder.setPositiveButton(legal.getPositiveText(), new Positive(legal))
                     .setNegativeButton(legal.getNegativeText(), new Negative(legal));

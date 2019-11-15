@@ -79,7 +79,9 @@
                     android:onClick="termsClick"
                     android:text="@string/tos_title"
                     android:textColor="#FFFFFF"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:autoLink="all"
+                    android:linksClickable="true"/>
             </LinearLayout>
         </LinearLayout>
 

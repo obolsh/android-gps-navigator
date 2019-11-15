@@ -66,7 +66,7 @@ public class FindMyPlaceCallback implements View.OnClickListener, Invalidator {
     private boolean isGpsActive() {
         LocationManager lm = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         try {
-            return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            return lm != null && lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception ex) {
             return false;
         }
