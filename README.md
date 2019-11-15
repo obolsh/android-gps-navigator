@@ -2,7 +2,7 @@
 
 ![resources/image/shots/001.png]
 
-##Features
+## Features
 - find your current position on map
 - search and show any place on map
 - build route between two point on map
@@ -11,10 +11,10 @@
 - see traffic jams on the roads
 - see terrains of the map
 
-##References
+## References
 - Maps, routes & navigation was build using https://www.mapbox.com
 - Place search on the map was build using https://locationiq.com
 - Images were build using http://www.freepik.com
 
 
-##License
+## License
