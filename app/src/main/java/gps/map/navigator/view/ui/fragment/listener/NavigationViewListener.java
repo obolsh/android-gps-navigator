@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import gps.map.navigator.R;
 import gps.map.navigator.common.debug.Logger;
 import gps.map.navigator.policy.DialogFactory;
+
 public class NavigationViewListener implements NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
@@ -78,12 +79,20 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
 
     @NonNull
     private Uri getRateUsUri() {
-        String appPackageName = activity.getApplicationContext().getPackageName();
+        String appPackageName = getAppBundle();
         try {
             return Uri.parse("market://details?id=" + appPackageName);
         } catch (Throwable e) {
             return Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName);
         }
+    }
+
+    private String getPlayStoreUrl() {
+        return "https://play.google.com/store/apps/details?id=" + getAppBundle();
+    }
+
+    private String getAppBundle() {
+        return activity.getApplicationContext().getPackageName();
     }
 
     private void shareThisApp() {
@@ -97,7 +106,7 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
     @NonNull
     private Intent getShareIntent() {
         Intent intent = createIntentWithAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.share_my_app));
+        intent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.share_my_app) + " " + getPlayStoreUrl());
         intent.setType("text/plain");
         return Intent.createChooser(intent, "");
     }
