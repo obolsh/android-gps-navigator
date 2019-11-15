@@ -15,6 +15,6 @@ jobs:
         java-version: 1.8
         
     - name: Set up local.properties
-      run: touch local.properties
+      run: touch -c local.properties
     - name: Build with Gradle
       run: ./gradlew test
