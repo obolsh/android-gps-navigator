@@ -51,7 +51,8 @@
                     android:text="@string/policy_title"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:background="@drawable/underline"/>
 
             </LinearLayout>
 
@@ -83,7 +84,8 @@
                     android:textSize="14sp"
                     android:autoLink="all"
                     android:linksClickable="true"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"
+                    android:background="@drawable/underline"/>
             </LinearLayout>
         </LinearLayout>
 
