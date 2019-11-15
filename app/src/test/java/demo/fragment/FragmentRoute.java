@@ -14,6 +14,6 @@ public class FragmentRoute extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(gps.navigator.demo.sdk.R.layout.route_fragment, container, false);
+        return inflater.inflate(123, container, false);
     }
 }

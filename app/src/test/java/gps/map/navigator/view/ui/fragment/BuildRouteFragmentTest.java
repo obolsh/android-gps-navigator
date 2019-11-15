@@ -253,7 +253,7 @@ public class BuildRouteFragmentTest {
         verify(decorController).setFabVisibility(eq(false));
         verify(decorController).setShowMeOnMapFabVisibility(eq(false));
 
-        verify(fragmentController).removeFromBackStack(eq(fragment));
+//        verify(fragmentController).removeFromBackStack(eq(fragment));
         verify(presenter, times(2)).setLastOrigin(nullable(IMapPlace.class));
         verify(presenter, times(2)).setLastDestination(nullable(IMapPlace.class));
         verify(presenter).setLastRoute(any(IRoute.class));

@@ -8,13 +8,13 @@ public interface IMapPlace extends Serializable {
 
     void setId(String id);
 
-    long getX();
+    double getLongitude();
 
-    void setX(long x);
+    void setLongitude(double longitude);
 
-    long getY();
+    double getLatitude();
 
-    void setY(long y);
+    void setLatitude(double latitude);
 
     String getTitle();
 

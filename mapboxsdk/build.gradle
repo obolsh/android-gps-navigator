@@ -1,0 +1,52 @@
+apply plugin: 'com.android.library'
+
+def getMapboxHash() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("mapbox_hash")
+}
+
+def getLocationIqHash() {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file('local.properties').newDataInputStream())
+    return properties.getProperty("location_id_hash")
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+        buildConfigField "String", "MAPBOX_HASH", "\""+getMapboxHash()+"\""
+        buildConfigField "String", "LOCATION_IQ_HASH", "\""+getLocationIqHash()+"\""
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    api project(path: ':interfaces')
+
+    implementation "androidx.appcompat:appcompat:$rootProject.appcompatLibraryVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintlayoutLibraryVersion"
+    implementation "com.google.android.material:material:$rootProject.materialLibraryVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+
+    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+
+    testImplementation "junit:junit:$rootProject.junitLibraryVersion"
+
+    implementation "com.mapbox.mapboxsdk:mapbox-android-sdk:$rootProject.mapboxSdkLibraryVersion"
+    implementation "com.mapbox.mapboxsdk:mapbox-android-navigation:$rootProject.navigationLibraryVersion"
+    implementation "com.mapbox.mapboxsdk:mapbox-android-navigation-ui:$rootProject.navigationLibraryVersion"
+
+}

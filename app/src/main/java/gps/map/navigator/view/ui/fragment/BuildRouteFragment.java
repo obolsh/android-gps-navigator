@@ -287,7 +287,6 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     private void openShowRouteFragmentIfRequied() {
         if (originPlace != null && destinationPlace != null) {
-            fragmentController.removeFromBackStack(this);
             IRoute route = buildNewRoute();
             presenter.setLastRoute(route);
             presenter.setLastOrigin(null);

@@ -88,4 +88,16 @@ public class NaviFragmentControllerTest {
         verify(transaction).commit();
         verify(fragmentManager).popBackStack();
     }
+
+    @Test
+    public void make_reloadFragment_verify() {
+        NaviFragmentController controller = new NaviFragmentController();
+        setReferences(controller);
+
+        controller.reloadFragment(fragment);
+
+        verify(transaction).detach(eq(instance));
+        verify(transaction).attach(eq(instance));
+        verify(transaction).commit();
+    }
 }

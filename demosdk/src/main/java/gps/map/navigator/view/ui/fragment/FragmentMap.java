@@ -1,4 +1,4 @@
-package demo.fragment;
+package gps.map.navigator.view.ui.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

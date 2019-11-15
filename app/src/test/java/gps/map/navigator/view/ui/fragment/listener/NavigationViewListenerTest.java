@@ -1,6 +1,6 @@
 package gps.map.navigator.view.ui.fragment.listener;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.MenuItem;
@@ -13,8 +13,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import gps.map.navigator.R;
+import gps.map.navigator.policy.DialogFactory;
 
-import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,35 +24,40 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.powermock.reflect.Whitebox.setInternalState;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({NavigationViewListener.class, Intent.class, Uri.class})
+@PrepareForTest({NavigationViewListener.class, Intent.class, Uri.class, DialogFactory.class})
 public class NavigationViewListenerTest {
 
-    private Context context;
+    private Activity activity;
     private MenuItem menuItem;
     private Intent intent;
     private Uri uri;
+    private DialogFactory dialogFactory;
 
     @Before
     public void setUp() throws Exception {
         mockStatic(Intent.class);
         mockStatic(Uri.class);
 
-        context = mock(Context.class);
+        activity = mock(Activity.class);
         menuItem = mock(MenuItem.class);
         intent = mock(Intent.class);
         uri = mock(Uri.class);
+        dialogFactory = mock(DialogFactory.class);
 
-        when(context.getApplicationContext()).thenReturn(context);
-        when(context.getString(anyInt())).thenReturn("foo");
+        when(activity.getApplicationContext()).thenReturn(activity);
+        when(activity.getString(anyInt())).thenReturn("foo");
         when(Uri.parse(anyString())).thenReturn(uri);
         when(Intent.createChooser(eq(intent), anyString())).thenReturn(intent);
 
         whenNew(Intent.class).withAnyArguments().thenReturn(intent);
+        whenNew(DialogFactory.class).withAnyArguments().thenReturn(dialogFactory);
+
+        when(dialogFactory.buildPolicy()).thenReturn(dialogFactory);
+        when(dialogFactory.buildTerms()).thenReturn(dialogFactory);
     }
 
     @After
@@ -62,7 +67,7 @@ public class NavigationViewListenerTest {
 
     private NavigationViewListener createListener() {
         NavigationViewListener listener = new NavigationViewListener();
-        setInternalState(listener, "context", context);
+        setInternalState(listener, "activity", activity);
         return listener;
     }
 
@@ -73,7 +78,7 @@ public class NavigationViewListenerTest {
 
         listener.onNavigationItemSelected(menuItem);
 
-        verify(context, times(0)).startActivity(any(Intent.class));
+        verify(activity, times(0)).startActivity(any(Intent.class));
     }
 
     @Test
@@ -83,7 +88,7 @@ public class NavigationViewListenerTest {
 
         listener.onNavigationItemSelected(menuItem);
 
-        verify(context).startActivity(eq(intent));
+        verify(activity).startActivity(eq(intent));
         verify(intent).setAction(eq(Intent.ACTION_VIEW));
         verify(intent).setData(eq(uri));
     }
@@ -95,9 +100,31 @@ public class NavigationViewListenerTest {
 
         listener.onNavigationItemSelected(menuItem);
 
-        verify(context).startActivity(eq(intent));
+        verify(activity).startActivity(eq(intent));
         verify(intent).setAction(eq(Intent.ACTION_SEND));
         verify(intent).putExtra(eq(Intent.EXTRA_TEXT), eq("foo"));
         verify(intent).setType(eq("text/plain"));
+    }
+
+    @Test
+    public void make_show_policy_verify() {
+        NavigationViewListener listener = createListener();
+        when(menuItem.getItemId()).thenReturn(R.id.privacy_policy);
+
+        listener.onNavigationItemSelected(menuItem);
+
+        verify(dialogFactory).buildPolicy();
+        verify(dialogFactory).show();
+    }
+
+    @Test
+    public void make_show_terms_verify() {
+        NavigationViewListener listener = createListener();
+        when(menuItem.getItemId()).thenReturn(R.id.tos);
+
+        listener.onNavigationItemSelected(menuItem);
+
+        verify(dialogFactory).buildTerms();
+        verify(dialogFactory).show();
     }
 }

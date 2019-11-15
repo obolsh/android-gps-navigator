@@ -24,6 +24,7 @@ import gps.map.navigator.R;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
+import gps.map.navigator.view.ui.fragment.controller.IFragmentController;
 import gps.map.navigator.view.viewmodel.DecorController;
 import gps.map.navigator.view.viewmodel.callback.ShowRouteCallback;
 
@@ -61,6 +62,7 @@ public class ShowRouteFragmentTest {
     private View.OnClickListener originClickListener;
     private View.OnClickListener destinationClickListener;
     private View parentView;
+    private IFragmentController fragmentController;
 
     @Before
     public void setUp() throws Exception {
@@ -81,9 +83,10 @@ public class ShowRouteFragmentTest {
         imageView = mock(ImageView.class);
         route = mock(IRoute.class);
         parentView = mock(View.class);
+        fragmentController = mock(IFragmentController.class);
 
         when(inflater.inflate(eq(R.layout.fragment_show_route), nullable(ViewGroup.class), anyBoolean())).thenReturn(view);
-        when(inflater.inflate(eq(R.layout.route_fragment), nullable(ViewGroup.class), anyBoolean())).thenReturn(parentView);
+        when(inflater.inflate(eq(123), nullable(ViewGroup.class), anyBoolean())).thenReturn(parentView);
         when(originPlace.getTitle()).thenReturn("title1");
         when(destinationPlace.getTitle()).thenReturn("title2");
         when(presenter.getLastRoute()).thenReturn(route);
@@ -105,6 +108,7 @@ public class ShowRouteFragmentTest {
     private void setInnerFields(Fragment fragment) {
         setInternalState(fragment, "presenter", presenter);
         setInternalState(fragment, "decorController", decorController);
+        setInternalState(fragment, "fragmentController", fragmentController);
     }
 
     private void makeFoundViews() {
@@ -159,7 +163,7 @@ public class ShowRouteFragmentTest {
 
         verify(decorController).setBottomBarVisibility(eq(false));
         verify(decorController).setFabVisibility(eq(true));
-        verify(decorController).setShowMeOnMapFabVisibility(eq(true));
+        verify(decorController).setShowMeOnMapFabVisibility(eq(false));
         verify(decorController).setFabAlignmentMode(eq(BottomAppBar.FAB_ALIGNMENT_MODE_END));
     }
 

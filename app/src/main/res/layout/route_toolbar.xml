@@ -43,9 +43,10 @@
             android:background="@color/colorPrimaryDark"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
-            android:text="Choose Origin"
+            android:text="@string/choose_origin_default"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/destination_title"
@@ -55,8 +56,9 @@
             android:background="@color/colorPrimaryDark"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
-            android:text="Choose Destination"
-            android:textColor="#FFFFFF" />
+            android:text="@string/choose_destination_default"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
 
     </LinearLayout>
 

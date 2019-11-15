@@ -45,7 +45,6 @@ public class MapFragmentTest {
 
         fragment.onStart();
 
-        verify(presenter).showMap();
         verify(presenter).setLastOrigin(nullable(IMapPlace.class));
         verify(presenter).setLastDestination(nullable(IMapPlace.class));
     }
@@ -56,6 +55,7 @@ public class MapFragmentTest {
 
         fragment.onActivityCreated(null);
 
+        verify(presenter).showMap();
         verify(decorController).setBottomBarVisibility(eq(true));
         verify(decorController).setFabVisibility(eq(true));
         verify(decorController).setShowMeOnMapFabVisibility(eq(true));

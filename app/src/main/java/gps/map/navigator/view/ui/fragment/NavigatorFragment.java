@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-import demo.fragment.FragmentNavigation;
 import gps.map.navigator.model.interfaces.IRoute;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;

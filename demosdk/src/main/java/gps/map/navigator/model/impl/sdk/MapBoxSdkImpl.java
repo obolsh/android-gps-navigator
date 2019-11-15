@@ -1,10 +1,18 @@
 package gps.map.navigator.model.impl.sdk;
 
 
+import android.content.Context;
+import android.os.Bundle;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import demo.place.FoundedPlace;
+import demo.place.MyDoctor;
 import demo.place.MyLocation;
+import demo.place.MyWork;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.model.interfaces.MapSdk;
 import gps.map.navigator.model.interfaces.MapSetting;
@@ -18,6 +26,11 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Inject
     public MapBoxSdkImpl() {
+    }
+
+    @Override
+    public void initialize(Context context, Bundle bundle) {
+
     }
 
     @Override
@@ -42,7 +55,11 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void findPlace(String query, IPlaceListener placeListener) {
-        placeListener.onPlaceLocated(new FoundedPlace());
+        List<IMapPlace> places = new ArrayList<>();
+        places.add(new FoundedPlace());
+        places.add(new MyWork());
+        places.add(new MyDoctor());
+        placeListener.onPlacesLocated(places);
     }
 
     @Override

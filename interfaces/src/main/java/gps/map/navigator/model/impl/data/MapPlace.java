@@ -5,8 +5,8 @@ import gps.map.navigator.model.interfaces.IMapPlace;
 public class MapPlace implements IMapPlace {
 
     private String id = "default_id";
-    private long x;
-    private long y;
+    private double x;
+    private double y;
     private String title;
     private String address;
     private String label;
@@ -40,22 +40,22 @@ public class MapPlace implements IMapPlace {
     }
 
     @Override
-    public long getX() {
+    public double getLongitude() {
         return x;
     }
 
     @Override
-    public void setX(long x) {
-        this.x = x;
+    public void setLongitude(double longitude) {
+        this.x = longitude;
     }
 
     @Override
-    public long getY() {
+    public double getLatitude() {
         return y;
     }
 
     @Override
-    public void setY(long y) {
+    public void setLatitude(double y) {
         this.y = y;
     }
 

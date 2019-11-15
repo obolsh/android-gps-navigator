@@ -7,8 +7,8 @@ public class MyLocation extends MapPlace {
     public MyLocation() {
         setId("my_place");
         setLastUsedTime(System.currentTimeMillis());
-        setX(100);
-        setY(100);
+        setLongitude(100);
+        setLatitude(100);
         setAddress("Kiev");
         setFavourite(true);
         setTitle("My Location");

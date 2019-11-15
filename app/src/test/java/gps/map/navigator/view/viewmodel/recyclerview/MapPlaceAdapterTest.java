@@ -160,6 +160,18 @@ public class MapPlaceAdapterTest {
     }
 
     @Test
+    public void make_showFoundedPlacesList_verify() {
+        MapPlaceAdapter adapter = createAdapter();
+        List<IMapPlace> places = getPlaces();
+
+        adapter.showFoundedPlacesList(places);
+
+        boolean cache_not_empty = adapter.getItemCount() == 3;
+
+        assertTrue(cache_not_empty);
+    }
+
+    @Test
     public void make_removePlace_verify() {
         MapPlaceAdapter adapter = createAdapter();
         List<IMapPlace> places = getPlaces();

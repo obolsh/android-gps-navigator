@@ -1,6 +1,6 @@
 package gps.map.navigator.view.ui.fragment.listener;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.MenuItem;
@@ -10,17 +10,15 @@ import androidx.annotation.NonNull;
 import com.google.android.material.navigation.NavigationView;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import gps.map.navigator.R;
-import gps.map.navigator.common.Constants;
 import gps.map.navigator.common.debug.Logger;
+import gps.map.navigator.policy.DialogFactory;
 
 public class NavigationViewListener implements NavigationView.OnNavigationItemSelectedListener {
 
     @Inject
-    @Named(Constants.ApplicationContext)
-    Context context;
+    Activity activity;
     @Inject
     Logger logger;
 
@@ -36,6 +34,12 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
                 break;
             case R.id.share:
                 shareThisApp();
+                break;
+            case R.id.privacy_policy:
+                new DialogFactory(activity).buildPolicy().show();
+                break;
+            case R.id.tos:
+                new DialogFactory(activity).buildTerms().show();
                 break;
 
             default:
@@ -53,7 +57,7 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
 
     private void startActivity(@NonNull Intent intent) {
         try {
-            context.getApplicationContext().startActivity(intent);
+            activity.getApplicationContext().startActivity(intent);
         } catch (Throwable t) {
             logger.error(t);
         }
@@ -75,12 +79,20 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
 
     @NonNull
     private Uri getRateUsUri() {
-        String appPackageName = context.getApplicationContext().getPackageName();
+        String appPackageName = getAppBundle();
         try {
             return Uri.parse("market://details?id=" + appPackageName);
         } catch (Throwable e) {
             return Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName);
         }
+    }
+
+    private String getPlayStoreUrl() {
+        return "https://play.google.com/store/apps/details?id=" + getAppBundle();
+    }
+
+    private String getAppBundle() {
+        return activity.getApplicationContext().getPackageName();
     }
 
     private void shareThisApp() {
@@ -94,7 +106,7 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
     @NonNull
     private Intent getShareIntent() {
         Intent intent = createIntentWithAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_my_app));
+        intent.putExtra(Intent.EXTRA_TEXT, activity.getString(R.string.share_my_app) + " " + getPlayStoreUrl());
         intent.setType("text/plain");
         return Intent.createChooser(intent, "");
     }

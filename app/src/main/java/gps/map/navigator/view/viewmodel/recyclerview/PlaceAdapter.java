@@ -53,4 +53,11 @@ public interface PlaceAdapter extends Filterable {
      * @param places - list of places.
      */
     void setInitialPlacesList(@NonNull List<IMapPlace> places);
+
+    /**
+     * Show founded places.
+     *
+     * @param foundedPlaces - list of places.
+     */
+    void showFoundedPlacesList(@NonNull List<IMapPlace> foundedPlaces);
 }

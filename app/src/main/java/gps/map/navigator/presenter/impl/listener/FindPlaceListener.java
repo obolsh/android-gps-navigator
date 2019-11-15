@@ -3,6 +3,8 @@ package gps.map.navigator.presenter.impl.listener;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.List;
+
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceListener;
@@ -25,6 +27,14 @@ public class FindPlaceListener implements IPlaceListener {
         }
         if (listener != null) {
             listener.onPlaceLocated(place);
+        }
+        invalidate();
+    }
+
+    @Override
+    public void onPlacesLocated(List<IMapPlace> place) {
+        if (listener != null) {
+            listener.onPlacesLocated(place);
         }
         invalidate();
     }
