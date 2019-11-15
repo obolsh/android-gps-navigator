@@ -57,7 +57,7 @@ public class MapPlaceViewHolderTest {
 
         holder.setMapPlace(mapPlace);
 
-        verify(favouriteImage).setImageResource(eq(android.R.drawable.star_big_on));
+        verify(favouriteImage).setImageResource(eq(R.drawable.outline_star_black_24dp));
         verify(titleView).setText(eq("origin"));
         verify(addressView).setText(eq("address"));
 
@@ -73,7 +73,7 @@ public class MapPlaceViewHolderTest {
 
         holder.setMapPlace(mapPlace);
 
-        verify(favouriteImage).setImageResource(eq(android.R.drawable.star_big_off));
+        verify(favouriteImage).setImageResource(eq(R.drawable.outline_star_border_black_24dp));
         verify(titleView).setText(eq("origin"));
         verify(addressView).setText(eq("address"));
 

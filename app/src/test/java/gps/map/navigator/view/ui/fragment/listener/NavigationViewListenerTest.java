@@ -102,7 +102,7 @@ public class NavigationViewListenerTest {
 
         verify(activity).startActivity(eq(intent));
         verify(intent).setAction(eq(Intent.ACTION_SEND));
-        verify(intent).putExtra(eq(Intent.EXTRA_TEXT), eq("foo"));
+        verify(intent).putExtra(eq(Intent.EXTRA_TEXT), anyString());
         verify(intent).setType(eq("text/plain"));
     }
 
