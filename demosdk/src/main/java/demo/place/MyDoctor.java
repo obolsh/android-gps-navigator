@@ -7,8 +7,8 @@ public class MyDoctor extends MapPlace {
     public MyDoctor() {
         setId("my_doctor");
         setLastUsedTime(System.currentTimeMillis());
-        setX(400);
-        setY(400);
+        setLongitude(400);
+        setLatitude(400);
         setAddress("Kiev");
         setFavourite(true);
         setTitle("My Doctor");

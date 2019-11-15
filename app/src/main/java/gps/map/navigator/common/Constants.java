@@ -16,4 +16,8 @@ public class Constants {
     public static final String DestinationChangeListener = "destination_change_listener";
     public static final String OriginClickListener = "origin_click_listener";
     public static final String DestinationClickListener = "destination_click_listener";
+    public static final String DecorCache = "decor_cache";
+    public static final String FragmentTagCache = "fragment_tag_cache";
+    public static final String ConsentStatus = "consent_status";
+    public static final int REQUEST_ACCESS_FINE_LOCATION = 1001;
 }

@@ -12,7 +12,6 @@ import com.google.android.material.bottomappbar.BottomAppBar;
 import javax.inject.Inject;
 
 import dagger.android.support.AndroidSupportInjection;
-import demo.fragment.FragmentMap;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.ui.fragment.controller.IFragment;
 import gps.map.navigator.view.viewmodel.DecorController;
@@ -48,7 +47,6 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     @Override
     public void onStart() {
         super.onStart();
-        presenter.showMap();
         presenter.setLastOrigin(null);
         presenter.setLastDestination(null);
     }
@@ -57,6 +55,7 @@ public class MapFragment extends FragmentMap implements IFragment<Fragment> {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         prepareUiElements();
+        presenter.showMap();
     }
 
     private void prepareUiElements() {

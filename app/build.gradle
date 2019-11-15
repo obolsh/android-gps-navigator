@@ -18,6 +18,16 @@ android {
         }
     }
 
+    flavorDimensions "sdk_source"
+    productFlavors {
+        demo {
+            dimension "sdk_source"
+        }
+        mapboxsdk {
+            dimension "sdk_source"
+        }
+    }
+
     testOptions {
         unitTests {
             includeAndroidResources = true
@@ -49,5 +59,6 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
 
     implementation project(path: ':interfaces')
-    implementation project(path: ':demosdk')
+    demoImplementation project(path: ':demosdk')
+    mapboxsdkImplementation project(path: ':mapboxsdk')
 }

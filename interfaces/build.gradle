@@ -21,6 +21,7 @@ android {
 }
 
 dependencies {
+    api "androidx.appcompat:appcompat:$rootProject.appcompatLibraryVersion"
     testImplementation "junit:junit:$rootProject.junitLibraryVersion"
     // Optional -- Mockito framework
     testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"

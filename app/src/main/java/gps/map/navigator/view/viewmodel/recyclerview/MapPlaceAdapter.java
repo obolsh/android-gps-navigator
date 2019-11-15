@@ -122,6 +122,18 @@ public class MapPlaceAdapter extends AbstractAdapter {
         notifyItemInserted(places.size() - 1);
     }
 
+    @Override
+    public void showFoundedPlacesList(@NonNull List<IMapPlace> foundedPlaces) {
+        if (places != null) {
+            places.clear();
+        }  else {
+            places = new ArrayList<>();
+        }
+        places.addAll(foundedPlaces);
+        sortByLastUsedTime(places);
+        notifyDataSetChanged();
+    }
+
     private int getPosition(@NonNull List<IMapPlace> places, @NonNull IMapPlace item) {
         for (int i = 0; i < places.size(); i++) {
             if (item.getId().equals(places.get(i).getId())) {

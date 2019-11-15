@@ -3,6 +3,9 @@ package gps.map.navigator.presenter.impl.listener;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.interfaces.IPlaceListener;
@@ -35,6 +38,22 @@ public class FindPlaceListenerTest {
 
         verify(cache).setLastPlace(eq(place));
         verify(placeListener).onPlaceLocated(eq(place));
+
+        boolean placeListener_cleaned = getInternalState(listener, "listener") == null;
+        boolean cache_cleaned = getInternalState(listener, "cache") == null;
+
+        assertTrue(placeListener_cleaned && cache_cleaned);
+    }
+
+
+    @Test
+    public void receive_onPlacesLocated_verify() {
+        FindPlaceListener listener = new FindPlaceListener(cache, placeListener);
+        List<IMapPlace> places = new ArrayList<>();
+
+        listener.onPlacesLocated(places);
+
+        verify(placeListener).onPlacesLocated(eq(places));
 
         boolean placeListener_cleaned = getInternalState(listener, "listener") == null;
         boolean cache_cleaned = getInternalState(listener, "cache") == null;
