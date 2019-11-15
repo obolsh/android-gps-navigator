@@ -97,7 +97,7 @@ public class NavigationRouteProvider implements INavigationProvider {
         LocationComponent component = mapboxMap.getLocationComponent();
         component.activateLocationComponent(context, style);
 
-        component.setLocationComponentEnabled(true);
+        component.setLocationComponentEnabled(false);
         component.setRenderMode(RenderMode.COMPASS);
         component.setCameraMode(CameraMode.TRACKING);
         component.zoomWhileTracking(10d);

@@ -30,14 +30,14 @@ public class DialogFactory {
 
     public void showWithChoice() {
         if (dialog != null) {
-            dialog.disableButtons(true);
+            dialog.disableButtons(false);
             dialog.show();
         }
     }
 
     public void show() {
         if (dialog != null) {
-            dialog.disableButtons(false);
+            dialog.disableButtons(true);
             dialog.show();
         }
     }

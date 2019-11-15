@@ -35,10 +35,10 @@ public class NavigationViewListener implements NavigationView.OnNavigationItemSe
                 shareThisApp();
                 break;
             case R.id.privacy_policy:
-                new DialogFactory(activity).buildPolicy().showWithChoice();
+                new DialogFactory(activity).buildPolicy().show();
                 break;
             case R.id.tos:
-                new DialogFactory(activity).buildTerms().showWithChoice();
+                new DialogFactory(activity).buildTerms().show();
                 break;
 
             default:

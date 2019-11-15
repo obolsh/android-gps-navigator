@@ -41,4 +41,11 @@
         app:layout_anchor="@id/bottom_app_bar"
         app:maxImageSize="32dp" />
 
+    <include
+        android:id="@+id/splash_view_layout"
+        layout="@layout/splash_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,7 +4,7 @@
     <string name="night_mode">night</string>
     <string name="rate_us">rate us</string>
     <string name="share_us">share</string>
-    <string name="satelite">Satelite view</string>
+    <string name="satelite">Satellite view</string>
     <string name="share_my_app">Check this app on play store</string>
     <string name="choose_origin_default">Choose Origin</string>
     <string name="choose_destination_default">Choose Destination</string>
@@ -13,4 +13,7 @@
     <string name="negative_text">Decline</string>
     <string name="tos_title">Terms and Conditions</string>
     <string name="policy_title">Privacy policy</string>
+    <string name="and">and</string>
+    <string name="by_clicking">I accept </string>
+    <string name="start">Start</string>
 </resources>

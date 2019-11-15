@@ -2,7 +2,11 @@ package gps.map.navigator.view.ui.callback;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.provider.Settings;
 import android.view.View;
 
 import androidx.core.app.ActivityCompat;
@@ -29,11 +33,15 @@ public class FindMyPlaceCallback implements View.OnClickListener, Invalidator {
     @Override
     public void onClick(View v) {
         if (hasLocatioPermission()) {
-            presenter.showMeOnMap(new ShowMeOnMapCallback());
+            if (isGpsActive()) {
+                presenter.showMeOnMap(new ShowMeOnMapCallback());
+            } else {
+                requestLocationService();
+            }
+
         } else {
             requestPermission();
         }
-
     }
 
     private void requestPermission() {
@@ -53,5 +61,18 @@ public class FindMyPlaceCallback implements View.OnClickListener, Invalidator {
 
     private int getPermissionState() {
         return ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
+    private boolean isGpsActive() {
+        LocationManager lm = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        try {
+            return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    private void requestLocationService() {
+        activity.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
     }
 }
