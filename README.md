@@ -2,14 +2,6 @@
 
 This is an open-source Android navigator app that provides an alternative to Google Maps.
 
-<table cellspacing="0" border=0>
-   <tr>
-    <td style="max-width:150px;"><img src="/resources/image/ic_launcher.png" width="30%"/></td>
-    <td>This is an open-source Android navigator app that provides an alternative to Google Maps.</td>
-   </tr>
- </table>
-
-
 <p float="left" align="middle">
     <img src="/resources/image/shots/001.png" width="30%" />
     <img src="/resources/image/shots/002.png" width="30%" />
@@ -37,6 +29,10 @@ This is an open-source Android navigator app that provides an alternative to Goo
 - Place search on the map was build using https://locationiq.com
 - Images were build using http://www.freepik.com
 
+
+## Wiki
+
+[Documentation Pages](https://github.com/obolsh/android-gps-navigator/wiki)
 
 ## License
 
