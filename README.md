@@ -1,12 +1,15 @@
 # Android GPS Navigator
 
 <p float="left">
-    <img src="/resources/image/shots/001.png" width="25%" />
-    <img src="/resources/image/shots/002.png" width="25%" />
-    <img src="/resources/image/shots/003.png" width="25%" />
-    <img src="/resources/image/shots/004.png" width="25%" />
+    <img src="/resources/image/shots/001.png" width="30%" />
+    <img src="/resources/image/shots/002.png" width="30%" />
+    <img src="/resources/image/shots/003.png" width="30%" />
+    <img src="/resources/image/shots/004.png" width="30%" />
+    <img src="/resources/image/shots/005.png" width="30%" />
+    <img src="/resources/image/shots/006.png" width="30%" />
 </p>
 
+<a href='https://play.google.com/store/apps/details?id=gps.map.navigator&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
 
 ## Features
 - find your current position on map
