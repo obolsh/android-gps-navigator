@@ -1,6 +1,6 @@
 # Android GPS Navigator
 
-![](https://github.com/obolsh/android-gps-navigator/workflows/.github/workflows/gradle.yml/badge.svg?branch=master)
+![](https://github.com/obolsh/android-gps-navigator/workflows/Java+CI/badge.svg?branch=master)
 
 This is an open-source Android navigator app that provides an alternative to Google Maps.
 
