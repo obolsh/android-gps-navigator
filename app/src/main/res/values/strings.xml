@@ -9,4 +9,8 @@
     <string name="choose_origin_default">Choose Origin</string>
     <string name="choose_destination_default">Choose Destination</string>
     <string name="choose_place_default">Choose place</string>
+    <string name="positive_text">Accept</string>
+    <string name="negative_text">Decline</string>
+    <string name="tos_title">Terms and Conditions</string>
+    <string name="policy_title">Privacy policy</string>
 </resources>
