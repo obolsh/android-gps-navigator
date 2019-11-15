@@ -11,8 +11,8 @@
     <string name="choose_place_default">Choose place</string>
     <string name="positive_text">Accept</string>
     <string name="negative_text">Decline</string>
-    <string name="tos_title">Terms and Conditions</string>
-    <string name="policy_title">Privacy policy</string>
+    <string name="tos_title"><u>Terms and Conditions</u></string>
+    <string name="policy_title"><u>Privacy policy</u></string>
     <string name="and">and</string>
     <string name="by_clicking">I accept </string>
     <string name="start">Start</string>

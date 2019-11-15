@@ -50,7 +50,8 @@
                     android:onClick="policyClick"
                     android:text="@string/policy_title"
                     android:textColor="#FFFFFF"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textStyle="bold"/>
 
             </LinearLayout>
 
@@ -81,7 +82,8 @@
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:autoLink="all"
-                    android:linksClickable="true"/>
+                    android:linksClickable="true"
+                    android:textStyle="bold"/>
             </LinearLayout>
         </LinearLayout>
 
