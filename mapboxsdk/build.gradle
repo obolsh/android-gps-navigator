@@ -5,7 +5,7 @@ def getMapboxHash() {
     try {
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
         return properties.getProperty("mapbox_hash")
-    } catch (Exception e) {
+    } catch (all) {
         return ""
     }
 }
@@ -15,7 +15,7 @@ def getLocationIqHash() {
     try {
         properties.load(project.rootProject.file('local.properties').newDataInputStream())
         return properties.getProperty("location_id_hash")
-    } catch (Exception e) {
+    } catch (all) {
         return ""
     }
 }
