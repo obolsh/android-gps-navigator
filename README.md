@@ -9,7 +9,7 @@
     <img src="/resources/image/shots/006.png" width="30%" />
 </p>
 
-<a href='https://play.google.com/store/apps/details?id=gps.map.navigator'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a>
+<a href='https://play.google.com/store/apps/details?id=gps.map.navigator'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png' width="50%" height="50%"/></a>
 
 ## Features
 - find your current position on map
