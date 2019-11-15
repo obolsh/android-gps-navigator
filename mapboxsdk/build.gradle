@@ -2,14 +2,22 @@ apply plugin: 'com.android.library'
 
 def getMapboxHash() {
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    return properties.getProperty("mapbox_hash")
+    try {
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        return properties.getProperty("mapbox_hash")
+    } catch (Exception e) {
+        return ""
+    }
 }
 
 def getLocationIqHash() {
     Properties properties = new Properties()
-    properties.load(project.rootProject.file('local.properties').newDataInputStream())
-    return properties.getProperty("location_id_hash")
+    try {
+        properties.load(project.rootProject.file('local.properties').newDataInputStream())
+        return properties.getProperty("location_id_hash")
+    } catch (Exception e) {
+        return ""
+    }
 }
 
 android {
@@ -20,8 +28,8 @@ android {
         targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.versionCode
         versionName rootProject.versionName
-        buildConfigField "String", "MAPBOX_HASH", "\""+getMapboxHash()+"\""
-        buildConfigField "String", "LOCATION_IQ_HASH", "\""+getLocationIqHash()+"\""
+        buildConfigField "String", "MAPBOX_HASH", "\"" + getMapboxHash() + "\""
+        buildConfigField "String", "LOCATION_IQ_HASH", "\"" + getLocationIqHash() + "\""
     }
 
     buildTypes {
