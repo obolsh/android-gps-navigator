@@ -3,6 +3,11 @@
 This is an open-source Android navigator app that provides an alternative to Google Maps.
 
 <p float="left" align="middle">
+    <img src="/resources/image/ic_launcher.png" width="30%" />
+    <p>This is an open-source Android navigator app that provides an alternative to Google Maps.</p>
+</p>
+
+<p float="left" align="middle">
     <img src="/resources/image/shots/001.png" width="30%" />
     <img src="/resources/image/shots/002.png" width="30%" />
     <img src="/resources/image/shots/003.png" width="30%" />
@@ -32,10 +37,10 @@ This is an open-source Android navigator app that provides an alternative to Goo
 
 ## License
 
-Copyright 2019 Oleksii Bolshakov
+```Copyright 2019 Oleksii Bolshakov
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
+Licensed under the Apache License, Version 2.0 (the "License").
+You may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
 http://www.apache.org/licenses/LICENSE-2.0
@@ -44,4 +49,4 @@ Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
-limitations under the License.
+limitations under the License.```
