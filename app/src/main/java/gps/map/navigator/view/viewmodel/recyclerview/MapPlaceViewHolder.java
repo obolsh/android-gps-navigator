@@ -59,9 +59,9 @@ class MapPlaceViewHolder extends RecyclerView.ViewHolder {
     private void setPlaceFavourite(boolean favourite) {
         if (favouriteImage != null) {
             if (favourite) {
-                favouriteImage.setImageResource(android.R.drawable.star_big_on);
+                favouriteImage.setImageResource(R.drawable.outline_star_black_24dp);
             } else {
-                favouriteImage.setImageResource(android.R.drawable.star_big_off);
+                favouriteImage.setImageResource(R.drawable.outline_star_border_black_24dp);
             }
         }
     }
