@@ -2,9 +2,9 @@
 
 This is an open-source Android navigator app that provides an alternative to Google Maps.
 
-<table cellspacing="0">
+<table cellspacing="0" border=0>
    <tr>
-    <td><img src="/resources/image/ic_launcher.png" width="30%" /></td>
+    <td id="leftcol"><img src="/resources/image/ic_launcher.png" width="30%"/></td>
     <td>This is an open-source Android navigator app that provides an alternative to Google Maps.</td>
    </tr>
  </table>
