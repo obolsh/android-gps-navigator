@@ -16,7 +16,7 @@ public class MapPlace implements IMapPlace {
     public MapPlace() {
     }
 
-    public MapPlace(String id, long x, long y, String title, String address, String label,
+    public MapPlace(String id, double x, double y, String title, String address, String label,
                     boolean favourite, long lastUsedTime) {
         super();
         this.id = id;
