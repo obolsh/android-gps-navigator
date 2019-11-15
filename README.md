@@ -1,5 +1,7 @@
 # Android GPS Navigator
 
+![](https://github.com/obolsh/android-gps-navigator/workflows/.github/workflows/gradle.yml/badge.svg)
+
 This is an open-source Android navigator app that provides an alternative to Google Maps.
 
 <p float="left" align="middle">
