@@ -2,10 +2,13 @@
 
 This is an open-source Android navigator app that provides an alternative to Google Maps.
 
-<p float="left" align="middle">
-    <img src="/resources/image/ic_launcher.png" width="30%" />
-    <p>This is an open-source Android navigator app that provides an alternative to Google Maps.</p>
-</p>
+<table float="left">
+   <tr>
+    <td><img src="/resources/image/ic_launcher.png" width="30%" /></td>
+    <td>This is an open-source Android navigator app that provides an alternative to Google Maps.</td>
+   </tr>
+ </table>
+
 
 <p float="left" align="middle">
     <img src="/resources/image/shots/001.png" width="30%" />
