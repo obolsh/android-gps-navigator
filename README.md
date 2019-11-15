@@ -1,7 +1,19 @@
 # Android GPS Navigator
 
-## Core components scheme:
-![](https://raw.githubusercontent.com/obolsh/android-gps-navigator/feature/set_ui_classes_structure/resources/image/Navigator.png)
+![resources/image/shots/001.png]
 
-## UI components scheme:
-![](https://raw.githubusercontent.com/obolsh/android-gps-navigator/feature/set_ui_classes_structure/resources/image/BackStackNavigator.png)
+Features:
+- find your current position on map
+- search and show any place on map
+- build route between two point on map
+- choose best route among offered
+- navigate to destination with voice tips during the route
+- see traffic jams on the roads
+- see terrains of the map
+
+Maps, routes & navigation was build using https://www.mapbox.com
+Place search on the map was build using https://locationiq.com
+Images were build using http://www.freepik.com
+
+
+License
