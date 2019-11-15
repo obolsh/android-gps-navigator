@@ -1,6 +1,5 @@
 package gps.navigator.mapboxsdk.geocode.impl;
 
-import android.content.Context;
 
 import androidx.annotation.Nullable;
 
@@ -10,7 +9,7 @@ import java.util.List;
 import gps.map.navigator.model.impl.data.MapPlace;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.interfaces.IPlaceListener;
-import gps.navigator.mapboxsdk.R;
+import gps.navigator.mapboxsdk.BuildConfig;
 import gps.navigator.mapboxsdk.geocode.IGeocode;
 import gps.navigator.mapboxsdk.geocode.ReverseGeocodeListener;
 import gps.navigator.mapboxsdk.geocode.locationiq.GeocodeApi;
@@ -20,11 +19,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LocationIqGeocode implements IGeocode {
-    private Context context;
-
-    public LocationIqGeocode(Context context) {
-        this.context = context;
-    }
 
     @Override
     public void searchForLocations(@Nullable String query, @Nullable final IPlaceListener listener) {
@@ -33,7 +27,7 @@ public class LocationIqGeocode implements IGeocode {
         }
         new GeocodeApi()
                 .getApi()
-                .getPlaceForQuery(context.getString(R.string.location_token), query)
+                .getPlaceForQuery(BuildConfig.LOCATION_IQ_HASH, query)
                 .enqueue(new Callback<List<Place>>() {
                     @Override
                     public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
@@ -76,7 +70,7 @@ public class LocationIqGeocode implements IGeocode {
         }
         new GeocodeApi()
                 .getApi()
-                .getPlaceForLocation(context.getString(R.string.location_token), place.getLatitude(), place.getLongitude())
+                .getPlaceForLocation(BuildConfig.LOCATION_IQ_HASH, place.getLatitude(), place.getLongitude())
                 .enqueue(new Callback<Place>() {
                     @Override
                     public void onResponse(Call<Place> call, Response<Place> response) {

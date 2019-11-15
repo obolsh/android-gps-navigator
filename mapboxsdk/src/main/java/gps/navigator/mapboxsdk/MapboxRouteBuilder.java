@@ -1,7 +1,5 @@
 package gps.navigator.mapboxsdk;
 
-import android.content.Context;
-
 import androidx.annotation.Nullable;
 
 import com.mapbox.api.directions.v5.DirectionsCriteria;
@@ -17,11 +15,9 @@ import retrofit2.Response;
 @Deprecated
 public class MapboxRouteBuilder {
 
-    private Context context;
     private RouteReadyListener listener;
 
-    public MapboxRouteBuilder(Context context, RouteReadyListener listener) {
-        this.context = context;
+    public MapboxRouteBuilder(RouteReadyListener listener) {
         this.listener = listener;
     }
 
@@ -32,7 +28,7 @@ public class MapboxRouteBuilder {
                 .destination(destination)
                 .overview(DirectionsCriteria.OVERVIEW_FULL)
                 .profile(DirectionsCriteria.PROFILE_DRIVING_TRAFFIC)
-                .accessToken(context.getString(R.string.mapbox_access_token))
+                .accessToken(BuildConfig.MAPBOX_HASH)
                 .build();
         client.enqueueCall(new ResponseCallback(listener));
     }

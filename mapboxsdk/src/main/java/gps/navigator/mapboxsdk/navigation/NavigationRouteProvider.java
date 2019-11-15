@@ -22,7 +22,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 
-import gps.navigator.mapboxsdk.R;
+import gps.navigator.mapboxsdk.BuildConfig;
 import gps.navigator.mapboxsdk.interfaces.RouteReadyListener;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,7 +48,7 @@ public class NavigationRouteProvider implements INavigationProvider {
             return;
         }
         NavigationRoute.builder(context)
-                .accessToken(context.getString(R.string.mapbox_access_token))
+                .accessToken(BuildConfig.MAPBOX_HASH)
                 .origin(origin)
                 .destination(destination)
                 .alternatives(true)

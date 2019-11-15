@@ -43,7 +43,7 @@ public class StyleLoadedCallback implements Style.OnStyleLoaded {
         this.map = map;
         this.placeListener = placeListener;
         this.context = context;
-        callback = new LocationCallback(context, map, placeListener);
+        callback = new LocationCallback(map, placeListener);
     }
 
     @Override
@@ -89,12 +89,10 @@ public class StyleLoadedCallback implements Style.OnStyleLoaded {
     private static class LocationCallback implements LocationEngineCallback<LocationEngineResult> {
         private MapboxMap map;
         private IPlaceListener placeListener;
-        private Context context;
 
-        private LocationCallback(Context context, MapboxMap map, IPlaceListener placeListener) {
+        private LocationCallback(MapboxMap map, IPlaceListener placeListener) {
             this.map = map;
             this.placeListener = placeListener;
-            this.context = context;
         }
 
         @Override
@@ -103,7 +101,7 @@ public class StyleLoadedCallback implements Style.OnStyleLoaded {
             if (map != null && location != null) {
                 map.getLocationComponent().forceLocationUpdate(location);
                 GeocodeStrategy.getInstance()
-                        .setStategy(new LocationIqGeocode(context))
+                        .setStategy(new LocationIqGeocode())
                         .getPlaceByLocation(buildMyLocation(location), new ReverseGeocodeListener() {
                             @Override
                             public void onPlaceDetected(IMapPlace mapPlace) {

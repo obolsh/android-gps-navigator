@@ -18,9 +18,9 @@ import gps.map.navigator.view.interfaces.IPlaceListener;
 import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
+import gps.navigator.mapboxsdk.BuildConfig;
 import gps.navigator.mapboxsdk.MapSdkInstance;
 import gps.navigator.mapboxsdk.MapSdkProvider;
-import gps.navigator.mapboxsdk.R;
 import gps.navigator.mapboxsdk.geocode.GeocodeStrategy;
 import gps.navigator.mapboxsdk.geocode.impl.LocationIqGeocode;
 import gps.navigator.mapboxsdk.map.MapProviderStategy;
@@ -41,7 +41,7 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void initialize(Context context, Bundle bundle) {
-        Mapbox.getInstance(context.getApplicationContext(), context.getString(R.string.mapbox_access_token));
+        Mapbox.getInstance(context.getApplicationContext(), BuildConfig.MAPBOX_HASH);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MapBoxSdkImpl implements MapSdk {
     @Override
     public void findPlace(String query, IPlaceListener placeListener) {
         GeocodeStrategy.getInstance()
-                .setStategy(new LocationIqGeocode(context))
+                .setStategy(new LocationIqGeocode())
                 .searchForLocations(query, placeListener);
     }
 

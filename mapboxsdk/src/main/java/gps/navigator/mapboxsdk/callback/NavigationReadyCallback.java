@@ -20,7 +20,7 @@ import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
 
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
-import gps.navigator.mapboxsdk.R;
+import gps.navigator.mapboxsdk.BuildConfig;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,7 +56,7 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
 
     private void fetchRoute() {
         NavigationRoute.builder(activity)
-                .accessToken(activity.getString(R.string.mapbox_access_token))
+                .accessToken(BuildConfig.MAPBOX_HASH)
                 .origin(getOrigin())
                 .destination(getDestination())
                 .alternatives(true)
