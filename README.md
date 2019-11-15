@@ -1,5 +1,12 @@
 # Android GPS Navigator
 
+<p float="left">
+    <img src="/resources/image/shots/001.png" width="50%" />
+    <img src="/resources/image/shots/002.png" width="50%" />
+    <img src="/resources/image/shots/003.png" width="50%" />
+    <img src="/resources/image/shots/004.png" width="50%" />
+</p>
+
 ![](resources/image/shots/001.png)
 
 ## Features
