@@ -18,6 +18,8 @@ import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 import com.mapbox.services.android.navigation.v5.routeprogress.ProgressChangeListener;
 import com.mapbox.services.android.navigation.v5.routeprogress.RouteProgress;
 
+import java.util.List;
+
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.navigator.mapboxsdk.BuildConfig;
@@ -64,8 +66,13 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
                 .getRoute(new Callback<DirectionsResponse>() {
                     @Override
                     public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-                        DirectionsRoute directionsRoute = response.body().routes().get(0);
-                        startNavigation(directionsRoute);
+                        DirectionsResponse body = response.body();
+                        if (body != null) {
+                            List<DirectionsRoute> routes = body.routes();
+                            if (routes.size() > 0) {
+                                startNavigation(routes.get(0));
+                            }
+                        }
                     }
 
                     @Override
@@ -131,7 +138,7 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
         navigationView.startNavigation(options);
     }
 
-    private boolean shouldSimulateRoute () {
+    private boolean shouldSimulateRoute() {
         return BuildConfig.DEBUG;
     }
 

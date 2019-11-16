@@ -3,9 +3,11 @@ package gps.navigator.mapboxsdk.map;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 
 import androidx.annotation.NonNull;
 
+import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -65,14 +67,26 @@ public class MapboxMapProvider implements IMapProvider {
                                 LocationComponentActivationOptions.builder(context, style)
                                         .useDefaultLocationEngine(false)
                                         .build());
-
-                        component.setLocationComponentEnabled(true);
+                        if (PermissionsManager.areLocationPermissionsGranted(context) && locationEnabled()) {
+                            component.setLocationComponentEnabled(true);
+                        } else {
+                            component.setLocationComponentEnabled(false);
+                        }
                         component.setCameraMode(CameraMode.TRACKING);
                         component.setRenderMode(RenderMode.COMPASS);
                         component.forceLocationUpdate(buildLastLocation());
                     }
                 });
             }
+        }
+    }
+
+    private boolean locationEnabled() {
+        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        try {
+            return lm != null && lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+            return false;
         }
     }
 

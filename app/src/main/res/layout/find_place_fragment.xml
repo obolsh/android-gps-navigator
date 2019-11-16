@@ -25,7 +25,7 @@
             app:contentInsetStartWithNavigation="0dp"
             app:navigationIcon="?attr/homeAsUpIndicator">
 
-            <include layout="@layout/search_view" />
+            <include layout="@layout/search_view_layout" />
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
