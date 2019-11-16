@@ -41,7 +41,6 @@ public class MapRouteBuilderCallback implements OnMapReadyCallback {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 NavigationRouteStrategy.getInstance()
-//                .setStrategy(new MapRouteProvider(context, cache, mapboxMap))
                         .setStrategy(new NavigationRouteProvider(context, mapboxMap, mapView, style))
                         .buildRoute(getOrigin(), getDestination(), new RouteReadyListener() {
                             @Override

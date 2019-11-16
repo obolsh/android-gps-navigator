@@ -3,6 +3,7 @@ package gps.navigator.mapboxsdk.callback;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
+import android.location.LocationManager;
 
 import androidx.annotation.NonNull;
 
@@ -61,7 +62,7 @@ public class StyleLoadedCallback implements Style.OnStyleLoaded {
                                 .useDefaultLocationEngine(false)
                                 .build());
 
-                component.setLocationComponentEnabled(true);
+                component.setLocationComponentEnabled(locationStatus());
                 component.setCameraMode(CameraMode.TRACKING);
                 component.setRenderMode(RenderMode.COMPASS);
                 component.zoomWhileTracking(15d, 2000L);
@@ -71,6 +72,15 @@ public class StyleLoadedCallback implements Style.OnStyleLoaded {
             }
         } else {
             placeListener.onPlaceLocationFailed(new Exception("No permission"));
+        }
+    }
+
+    private boolean locationStatus() {
+        LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        try {
+            return lm != null && lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+            return false;
         }
     }
 
