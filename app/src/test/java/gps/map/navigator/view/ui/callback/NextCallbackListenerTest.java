@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import gps.map.navigator.common.utils.PermissionHelper;
 import gps.map.navigator.view.ui.fragment.BuildRouteFragment;
 import gps.map.navigator.view.ui.fragment.MapFragment;
 import gps.map.navigator.view.ui.fragment.NavigatorFragment;
@@ -31,15 +32,18 @@ public class NextCallbackListenerTest {
     private IFragmentController<Fragment> fragmentController;
     private BuildRouteFragment buildRouteFragment;
     private NavigatorFragment navigatorFragment;
+    private PermissionHelper permissionHelper;
 
     @Before
     public void setUp() throws Exception {
         fragmentController = mock(IFragmentController.class);
         buildRouteFragment = mock(BuildRouteFragment.class);
         navigatorFragment = mock(NavigatorFragment.class);
+        permissionHelper = mock(PermissionHelper.class);
 
         whenNew(BuildRouteFragment.class).withAnyArguments().thenReturn(buildRouteFragment);
         whenNew(NavigatorFragment.class).withAnyArguments().thenReturn(navigatorFragment);
+        whenNew(PermissionHelper.class).withAnyArguments().thenReturn(permissionHelper);
     }
 
     @After
@@ -83,9 +87,35 @@ public class NextCallbackListenerTest {
     }
 
     @Test
-    public void receive_click_show_route_active_verify() {
+    public void receive_click_show_route_no_permission_active_verify() {
         NextCallbackListener listener = initListener();
         when(fragmentController.thisFragmentIsActive(eq(ShowRouteFragment.class))).thenReturn(true);
+        when(permissionHelper.hasLocationPermission()).thenReturn(false);
+        when(permissionHelper.isGpsActive()).thenReturn(false);
+
+        listener.onClick(null);
+
+        verify(permissionHelper).requestLocationPermission();
+    }
+
+    @Test
+    public void receive_click_show_route_no_location_active_verify() {
+        NextCallbackListener listener = initListener();
+        when(fragmentController.thisFragmentIsActive(eq(ShowRouteFragment.class))).thenReturn(true);
+        when(permissionHelper.hasLocationPermission()).thenReturn(true);
+        when(permissionHelper.isGpsActive()).thenReturn(false);
+
+        listener.onClick(null);
+
+        verify(permissionHelper).requestLocationService();
+    }
+
+    @Test
+    public void receive_click_show_route_has_location_has_permission_active_verify() {
+        NextCallbackListener listener = initListener();
+        when(fragmentController.thisFragmentIsActive(eq(ShowRouteFragment.class))).thenReturn(true);
+        when(permissionHelper.hasLocationPermission()).thenReturn(true);
+        when(permissionHelper.isGpsActive()).thenReturn(true);
 
         listener.onClick(null);
 

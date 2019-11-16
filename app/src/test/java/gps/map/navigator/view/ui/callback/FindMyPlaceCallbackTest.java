@@ -1,11 +1,7 @@
 package gps.map.navigator.view.ui.callback;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.LocationManager;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -16,18 +12,17 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import gps.map.navigator.common.utils.PermissionHelper;
 import gps.map.navigator.presenter.interfaces.Presenter;
 import gps.map.navigator.view.viewmodel.callback.ShowMeOnMapCallback;
 
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 import static org.powermock.reflect.Whitebox.getInternalState;
 import static org.powermock.reflect.Whitebox.setInternalState;
@@ -38,19 +33,16 @@ public class FindMyPlaceCallbackTest {
 
     private Presenter presenter;
     private Activity activity;
-    private LocationManager lm;
-    private Intent intent;
+    private PermissionHelper permissionHelper;
 
     @Before
     public void setUp() throws Exception {
         presenter = mock(Presenter.class);
         activity = mock(Activity.class);
-        lm = mock(LocationManager.class);
-        intent = mock(Intent.class);
+        permissionHelper = mock(PermissionHelper.class);
         mockStatic(ContextCompat.class);
         mockStatic(ActivityCompat.class);
-        when(activity.getSystemService(eq(Context.LOCATION_SERVICE))).thenReturn(lm);
-        whenNew(Intent.class).withAnyArguments().thenReturn(intent);
+        whenNew(PermissionHelper.class).withAnyArguments().thenReturn(permissionHelper);
     }
 
     private FindMyPlaceCallback initCallback() {
@@ -63,10 +55,8 @@ public class FindMyPlaceCallbackTest {
     @Test
     public void receive_click_has_permission_has_location_verify() {
         FindMyPlaceCallback callback = initCallback();
-        when(ContextCompat
-                .checkSelfPermission(eq(activity), eq(Manifest.permission.ACCESS_FINE_LOCATION)))
-                .thenReturn(PackageManager.PERMISSION_GRANTED);
-        when(lm.isProviderEnabled(eq(LocationManager.GPS_PROVIDER))).thenReturn(true);
+        when(permissionHelper.hasLocationPermission()).thenReturn(true);
+        when(permissionHelper.isGpsActive()).thenReturn(true);
 
         callback.onClick(null);
 
@@ -77,27 +67,25 @@ public class FindMyPlaceCallbackTest {
     @Test
     public void receive_click_has_permission_missing_location_verify() {
         FindMyPlaceCallback callback = initCallback();
-        when(ContextCompat
-                .checkSelfPermission(eq(activity), eq(Manifest.permission.ACCESS_FINE_LOCATION)))
-                .thenReturn(PackageManager.PERMISSION_GRANTED);
-        when(lm.isProviderEnabled(eq(LocationManager.GPS_PROVIDER))).thenReturn(false);
+        when(permissionHelper.hasLocationPermission()).thenReturn(true);
+        when(permissionHelper.isGpsActive()).thenReturn(false);
 
         callback.onClick(null);
 
-        verify(activity).startActivity(eq(intent));
+        verify(permissionHelper).requestLocationService();
 
     }
 
     @Test
     public void receive_click_missing_permission_verify() {
         FindMyPlaceCallback callback = initCallback();
-        when(ContextCompat
-                .checkSelfPermission(eq(activity), eq(Manifest.permission.ACCESS_FINE_LOCATION)))
-                .thenReturn(PackageManager.PERMISSION_DENIED);
+        when(permissionHelper.hasLocationPermission()).thenReturn(false);
+        when(permissionHelper.isGpsActive()).thenReturn(false);
 
         callback.onClick(null);
 
         verify(presenter, times(0)).showMeOnMap(any(ShowMeOnMapCallback.class));
+        verify(permissionHelper).requestLocationPermission();
     }
 
     @Test
