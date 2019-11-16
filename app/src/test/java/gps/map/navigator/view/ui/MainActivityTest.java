@@ -226,7 +226,7 @@ public class MainActivityTest {
 
         activity.setBottomBarVisibility(false);
 
-        verify(bottomAppBar).setVisibility(View.INVISIBLE);
+        verify(bottomAppBar, times(2)).setVisibility(View.INVISIBLE);
         verify(decorCache).setButtomAppBarActive(eq(false));
     }
 
