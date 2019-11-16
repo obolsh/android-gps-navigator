@@ -134,11 +134,17 @@ public class MainActivity extends AppCompatActivity implements HasSupportFragmen
         if (floatingActionButton != null) {
             floatingActionButton.hide();
         }
+        if (bottomAppBar != null) {
+            bottomAppBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setUiAfterIntro() {
         if (splashLayout != null) {
             splashLayout.setVisibility(View.GONE);
+            if (bottomAppBar != null) {
+                bottomAppBar.setVisibility(View.VISIBLE);
+            }
             if (showMeOnMap != null) {
                 showMeOnMap.show();
             }
