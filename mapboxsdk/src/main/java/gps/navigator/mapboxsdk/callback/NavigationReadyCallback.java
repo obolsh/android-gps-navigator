@@ -3,7 +3,6 @@ package gps.navigator.mapboxsdk.callback;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.location.Location;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -24,6 +23,7 @@ import java.util.List;
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.navigator.mapboxsdk.BuildConfig;
+import gps.navigator.mapboxsdk.interfaces.NavigationStatusListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,21 +34,24 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
     private static final String WAS_NAVIGATION_STOPPED = "was_navigation_stopped";
 
     private Activity activity;
-    private NavigationView navigationView;
+    private final NavigationView navigationView;
     private Cache cache;
-    private Handler handler;
+    private NavigationStatusListener listener;
 
-    public NavigationReadyCallback(Activity activity, Cache cache, NavigationView navigationView) {
+    public NavigationReadyCallback(Activity activity, Cache cache, NavigationView navigationView,
+                                   NavigationStatusListener listener) {
         this.activity = activity;
         this.navigationView = navigationView;
         this.cache = cache;
+        this.listener = listener;
     }
 
     @Override
     public void onNavigationReady(boolean isRunning) {
-        handler = new Handler();
-        updateNightMode();
-        fetchRoute();
+        synchronized (navigationView) {
+            updateNightMode();
+            fetchRoute();
+        }
     }
 
     private void updateNightMode() {
@@ -72,20 +75,25 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
                         DirectionsResponse body = response.body();
                         if (body != null) {
                             final List<DirectionsRoute> routes = body.routes();
-                            if (routes.size() > 0 && handler != null) {
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        startNavigation(routes.get(0));
-                                    }
-                                });
+                            if (routes.size() > 0) {
+                                startNavigation(routes.get(0));
+                            } else {
+                                if (listener != null) {
+                                    listener.onNavigationFailed();
+                                }
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onNavigationFailed();
                             }
                         }
                     }
 
                     @Override
                     public void onFailure(Call<DirectionsResponse> call, Throwable t) {
-
+                        if (listener != null) {
+                            listener.onNavigationFailed();
+                        }
                     }
                 });
     }
@@ -101,49 +109,60 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
     }
 
     private void startNavigation(DirectionsRoute directionsRoute) {
-        if (directionsRoute == null) {
-            return;
-        }
-        NavigationViewOptions options = NavigationViewOptions.builder()
-                .directionsRoute(directionsRoute)
-                .shouldSimulateRoute(shouldSimulateRoute())
-                .navigationListener(new NavigationListener() {
-                    @Override
-                    public void onCancelNavigation() {
-                        navigationView.stopNavigation();
-                        stopNavigation();
-                    }
+        synchronized (navigationView) {
+            if (directionsRoute == null) {
+                return;
+            }
+            NavigationViewOptions options = NavigationViewOptions.builder()
+                    .directionsRoute(directionsRoute)
+                    .shouldSimulateRoute(shouldSimulateRoute())
+                    .navigationListener(new NavigationListener() {
+                        @Override
+                        public void onCancelNavigation() {
+                            navigationView.stopNavigation();
+                            stopNavigation();
+                        }
 
-                    @Override
-                    public void onNavigationFinished() {
+                        @Override
+                        public void onNavigationFinished() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNavigationRunning() {
+                        @Override
+                        public void onNavigationRunning() {
 
-                    }
-                })
-                .progressChangeListener(new ProgressChangeListener() {
-                    @Override
-                    public void onProgressChange(Location location, RouteProgress routeProgress) {
-                        boolean isInTunnel = routeProgress.inTunnel();
-                        boolean wasInTunnel = wasInTunnel();
-                        if (isInTunnel) {
-                            if (!wasInTunnel) {
-                                updateWasInTunnel(true);
-                                updateCurrentNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                            }
-                        } else {
-                            if (wasInTunnel) {
-                                updateWasInTunnel(false);
-                                updateCurrentNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                        }
+                    })
+                    .progressChangeListener(new ProgressChangeListener() {
+                        @Override
+                        public void onProgressChange(Location location, RouteProgress routeProgress) {
+                            boolean isInTunnel = routeProgress.inTunnel();
+                            boolean wasInTunnel = wasInTunnel();
+                            if (isInTunnel) {
+                                if (!wasInTunnel) {
+                                    updateWasInTunnel(true);
+                                    updateCurrentNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                                }
+                            } else {
+                                if (wasInTunnel) {
+                                    updateWasInTunnel(false);
+                                    updateCurrentNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
+                                }
                             }
                         }
-                    }
-                })
-                .build();
-        navigationView.startNavigation(options);
+                    })
+                    .build();
+            try {
+                navigationView.startNavigation(options);
+                if (listener != null) {
+                    listener.onNavigationRunning();
+                }
+            } catch (Throwable t) {
+                if (listener != null) {
+                    listener.onNavigationFailed();
+                }
+            }
+        }
     }
 
     private boolean shouldSimulateRoute() {
