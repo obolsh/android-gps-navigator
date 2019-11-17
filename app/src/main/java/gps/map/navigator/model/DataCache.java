@@ -117,6 +117,9 @@ public class DataCache implements Cache {
     }
 
     private boolean placeAlreadyExist(@NonNull List<IMapPlace> historyPlaces, @NonNull IMapPlace place) {
+        if (historyPlaces.isEmpty()) {
+            return false;
+        }
         for (int i = 0; i < historyPlaces.size(); i++) {
             if (place.getId().equals(historyPlaces.get(i).getId())) {
                 return true;
@@ -248,7 +251,7 @@ public class DataCache implements Cache {
     public void removeHistoryPlace(@Nullable IMapPlace placeToRemove) {
         if (placeToRemove != null) {
             List<IMapPlace> places = getHistoryPlaces();
-            if (places != null) {
+            if (places != null && !places.isEmpty()) {
                 int position = getPosition(places, placeToRemove);
                 places.remove(position);
                 setHistoryPlaces(places);
