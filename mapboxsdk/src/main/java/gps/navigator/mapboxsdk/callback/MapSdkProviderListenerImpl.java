@@ -1,6 +1,9 @@
 package gps.navigator.mapboxsdk.callback;
 
+import androidx.annotation.NonNull;
+
 import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.Style;
 
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.MapSdk;
@@ -26,10 +29,14 @@ public class MapSdkProviderListenerImpl implements MapSdkProviderListener {
             provider.setMapSdkInstance(instance);
         }
         if (cache != null) {
-            instance.setStyle(cache.getMapSettings());
-        }
-        if (mapSdk != null) {
-            mapSdk.showMap();
+            instance.setStyle(cache.getMapSettings(), new Style.OnStyleLoaded() {
+                @Override
+                public void onStyleLoaded(@NonNull Style style) {
+                    if (mapSdk != null) {
+                        mapSdk.showMap();
+                    }
+                }
+            });
         }
     }
 }

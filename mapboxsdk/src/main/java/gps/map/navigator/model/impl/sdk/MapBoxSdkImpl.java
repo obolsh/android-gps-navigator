@@ -55,7 +55,7 @@ public class MapBoxSdkImpl implements MapSdk {
     public void setMapSettings(MapSetting mapSettings) {
         MapSdkInstance map = MapSdkProvider.getInstance().getMapSdkInstance();
         if (map != null) {
-            map.setStyle(mapSettings);
+            map.setStyle(mapSettings, null);
         }
     }
 
