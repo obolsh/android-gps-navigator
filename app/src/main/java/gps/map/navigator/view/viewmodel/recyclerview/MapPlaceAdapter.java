@@ -106,11 +106,19 @@ public class MapPlaceAdapter extends AbstractAdapter {
     @Override
     public void updatePlace(@NonNull IMapPlace update) {
         if (places != null && originalPlacesList != null) {
-            int position = getPosition(places, update);
-            places.set(position, update);
-            int originalPosition = getPosition(originalPlacesList, update);
-            originalPlacesList.set(originalPosition, update);
-            notifyItemChanged(position);
+            if (places.isEmpty()) {
+                places.add(update);
+            } else {
+                int position = getPosition(places, update);
+                places.set(position, update);
+                if (originalPlacesList.isEmpty()) {
+                    originalPlacesList.add(update);
+                } else {
+                    int originalPosition = getPosition(originalPlacesList, update);
+                    originalPlacesList.set(originalPosition, update);
+                }
+                notifyItemChanged(position);
+            }
         }
     }
 
@@ -135,6 +143,9 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     private int getPosition(@NonNull List<IMapPlace> places, @NonNull IMapPlace item) {
+        if (places.isEmpty()) {
+            return 0;
+        }
         for (int i = 0; i < places.size(); i++) {
             if (item.getId().equals(places.get(i).getId())) {
                 return i;
