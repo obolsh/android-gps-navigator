@@ -3,6 +3,7 @@ package gps.navigator.mapboxsdk.callback;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -35,6 +36,7 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
     private Activity activity;
     private NavigationView navigationView;
     private Cache cache;
+    private Handler handler;
 
     public NavigationReadyCallback(Activity activity, Cache cache, NavigationView navigationView) {
         this.activity = activity;
@@ -44,6 +46,7 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
 
     @Override
     public void onNavigationReady(boolean isRunning) {
+        handler = new Handler();
         updateNightMode();
         fetchRoute();
     }
@@ -68,9 +71,14 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
                     public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
                         DirectionsResponse body = response.body();
                         if (body != null) {
-                            List<DirectionsRoute> routes = body.routes();
-                            if (routes.size() > 0) {
-                                startNavigation(routes.get(0));
+                            final List<DirectionsRoute> routes = body.routes();
+                            if (routes.size() > 0 && handler != null) {
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        startNavigation(routes.get(0));
+                                    }
+                                });
                             }
                         }
                     }
