@@ -7,25 +7,11 @@ import androidx.fragment.app.Fragment;
 
 import com.mapbox.mapboxsdk.maps.MapView;
 
-import gps.navigator.mapboxsdk.MapSdkProvider;
-import gps.navigator.mapboxsdk.MapViewInstance;
-import gps.navigator.mapboxsdk.MapViewProvider;
-
 public abstract class MapboxFragment extends Fragment {
-
 
     protected abstract MapView getMapView();
 
     protected abstract void cleanReferences();
-
-    protected void cacheMapViewInstance() {
-        MapViewProvider provider = MapViewProvider.getInstance();
-        MapViewInstance instance = provider.getMapViewInstance();
-        if (instance == null) {
-            instance = new MapViewInstance(getMapView());
-            provider.setMapViewInstance(instance);
-        }
-    }
 
     @Override
     public void onResume() {
@@ -79,15 +65,6 @@ public abstract class MapboxFragment extends Fragment {
         if (mapView != null) {
             mapView.onDestroy();
         }
-        cleanup();
-    }
-
-
-
-    private void cleanup() {
-        MapSdkProvider.getInstance().setMapSdkInstance(null);
-        MapViewProvider.getInstance().setMapViewInstance(null);
-        cleanReferences();
     }
 
     @Override
