@@ -32,8 +32,8 @@ ext {
     bundleId = "gps.map.navigator"
 
     //versions
-    versionCode = 4
-    versionName = "1.0.4"
+    versionCode = 5
+    versionName = "1.0.5"
 
     //proguard
     activateProguard = false
