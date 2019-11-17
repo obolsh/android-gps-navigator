@@ -3,6 +3,7 @@ package gps.navigator.mapboxsdk.callback;
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.geojson.Point;
@@ -22,13 +23,16 @@ import gps.navigator.mapboxsdk.navigation.NavigationRouteProvider;
 import gps.navigator.mapboxsdk.navigation.NavigationRouteStrategy;
 
 public class MapRouteBuilderCallback implements OnMapReadyCallback {
-
+    @Nullable
     private Cache cache;
+    @Nullable
     private Context context;
+    @Nullable
     private Logger logger;
+    @Nullable
     private MapView mapView;
 
-    public MapRouteBuilderCallback(Context context, Cache cache, Logger logger, MapView mapView) {
+    public MapRouteBuilderCallback(@Nullable Context context, @Nullable Cache cache, @Nullable Logger logger, @Nullable MapView mapView) {
         this.cache = cache;
         this.context = context;
         this.logger = logger;
@@ -50,7 +54,9 @@ public class MapRouteBuilderCallback implements OnMapReadyCallback {
 
                             @Override
                             public void onBuildFailed(Exception reason) {
-                                logger.error(reason);
+                                if (logger != null) {
+                                    logger.error(reason);
+                                }
                             }
                         });
             }
@@ -58,11 +64,17 @@ public class MapRouteBuilderCallback implements OnMapReadyCallback {
     }
 
     private Point getOrigin() {
+        if (cache == null || cache.getLastRoute() == null) {
+            return null;
+        }
         IMapPlace place = cache.getLastRoute().getOrigin();
         return Point.fromLngLat(place.getLongitude(), place.getLatitude());
     }
 
     private Point getDestination() {
+        if (cache == null || cache.getLastRoute() == null) {
+            return null;
+        }
         IMapPlace place = cache.getLastRoute().getDestination();
         return Point.fromLngLat(place.getLongitude(), place.getLatitude());
     }
