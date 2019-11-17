@@ -40,7 +40,7 @@ public class NavigationRouteProvider implements INavigationProvider {
         this.context = context;
         this.mapboxMap = mapboxMap;
         initializeLocationComponent(mapboxMap, style);
-        if (mapboxMap != null && mapView != null) {
+        if (mapboxMap != null && mapView != null && !mapView.isDestroyed()) {
             navigationMapRoute = new NavigationMapRoute(null, mapView, mapboxMap);
         }
     }

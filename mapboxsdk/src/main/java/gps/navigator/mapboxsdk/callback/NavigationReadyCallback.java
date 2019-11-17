@@ -75,7 +75,7 @@ public class NavigationReadyCallback implements OnNavigationReadyCallback {
                         DirectionsResponse body = response.body();
                         if (body != null) {
                             final List<DirectionsRoute> routes = body.routes();
-                            if (routes.size() > 0) {
+                            if (!routes.isEmpty()) {
                                 startNavigation(routes.get(0));
                             } else {
                                 if (listener != null) {

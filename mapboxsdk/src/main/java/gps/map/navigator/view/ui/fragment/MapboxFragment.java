@@ -17,7 +17,7 @@ public abstract class MapboxFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MapView mapView = getMapView();
-        if (mapView != null) {
+        if (mapView != null && !mapView.isDestroyed()) {
             mapView.onResume();
         }
     }
@@ -26,7 +26,7 @@ public abstract class MapboxFragment extends Fragment {
     public void onPause() {
         super.onPause();
         MapView mapView = getMapView();
-        if (mapView != null) {
+        if (mapView != null && !mapView.isDestroyed()) {
             mapView.onPause();
         }
     }
@@ -35,7 +35,7 @@ public abstract class MapboxFragment extends Fragment {
     public void onStart() {
         super.onStart();
         MapView mapView = getMapView();
-        if (mapView != null) {
+        if (mapView != null && !mapView.isDestroyed()) {
             mapView.onStart();
         }
     }
@@ -44,7 +44,7 @@ public abstract class MapboxFragment extends Fragment {
     public void onStop() {
         super.onStop();
         MapView mapView = getMapView();
-        if (mapView != null) {
+        if (mapView != null && !mapView.isDestroyed()) {
             mapView.onStop();
         }
     }
@@ -53,7 +53,7 @@ public abstract class MapboxFragment extends Fragment {
     public void onLowMemory() {
         super.onLowMemory();
         MapView mapView = getMapView();
-        if (mapView != null) {
+        if (mapView != null && !mapView.isDestroyed()) {
             mapView.onLowMemory();
         }
     }
@@ -62,7 +62,7 @@ public abstract class MapboxFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         MapView mapView = getMapView();
-        if (mapView != null) {
+        if (mapView != null && !mapView.isDestroyed()) {
             mapView.onDestroy();
         }
     }
@@ -71,7 +71,7 @@ public abstract class MapboxFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         MapView mapView = getMapView();
-        if (mapView != null) {
+        if (mapView != null && !mapView.isDestroyed()) {
             mapView.onSaveInstanceState(outState);
         }
     }

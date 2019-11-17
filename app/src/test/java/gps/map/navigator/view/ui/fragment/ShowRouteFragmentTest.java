@@ -189,10 +189,26 @@ public class ShowRouteFragmentTest {
     }
 
     @Test
-    public void make_setOnlyOrigin_verify() {
+    public void make_setOnlyOrigin_same_as_destination_verify() {
         ShowRouteFragment fragment = createFragment();
         IRoute newRoute = createRoute();
         when(presenter.getLastRoute()).thenReturn(newRoute);
+        when(newRoute.getDestination()).thenReturn(destinationPlace);
+
+        fragment.setOnlyOrigin(destinationPlace);
+
+        verify(newRoute, times(0)).setDestination(any(IMapPlace.class));
+        verify(newRoute, times(0)).setOrigin(eq(destinationPlace));
+    }
+
+    @Test
+    public void make_setOnlyOrigin_not_same_as_destination_verify() {
+        ShowRouteFragment fragment = createFragment();
+        IRoute newRoute = createRoute();
+        when(presenter.getLastRoute()).thenReturn(newRoute);
+        IMapPlace newPlace = mock(IMapPlace.class);
+        when(newPlace.getLongitude()).thenReturn(12d);
+        when(newRoute.getDestination()).thenReturn(newPlace);
 
         fragment.setOnlyOrigin(destinationPlace);
 
@@ -201,14 +217,30 @@ public class ShowRouteFragmentTest {
     }
 
     @Test
-    public void make_setOnlyDestination_verify() {
+    public void make_setOnlyDestination_not_same_as_origin_verify() {
         ShowRouteFragment fragment = createFragment();
         IRoute newRoute = createRoute();
         when(presenter.getLastRoute()).thenReturn(newRoute);
+        IMapPlace newPlace = mock(IMapPlace.class);
+        when(newPlace.getLongitude()).thenReturn(12d);
+        when(newRoute.getOrigin()).thenReturn(newPlace);
 
         fragment.setOnlyDestination(originPlace);
 
         verify(newRoute, times(0)).setOrigin(any(IMapPlace.class));
         verify(newRoute).setDestination(eq(originPlace));
+    }
+
+    @Test
+    public void make_setOnlyDestination_same_as_origin_verify() {
+        ShowRouteFragment fragment = createFragment();
+        IRoute newRoute = createRoute();
+        when(presenter.getLastRoute()).thenReturn(newRoute);
+        when(newRoute.getOrigin()).thenReturn(originPlace);
+
+        fragment.setOnlyDestination(originPlace);
+
+        verify(newRoute, times(0)).setOrigin(any(IMapPlace.class));
+        verify(newRoute, times(0)).setDestination(eq(originPlace));
     }
 }

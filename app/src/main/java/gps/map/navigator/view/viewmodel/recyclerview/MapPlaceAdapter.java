@@ -126,7 +126,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
     public void showFoundedPlacesList(@NonNull List<IMapPlace> foundedPlaces) {
         if (places != null) {
             places.clear();
-        }  else {
+        } else {
             places = new ArrayList<>();
         }
         places.addAll(foundedPlaces);
@@ -144,6 +144,8 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     private void sortByLastUsedTime(@NonNull List<IMapPlace> places) {
-        Collections.sort(places, new DescendingTimeComparator());
+        if (!places.isEmpty()) {
+            Collections.sort(places, new DescendingTimeComparator());
+        }
     }
 }
