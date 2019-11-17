@@ -49,4 +49,6 @@ dependencies {
     implementation "com.mapbox.mapboxsdk:mapbox-android-navigation:$rootProject.navigationLibraryVersion"
     implementation "com.mapbox.mapboxsdk:mapbox-android-navigation-ui:$rootProject.navigationLibraryVersion"
 
+    implementation "org.greenrobot:eventbus:$rootProject.eventbusVersion"
+
 }
