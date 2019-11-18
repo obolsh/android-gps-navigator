@@ -149,7 +149,7 @@ public class FindPlaceFragment extends AbstractNaviFragment implements IPlacePic
 
     private void setFavouriteState(@NonNull IMapPlace mapPlace, boolean favourite) {
         List<IMapPlace> places = presenter.getHistoryPlaces();
-        if (places != null) {
+        if (places != null && !places.isEmpty()) {
             int position = getPosition(places, mapPlace);
 
             mapPlace.setFavourite(favourite);

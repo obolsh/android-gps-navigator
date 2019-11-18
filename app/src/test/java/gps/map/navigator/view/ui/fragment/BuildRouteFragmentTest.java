@@ -188,7 +188,8 @@ public class BuildRouteFragmentTest {
     @Test
     public void make_onCreateView_has_history_places_verify() {
         BuildRouteFragment fragment = createFragment();
-        setOriginAndDestinationTitle();
+        when(presenter.getLastOrigin()).thenReturn(originPlace);
+        when(presenter.getLastDestination()).thenReturn(null);
 
         View created = fragment.onCreateView(inflater, null, null);
 
@@ -201,10 +202,10 @@ public class BuildRouteFragmentTest {
         verify(destinationTitle).setOnClickListener(eq(destinationClickListener));
 
         verify(originTitle).setText(eq("title1"));
-        verify(destinationTitle).setText(eq("title2"));
+        verify(destinationTitle).setText(eq("destination"));
 
         verify(presenter).setLastOrigin(eq(originPlace));
-        verify(presenter).setLastDestination(eq(destinationPlace));
+        verify(presenter).setLastDestination(nullable(IMapPlace.class));
 
         verify(presenter).buildRoute(eq(buildRouteCallback));
     }
@@ -214,12 +215,15 @@ public class BuildRouteFragmentTest {
         BuildRouteFragment fragment = createFragment();
         setOriginAndDestinationTitle();
         fragment.onCreateView(inflater, null, null);
+        when(presenter.getLastOrigin()).thenReturn(originPlace);
+        when(presenter.getLastDestination()).thenReturn(null);
+
 
         fragment.swipeOriginAndDestination();
 
-        verify(presenter).setLastOrigin(eq(destinationPlace));
+        verify(presenter, times(2)).setLastOrigin(nullable(IMapPlace.class));
         verify(presenter).setLastDestination(eq(originPlace));
-        verify(originTitle).setText(eq("title2"));
+        verify(originTitle, times(2)).setText(eq("origin"));
         verify(destinationTitle).setText(eq("title1"));
     }
 
@@ -284,9 +288,11 @@ public class BuildRouteFragmentTest {
     @Test
     public void make_setNewPickedPlace_verify_destination() {
         BuildRouteFragment fragment = createFragment();
-        setInternalState(fragment, "originPlace", originPlace);
+        when(presenter.getLastOrigin()).thenReturn(originPlace);
+        when(presenter.getLastDestination()).thenReturn(null);
 
         IMapPlace place = getOriginPlace();
+        when(place.getLongitude()).thenReturn(12d);
         fragment.setNewPickedPlace(place);
 
         verify(presenter).setLastDestination(eq(place));

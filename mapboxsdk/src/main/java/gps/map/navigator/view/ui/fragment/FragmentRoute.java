@@ -34,7 +34,6 @@ public class FragmentRoute extends MapboxFragment {
         View root = inflater.inflate(R.layout.route_fragment, container, false);
         mapView = root.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-        cacheMapViewInstance();
         mapView.getMapAsync(new MapRouteBuilderCallback(getContext(), cache, logger, mapView));
         return root;
     }
@@ -46,6 +45,5 @@ public class FragmentRoute extends MapboxFragment {
 
     @Override
     protected void cleanReferences() {
-        mapView = null;
     }
 }

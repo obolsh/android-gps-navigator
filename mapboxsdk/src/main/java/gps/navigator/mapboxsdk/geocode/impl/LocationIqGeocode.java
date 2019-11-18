@@ -32,7 +32,7 @@ public class LocationIqGeocode implements IGeocode {
                     @Override
                     public void onResponse(Call<List<Place>> call, Response<List<Place>> response) {
                         List<Place> body = response.body();
-                        if (body != null) {
+                        if (body != null && !body.isEmpty()) {
                             List<IMapPlace> tely = new ArrayList<>();
                             Place vely;
                             for (int i = 0; i < body.size(); i++) {

@@ -29,15 +29,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class NavigationRouteProvider implements INavigationProvider {
+    @Nullable
     private Context context;
+    @Nullable
     private MapboxMap mapboxMap;
+    @Nullable
     private NavigationMapRoute navigationMapRoute;
 
-    public NavigationRouteProvider(Context context, MapboxMap mapboxMap, MapView mapView, Style style) {
+    public NavigationRouteProvider(@Nullable Context context, @Nullable MapboxMap mapboxMap, @Nullable MapView mapView, @Nullable Style style) {
         this.context = context;
         this.mapboxMap = mapboxMap;
         initializeLocationComponent(mapboxMap, style);
-        navigationMapRoute = new NavigationMapRoute(null, mapView, mapboxMap);
+        if (mapboxMap != null && mapView != null && !mapView.isDestroyed()) {
+            navigationMapRoute = new NavigationMapRoute(null, mapView, mapboxMap);
+        }
     }
 
     @Override
@@ -66,12 +71,14 @@ public class NavigationRouteProvider implements INavigationProvider {
                                 listener.onBuildFailed(new Exception("No routes found"));
                             }
                         } else {
-                            navigationMapRoute.addRoutes(directionsResponse.routes());
-                            mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(
-                                    new LatLngBounds.Builder()
-                                            .include(getPlace(origin))
-                                            .include(getPlace(destination))
-                                            .build(), 150), 5000);
+                            if (navigationMapRoute != null && mapboxMap != null) {
+                                navigationMapRoute.addRoutes(directionsResponse.routes());
+                                mapboxMap.easeCamera(CameraUpdateFactory.newLatLngBounds(
+                                        new LatLngBounds.Builder()
+                                                .include(getPlace(origin))
+                                                .include(getPlace(destination))
+                                                .build(), 150), 5000);
+                            }
                         }
                     }
 
@@ -85,7 +92,7 @@ public class NavigationRouteProvider implements INavigationProvider {
     }
 
     private Marker getMarker(LatLng position) {
-        return mapboxMap.addMarker(new MarkerOptions().position(position));
+        return mapboxMap != null ? mapboxMap.addMarker(new MarkerOptions().position(position)) : null;
     }
 
     @Override
@@ -93,14 +100,16 @@ public class NavigationRouteProvider implements INavigationProvider {
     }
 
     @SuppressWarnings("MissingPermission")
-    private void initializeLocationComponent(MapboxMap mapboxMap, Style style) {
-        LocationComponent component = mapboxMap.getLocationComponent();
-        component.activateLocationComponent(context, style);
+    private void initializeLocationComponent(@Nullable MapboxMap mapboxMap, @Nullable Style style) {
+        if (mapboxMap != null && style != null && context != null) {
+            LocationComponent component = mapboxMap.getLocationComponent();
+            component.activateLocationComponent(context, style);
 
-        component.setLocationComponentEnabled(false);
-        component.setRenderMode(RenderMode.COMPASS);
-        component.setCameraMode(CameraMode.TRACKING);
-        component.zoomWhileTracking(10d);
+            component.setLocationComponentEnabled(false);
+            component.setRenderMode(RenderMode.COMPASS);
+            component.setCameraMode(CameraMode.TRACKING);
+            component.zoomWhileTracking(10d);
+        }
     }
 
     private LatLng getPlace(Point origin) {

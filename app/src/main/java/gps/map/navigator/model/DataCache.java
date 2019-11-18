@@ -46,7 +46,7 @@ public class DataCache implements Cache {
     @Override
     public List<IMapPlace> getHistoryPlaces() {
         List<byte[]> arrays = storage.getChunkedData();
-        if (arrays != null) {
+        if (arrays != null && !arrays.isEmpty()) {
             int cacheSize = arrays.size();
             List<IMapPlace> output = new ArrayList<>(cacheSize);
             for (int i = 0; i < cacheSize; i++) {
@@ -69,7 +69,7 @@ public class DataCache implements Cache {
 
     @Override
     public void setHistoryPlaces(@Nullable List<IMapPlace> historyPlaces) {
-        if (historyPlaces != null) {
+        if (historyPlaces != null && !historyPlaces.isEmpty()) {
             sortByLastUsedTime(historyPlaces);
             List<byte[]> arrays = new ArrayList<>();
             for (int i = 0; i < historyPlaces.size(); i++) {
@@ -80,7 +80,9 @@ public class DataCache implements Cache {
     }
 
     private void sortByLastUsedTime(@NonNull List<IMapPlace> places) {
-        Collections.sort(places, new DescendingTimeComparator());
+        if (!places.isEmpty()) {
+            Collections.sort(places, new DescendingTimeComparator());
+        }
     }
 
     @Nullable
@@ -117,6 +119,9 @@ public class DataCache implements Cache {
     }
 
     private boolean placeAlreadyExist(@NonNull List<IMapPlace> historyPlaces, @NonNull IMapPlace place) {
+        if (historyPlaces.isEmpty()) {
+            return false;
+        }
         for (int i = 0; i < historyPlaces.size(); i++) {
             if (place.getId().equals(historyPlaces.get(i).getId())) {
                 return true;
@@ -248,7 +253,7 @@ public class DataCache implements Cache {
     public void removeHistoryPlace(@Nullable IMapPlace placeToRemove) {
         if (placeToRemove != null) {
             List<IMapPlace> places = getHistoryPlaces();
-            if (places != null) {
+            if (places != null && !places.isEmpty()) {
                 int position = getPosition(places, placeToRemove);
                 places.remove(position);
                 setHistoryPlaces(places);

@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import com.mapbox.mapboxsdk.Mapbox;
 
+import org.greenrobot.eventbus.EventBus;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -19,12 +21,11 @@ import gps.map.navigator.view.interfaces.IPlaceShowListener;
 import gps.map.navigator.view.interfaces.IRouteListener;
 import gps.map.navigator.view.interfaces.IRouteReadyListener;
 import gps.navigator.mapboxsdk.BuildConfig;
-import gps.navigator.mapboxsdk.MapSdkInstance;
-import gps.navigator.mapboxsdk.MapSdkProvider;
+import gps.navigator.mapboxsdk.event.ChangeSettingsEvent;
+import gps.navigator.mapboxsdk.event.MessageEvent;
+import gps.navigator.mapboxsdk.event.RequestLocationEvent;
 import gps.navigator.mapboxsdk.geocode.GeocodeStrategy;
 import gps.navigator.mapboxsdk.geocode.impl.LocationIqGeocode;
-import gps.navigator.mapboxsdk.map.MapProviderStategy;
-import gps.navigator.mapboxsdk.map.MapboxMapProvider;
 
 public class MapBoxSdkImpl implements MapSdk {
     @Inject
@@ -46,17 +47,14 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void showMeOnMap(IPlaceListener placeListener) {
-        MapProviderStategy.getInstance()
-                .setStrategy(new MapboxMapProvider(context, cache))
-                .showDeviceLocation(placeListener);
+        EventBus.getDefault()
+                .post(new RequestLocationEvent(MessageEvent.TYPE_SHOW_DEVICE_LOCATION, placeListener));
     }
 
     @Override
     public void setMapSettings(MapSetting mapSettings) {
-        MapSdkInstance map = MapSdkProvider.getInstance().getMapSdkInstance();
-        if (map != null) {
-            map.setStyle(mapSettings);
-        }
+        EventBus.getDefault()
+                .post(new ChangeSettingsEvent(MessageEvent.TYPE_CHANGE_MAP_SETTINGS, mapSettings));
     }
 
     @Override
@@ -93,8 +91,7 @@ public class MapBoxSdkImpl implements MapSdk {
 
     @Override
     public void showMap() {
-        MapProviderStategy.getInstance()
-                .setStrategy(new MapboxMapProvider(context, cache))
-                .showInitialLocation(null);
+        EventBus.getDefault()
+                .post(new RequestLocationEvent(MessageEvent.TYPE_SHOW_LAST_LOCATION, null));
     }
 }

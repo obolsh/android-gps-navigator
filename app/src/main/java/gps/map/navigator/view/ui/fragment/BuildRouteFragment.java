@@ -63,10 +63,6 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     @Named(Constants.DestinationClickListener)
     View.OnClickListener destinationClickListener;
     @Nullable
-    private IMapPlace originPlace;
-    @Nullable
-    private IMapPlace destinationPlace;
-    @Nullable
     private TextView originTitle;
     @Nullable
     private TextView destinationTitle;
@@ -89,6 +85,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
         setupDestination(view);
         setupSwipeOriginAndDestination(view);
         setupToolbarNavigation(view);
+        logger.debug("BuildRouteFragment onCreateView");
         return view;
     }
 
@@ -123,16 +120,17 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     }
 
     private void setOriginPlace(@Nullable IMapPlace place) {
-        if (place != null) {
+        if (place != null
+                && (presenter.getLastOrigin() == null
+                || !placesAreTheSame(place, presenter.getLastDestination()))) {
             setOriginTitle(place.getTitle());
-            originPlace = place;
+            presenter.setLastOrigin(place);
             logger.debug("Set origin as: " + place);
         } else {
             setOriginTitle(context.getResources().getString(R.string.choose_origin_default));
-            originPlace = null;
+            presenter.setLastOrigin(null);
             logger.debug("Clean last origin");
         }
-        presenter.setLastOrigin(originPlace);
     }
 
     private void setOriginTitle(@NonNull String title) {
@@ -169,33 +167,47 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     @Override
     public void swipeOriginAndDestination() {
-        IMapPlace lastOrigin = originPlace;
-        IMapPlace lastDestination = destinationPlace;
+        logger.debug("BuildRouteFragment swipeOriginAndDestination");
+        IMapPlace lastOrigin = presenter.getLastOrigin();
+        IMapPlace lastDestination = presenter.getLastDestination();
         setOriginPlace(lastDestination);
         setDestinationPlace(lastOrigin);
     }
 
     @Override
     public void setOnlyOrigin(@NonNull IMapPlace origin) {
-        presenter.setLastOrigin(origin);
+        logger.debug("BuildRouteFragment setOnlyOrigin");
+        if (!placesAreTheSame(origin, presenter.getLastDestination())) {
+            presenter.setLastOrigin(origin);
+        }
     }
 
     @Override
     public void setOnlyDestination(@NonNull IMapPlace destination) {
-        presenter.setLastDestination(destination);
+        logger.debug("BuildRouteFragment setOnlyDestination");
+        if (!placesAreTheSame(destination, presenter.getLastOrigin())) {
+            presenter.setLastDestination(destination);
+        }
     }
 
     private void setDestinationPlace(@Nullable IMapPlace place) {
-        if (place != null) {
+        if (place != null
+                && (presenter.getLastDestination() == null
+                || !placesAreTheSame(place, presenter.getLastOrigin()))) {
             setDestinationTitle(place.getTitle());
-            destinationPlace = place;
+            presenter.setLastDestination(place);
             logger.debug("Set destination as: " + place);
         } else {
             setDestinationTitle(context.getResources().getString(R.string.choose_destination_default));
-            destinationPlace = null;
+            presenter.setLastDestination(null);
             logger.debug("Clean last destination");
         }
-        presenter.setLastDestination(destinationPlace);
+    }
+
+    private boolean placesAreTheSame(IMapPlace place, IMapPlace comparing) {
+        return place != null && comparing != null
+                && place.getLongitude() == comparing.getLongitude()
+                && place.getLatitude() == comparing.getLatitude();
     }
 
     private void setDestinationTitle(@NonNull String title) {
@@ -232,14 +244,16 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     @Override
     public void setNewPickedPlace(@NonNull IMapPlace mapPlace) {
-        if (originPlace == null) {
+        logger.debug("BuildRouteFragment setNewPickedPlace");
+        if (presenter.getLastOrigin() == null && !placesAreTheSame(mapPlace, presenter.getLastDestination())) {
             setOriginPlace(mapPlace);
-        } else if (destinationPlace == null) {
+            openShowRouteFragmentIfRequied();
+        } else if (presenter.getLastDestination() == null && !placesAreTheSame(mapPlace, presenter.getLastOrigin())) {
             setDestinationPlace(mapPlace);
+            openShowRouteFragmentIfRequied();
         } else {
             logger.error("Can't use picked new place");
         }
-        openShowRouteFragmentIfRequied();
     }
 
     @Override
@@ -255,7 +269,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
 
     private void setFavouriteState(@NonNull IMapPlace mapPlace, boolean favourite) {
         List<IMapPlace> places = presenter.getHistoryPlaces();
-        if (places != null) {
+        if (places != null && !places.isEmpty()) {
             int position = getPosition(places, mapPlace);
 
             mapPlace.setFavourite(favourite);
@@ -286,7 +300,7 @@ public class BuildRouteFragment extends AbstractNaviFragment implements ISwipeRo
     }
 
     private void openShowRouteFragmentIfRequied() {
-        if (originPlace != null && destinationPlace != null) {
+        if (presenter.getLastOrigin() != null && presenter.getLastDestination() != null) {
             IRoute route = buildNewRoute();
             presenter.setLastRoute(route);
             presenter.setLastOrigin(null);

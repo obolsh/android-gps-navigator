@@ -192,23 +192,29 @@ public class ShowRouteFragment extends FragmentRoute implements IFragment<Fragme
         if (route == null) {
             return;
         }
-        if (newOrigin != null) {
+        if (newOrigin != null && (newDestination != null || !placesAreTheSame(newOrigin, route.getDestination()))) {
             route.setOrigin(newOrigin);
         }
-        if (newDestination != null) {
+        if (newDestination != null && (newOrigin != null || !placesAreTheSame(newDestination, route.getOrigin()))) {
             route.setDestination(newDestination);
         }
 
         presenter.setLastRoute(route);
 
-        if (newOrigin != null) {
+        if (newOrigin != null && (newDestination != null || !placesAreTheSame(newOrigin, route.getDestination()))) {
             setOriginTitle();
         }
 
-        if (newDestination != null) {
+        if (newDestination != null && (newOrigin != null || !placesAreTheSame(newDestination, route.getOrigin()))) {
             setDestinationTitle();
         }
 
         showRouteOnMap(route);
+    }
+
+    private boolean placesAreTheSame(IMapPlace place, IMapPlace comparing) {
+        return place != null && comparing != null
+                && place.getLongitude() == comparing.getLongitude()
+                && place.getLatitude() == comparing.getLatitude();
     }
 }
