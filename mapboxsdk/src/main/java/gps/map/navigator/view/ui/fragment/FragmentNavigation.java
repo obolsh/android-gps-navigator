@@ -1,5 +1,6 @@
 package gps.map.navigator.view.ui.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.navigator.mapboxsdk.R;
 import gps.navigator.mapboxsdk.callback.NavigationReadyCallback;
+import gps.navigator.mapboxsdk.interfaces.NavigationStatusListener;
 
 
 public class FragmentNavigation extends Fragment {
@@ -39,7 +41,8 @@ public class FragmentNavigation extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navigationView = view.findViewById(R.id.navigation_view_fragment);
         navigationView.onCreate(savedInstanceState);
-        navigationView.initialize(new NavigationReadyCallback(getActivity(), cache, navigationView), getInitialPosition());
+        navigationView.initialize(new NavigationReadyCallback(getActivity(), cache, navigationView,
+                new NavigationListener(getActivity())), getInitialPosition());
     }
 
     private CameraPosition getInitialPosition() {
@@ -118,6 +121,28 @@ public class FragmentNavigation extends Fragment {
         super.onDestroyView();
         if (navigationView != null) {
             navigationView.onDestroy();
+        }
+    }
+
+    private static class NavigationListener implements NavigationStatusListener {
+
+        private Activity activity;
+
+        private NavigationListener(Activity activity) {
+            this.activity = activity;
+        }
+
+        @Override
+        public void onNavigationRunning() {
+            activity = null;
+        }
+
+        @Override
+        public void onNavigationFailed() {
+            if (activity != null) {
+                activity.onBackPressed();
+            }
+            activity = null;
         }
     }
 }

@@ -17,64 +17,67 @@ import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 
+import org.jetbrains.annotations.Nullable;
+
 import gps.map.navigator.model.interfaces.Cache;
 import gps.map.navigator.model.interfaces.IMapPlace;
 import gps.map.navigator.view.interfaces.IPlaceListener;
-import gps.navigator.mapboxsdk.MapSdkInstance;
-import gps.navigator.mapboxsdk.MapSdkProvider;
 import gps.navigator.mapboxsdk.callback.StyleLoadedCallback;
 
 public class MapboxMapProvider implements IMapProvider {
+    @Nullable
     private Context context;
+    @Nullable
     private Cache cache;
+    @Nullable
+    private MapboxMap mapboxMap;
 
-    public MapboxMapProvider(Context context, Cache cache) {
+    public MapboxMapProvider(@Nullable Context context, @Nullable Cache cache, @Nullable MapboxMap mapboxMap) {
         this.context = context;
         this.cache = cache;
+        this.mapboxMap = mapboxMap;
     }
 
     @Override
-    public void showDeviceLocation(IPlaceListener placeListener) {
-        MapSdkProvider provider = MapSdkProvider.getInstance();
-        MapSdkInstance mapboxMap = provider.getMapSdkInstance();
+    public void showDeviceLocation(@Nullable IPlaceListener placeListener) {
         if (mapboxMap != null) {
-            MapboxMap map = mapboxMap.getInstance();
-            if (map != null) {
-                map.getStyle(new StyleLoadedCallback(context, map, placeListener));
-            } else {
-                placeListener.onPlaceLocationFailed(new Exception("No map"));
-            }
-        } else {
+            mapboxMap.getStyle(new StyleLoadedCallback(context, mapboxMap, placeListener));
+        } else if (placeListener != null) {
             placeListener.onPlaceLocationFailed(new Exception("No map cache"));
         }
     }
 
     @Override
-    public void showInitialLocation(IPlaceListener placeListener) {
-        MapSdkProvider provider = MapSdkProvider.getInstance();
-        MapSdkInstance mapboxMap = provider.getMapSdkInstance();
+    public void showInitialLocation(@Nullable final IPlaceListener placeListener) {
         if (mapboxMap != null) {
-            final MapboxMap map = mapboxMap.getInstance();
             final CameraPosition location = getPosition();
-            if (map != null && location != null) {
-                map.setCameraPosition(location);
-                map.getStyle(new Style.OnStyleLoaded() {
+            if (location != null) {
+                mapboxMap.setCameraPosition(location);
+                mapboxMap.getStyle(new Style.OnStyleLoaded() {
                     @SuppressLint("MissingPermission")
                     @Override
                     public void onStyleLoaded(@NonNull Style style) {
-                        LocationComponent component = map.getLocationComponent();
-                        component.activateLocationComponent(
-                                LocationComponentActivationOptions.builder(context, style)
-                                        .useDefaultLocationEngine(false)
-                                        .build());
-                        if (PermissionsManager.areLocationPermissionsGranted(context) && locationEnabled()) {
-                            component.setLocationComponentEnabled(true);
-                        } else {
-                            component.setLocationComponentEnabled(false);
+                        if (context != null && PermissionsManager.areLocationPermissionsGranted(context)) {
+                            try {
+                                LocationComponent component = mapboxMap.getLocationComponent();
+                                component.activateLocationComponent(
+                                        LocationComponentActivationOptions.builder(context, style)
+                                                .useDefaultLocationEngine(false)
+                                                .build());
+                                if (locationEnabled()) {
+                                    component.setLocationComponentEnabled(true);
+                                    component.setCameraMode(CameraMode.TRACKING);
+                                    component.setRenderMode(RenderMode.COMPASS);
+                                    component.forceLocationUpdate(buildLastLocation());
+                                } else {
+                                    component.setLocationComponentEnabled(false);
+                                }
+                            } catch (Throwable t) {
+                                if (placeListener != null) {
+                                    placeListener.onPlaceLocationFailed(new Exception(t));
+                                }
+                            }
                         }
-                        component.setCameraMode(CameraMode.TRACKING);
-                        component.setRenderMode(RenderMode.COMPASS);
-                        component.forceLocationUpdate(buildLastLocation());
                     }
                 });
             }
@@ -82,6 +85,9 @@ public class MapboxMapProvider implements IMapProvider {
     }
 
     private boolean locationEnabled() {
+        if (context == null) {
+            return false;
+        }
         LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         try {
             return lm != null && lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -91,6 +97,9 @@ public class MapboxMapProvider implements IMapProvider {
     }
 
     private Location buildLastLocation() {
+        if (cache == null) {
+            return null;
+        }
         Location location = new Location("");
         IMapPlace place = cache.getLastPlace();
         if (place == null) {
@@ -106,6 +115,9 @@ public class MapboxMapProvider implements IMapProvider {
     }
 
     private CameraPosition getPosition() {
+        if (cache == null) {
+            return null;
+        }
         IMapPlace place = cache.getLastPlace();
         if (place == null) {
             place = cache.getMyLocation();

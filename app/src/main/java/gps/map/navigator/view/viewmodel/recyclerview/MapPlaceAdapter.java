@@ -106,11 +106,19 @@ public class MapPlaceAdapter extends AbstractAdapter {
     @Override
     public void updatePlace(@NonNull IMapPlace update) {
         if (places != null && originalPlacesList != null) {
-            int position = getPosition(places, update);
-            places.set(position, update);
-            int originalPosition = getPosition(originalPlacesList, update);
-            originalPlacesList.set(originalPosition, update);
-            notifyItemChanged(position);
+            if (places.isEmpty()) {
+                places.add(update);
+            } else {
+                int position = getPosition(places, update);
+                places.set(position, update);
+                if (originalPlacesList.isEmpty()) {
+                    originalPlacesList.add(update);
+                } else {
+                    int originalPosition = getPosition(originalPlacesList, update);
+                    originalPlacesList.set(originalPosition, update);
+                }
+                notifyItemChanged(position);
+            }
         }
     }
 
@@ -126,7 +134,7 @@ public class MapPlaceAdapter extends AbstractAdapter {
     public void showFoundedPlacesList(@NonNull List<IMapPlace> foundedPlaces) {
         if (places != null) {
             places.clear();
-        }  else {
+        } else {
             places = new ArrayList<>();
         }
         places.addAll(foundedPlaces);
@@ -135,6 +143,9 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     private int getPosition(@NonNull List<IMapPlace> places, @NonNull IMapPlace item) {
+        if (places.isEmpty()) {
+            return 0;
+        }
         for (int i = 0; i < places.size(); i++) {
             if (item.getId().equals(places.get(i).getId())) {
                 return i;
@@ -144,6 +155,8 @@ public class MapPlaceAdapter extends AbstractAdapter {
     }
 
     private void sortByLastUsedTime(@NonNull List<IMapPlace> places) {
-        Collections.sort(places, new DescendingTimeComparator());
+        if (!places.isEmpty()) {
+            Collections.sort(places, new DescendingTimeComparator());
+        }
     }
 }

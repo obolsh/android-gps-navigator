@@ -21,9 +21,12 @@ public class AdapterFilter extends Filter {
     @SuppressWarnings("unchecked")
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
-        if (adapter != null) {
-            adapter.changePlacesList((List<IMapPlace>) results.values);
-            adapter.notifyDataSetChanged();
+        if (adapter != null && results != null && results.values instanceof List) {
+            List<IMapPlace> list = (List<IMapPlace>) results.values;
+            if (!list.isEmpty()) {
+                adapter.changePlacesList(list);
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -45,7 +48,7 @@ public class AdapterFilter extends Filter {
     @NonNull
     private List<IMapPlace> getFilteredResults(@Nullable List<IMapPlace> originalPlacesList, @NonNull String constraint) {
         List<IMapPlace> results = new ArrayList<>();
-        if (originalPlacesList != null) {
+        if (originalPlacesList != null && !originalPlacesList.isEmpty()) {
             for (IMapPlace item : originalPlacesList) {
                 if (itemMatch(item, constraint)) {
                     results.add(item);
